@@ -1,18 +1,18 @@
 # Overview
 
-`logit`は、local development 環境向けのログ収集・保存・検索ツールです。
+`logit` is a logging tool for local development environments.
 
-このリポジトリでは、ブラウザと runtime のログをローカルに保存し、CLI を中心に簡単に検索できる OSS を構築します。
+This repository builds an OSS product that stores browser and runtime logs locally and makes them easy to query through a CLI-first workflow.
 
-基本方針は以下です。
+Core principles:
 
-- Browser は Vite plugin で収集する
-- Runtime は preload/import で差し込める形を優先する
-- raw log は JSONL に保存する
-- query backend は DuckDB を使う
-- CLI を主導線にし、Web UI は sample として付属させる
+- Collect browser logs through a Vite plugin
+- Prefer preload or import based runtime integration
+- Store raw logs as JSONL
+- Use DuckDB as the query backend
+- Make the CLI the primary interface and keep the web UI as a sample
 
-関連仕様は以下を参照する。
+See the following documents for the detailed product specification:
 
 - [Product](product.md)
 - [Requirements](requirements.md)

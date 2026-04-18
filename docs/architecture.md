@@ -2,11 +2,11 @@
 
 ## High Level
 
-`logit`は、runtime ごとの agent と、共通の保存・検索基盤で構成する。
+`logit` consists of runtime-specific agents plus shared storage and query infrastructure.
 
-実装は pnpm workspace を使った monorepo を前提にし、Domain 名の大きいフォルダを作るより、責務ごとに package 単位で分ける。
+The implementation uses a pnpm workspace monorepo. Instead of creating large domain folders, split the repository by package-level responsibility.
 
-構成:
+Target package families:
 
 - `core`: event schema, serializer, redaction, file layout
 - `vite-plugin`: browser agent
@@ -14,48 +14,61 @@
 - `runtime-bun`: Bun register
 - `runtime-deno`: Deno register
 - `cli`: tail, query, reindex, prune, doctor, ui
-- `ui-sample`: sample Web UI
+- `web-ui`: sample web UI
+
+Initial repository packages and apps:
+
+- `packages/core`
+- `packages/cli`
+- `packages/vite-plugin`
+- `packages/runtime-node`
+- `apps/web-ui`
+- `examples/vite-client`
+- `examples/node-server`
+- `tests/e2e`
 
 ## Repository Policy
 
-- package manager は`pnpm`
-- workspace で packages を分割する
-- ESM 前提で実装する
-- TypeScript は strict 前提にする
-- linter は`ESLint`
-- unit/integration test は`Vitest`
-- E2E が必要な場合は`Playwright`
-- HTTP server が必要な場合は`Hono`
+- Use `pnpm` as the package manager
+- Split the workspace into packages
+- Implement everything as ESM
+- Use TypeScript in strict mode
+- Use `ESLint` as the linter
+- Use `Vitest` for unit and integration tests
+- Use `Playwright` when E2E coverage is needed
+- Use `Hono` when an HTTP server is required
 
 ## Package-Oriented Structure
 
-大きい domain フォルダを切るのではなく、workspace package を最小の配布・責務単位として扱う。
+Treat each workspace package as the smallest unit of responsibility and distribution instead of building around large domain folders.
 
-狙い:
+Goals:
 
-- runtime ごとの差分を package 境界で分離する
-- CLI, core, plugin, sample UI を独立して育てる
-- 配布、テスト、依存関係を package 単位で制御しやすくする
-- 将来の OSS 公開時に publish 戦略を取りやすくする
+- Isolate runtime-specific differences at package boundaries
+- Evolve the CLI, core, plugin, and sample UI independently
+- Control publishing, testing, and dependencies per package
+- Keep the repository ready for future OSS publishing strategies
+
+See [Repository Structure](repository-structure.md) for the concrete top-level layout and package responsibilities.
 
 ## Data Flow
 
 Browser:
 
-- Vite plugin が browser runtime を inject する
-- browser runtime が console, error, unhandledrejection, fetch を収集する
-- agent が raw JSONL に append する
+- The Vite plugin injects a browser runtime
+- The browser runtime captures `console`, `error`, `unhandledrejection`, and `fetch`
+- The agent appends events to raw JSONL
 
 Runtime:
 
-- preload/import で runtime agent を差し込む
-- runtime agent が console, uncaughtException, unhandledRejection, fetch を収集する
-- agent が raw JSONL に append する
+- A runtime agent is installed through preload or import
+- The runtime agent captures `console`, `uncaughtException`, `unhandledRejection`, and `fetch`
+- The agent appends events to raw JSONL
 
 Search:
 
-- CLI が raw JSONL から DuckDB index を構築する
-- CLI と sample UI が DuckDB を query する
+- The CLI builds the DuckDB index from raw JSONL
+- The CLI and the sample UI query DuckDB
 
 ## Storage Layout
 
@@ -76,11 +89,11 @@ Search:
 
 ## Design Choice
 
-collector 常駐プロセスは初期必須にしない。
+Do not require a dedicated collector process in the initial design.
 
-理由:
+Reasons:
 
-- 導入が軽い
-- 起動忘れがない
-- raw JSONL を正本として扱える
-- DuckDB index を後から再構築できる
+- Adoption stays lightweight
+- There is no separate collector process to forget
+- Raw JSONL remains the source of truth
+- The DuckDB index can be rebuilt later

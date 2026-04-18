@@ -6,6 +6,7 @@
 - [Product](product.md)
 - [Requirements](requirements.md)
 - [Architecture](architecture.md)
+- [Repository Structure](repository-structure.md)
 - [Runtime Integration](runtime-integration.md)
 - [Query Model](query-model.md)
 - [Docs Policy](docs-policy.md)
@@ -13,6 +14,6 @@
 
 ## Intended Use
 
-- `agent/agent.md`からこのファイルを辿って全体像を把握する
-- プロダクトの目的、MVP、設計判断はこの配下を正本にする
-- 各Skillは必要に応じてこの配下の文書を参照する
+- Use this file from `agent/agent.md` as the main entry point into the documentation set
+- Treat this directory as the source of truth for product goals, MVP scope, and design decisions
+- Let each skill reference documents in this directory when needed

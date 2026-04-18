@@ -1,13 +1,13 @@
 # Skills
 
-このディレクトリにはSkill定義を置きます。
+This directory contains skill definitions.
 
-方針:
+Policy:
 
-- 詳細な共通説明はルートの`docs/`を参照する
-- ここにはSkill固有の情報だけを書く
+- Reference the root `docs/` directory for shared explanations
+- Keep only skill-specific information here
 
-参照先:
+References:
 
 - [Docs Index](../../docs/index.md)
 - [Skills Policy](../../docs/skills-policy.md)

@@ -2,14 +2,14 @@
 
 ## Browser
 
-Browser は Vite plugin 前提とする。
+Browser integration is based on a Vite plugin.
 
-導入方針:
+Integration approach:
 
-- `transformIndexHtml`で browser runtime を inject する
-- `configureServer`で dev server 側の補助処理を追加できるようにする
+- Use `transformIndexHtml` to inject the browser runtime
+- Use `configureServer` to add dev-server-side helper behavior when needed
 
-収集対象:
+Collected signals:
 
 - `console.log/info/warn/error/debug`
 - `window.onerror`
@@ -19,20 +19,20 @@ Browser は Vite plugin 前提とする。
 
 ## Node.js
 
-Node.js は`--import`を使う路線を第一候補とする。
+Node.js should use the `--import` path as the first choice.
 
-狙い:
+Goals:
 
-- `node`の既存コマンドを大きく変えない
-- `tsx`など Node ベースの実行にも乗せやすい
+- Avoid major changes to existing `node` commands
+- Keep the integration compatible with Node-based runners such as `tsx`
 
-導入例:
+Example:
 
 ```bash
 NODE_OPTIONS="--import @logit/runtime-node/register" node server.js
 ```
 
-収集対象:
+Collected signals:
 
 - `console.*`
 - `uncaughtException`
@@ -41,33 +41,33 @@ NODE_OPTIONS="--import @logit/runtime-node/register" node server.js
 
 ## Bun
 
-Bun は`--preload`を第一候補とする。
+Bun should use `--preload` as the first choice.
 
-導入例:
+Example:
 
 ```bash
 bun --preload @logit/runtime-bun/register app.ts
 ```
 
-または:
+Or:
 
 ```bash
 BUN_INSPECT_PRELOAD=@logit/runtime-bun/register bun app.ts
 ```
 
-収集対象は Node.js と同等を基本にする。
+The collected signal set should match Node.js by default.
 
 ## Deno
 
-Deno は初期版では experimental とする。
+Deno is experimental in the initial version.
 
-導入方針:
+Integration approach:
 
 - manual import
 - wrapper
-- task 経由
+- task-based execution
 
-導入例:
+Example:
 
 ```ts
 import "@logit/runtime-deno/register";
@@ -76,6 +76,6 @@ import "./main.ts";
 
 ## Shared Policy
 
-- 既存コマンドをなるべく維持する
-- zero or minimal change の導入を優先する
-- runtime ごとの差し込み方式は分けるが、event schema は共通化する
+- Preserve existing commands as much as possible
+- Prefer zero-change or minimal-change installation paths
+- Allow runtime-specific installation methods while keeping a shared event schema

@@ -2,25 +2,25 @@
 
 ## Storage Strategy
 
-保存は 2 層に分ける。
+Use a two-layer storage model.
 
 - raw: append-only JSONL
 - index: DuckDB
 
-この構成により、raw を正本として保持しつつ、query しやすい index を持てる。
+This keeps raw logs as the source of truth while providing a query-friendly index.
 
 ## Why DuckDB
 
-- CLI から SQL で扱いやすい
-- JSON を扱いやすい
-- 集計、絞り込み、時系列検索に向いている
-- raw JSONL から再構築しやすい
+- It is easy to query from the CLI with SQL
+- It handles JSON well
+- It is well-suited for aggregation, filtering, and time-based queries
+- It is easy to rebuild from raw JSONL
 
 ## Query UX
 
-CLI を主導線にする。
+Make the CLI the primary query interface.
 
-初期コマンド:
+Initial commands:
 
 - `logit tail`
 - `logit query`
@@ -31,23 +31,23 @@ CLI を主導線にする。
 
 ## Source Map Policy
 
-MVP では source map は検索時解決とする。
+Resolve sourcemaps at query time in the MVP.
 
-保存時に持つもの:
+Persist the following at ingest time:
 
 - stack
 - generated frames
 
-検索時に行うこと:
+Resolve the following at query time:
 
-- source map を使った解決
-- 解決結果の cache 利用
+- Sourcemap-based frame resolution
+- Cached resolution results
 
 ## PII Policy
 
-最低限の PII redaction を標準有効にする。
+Enable a minimum PII redaction policy by default.
 
-対象:
+Covered values:
 
 - email
 - Authorization header
@@ -55,15 +55,15 @@ MVP では source map は検索時解決とする。
 - Cookie
 - Set-Cookie
 - password
-- `apiKey`, `token`, `secret`系の key
+- `apiKey`, `token`, and `secret` style keys
 
-追加ルールは設定で拡張可能にする。
+Allow additional rules through configuration.
 
 ## Network Log Policy
 
-network log は初版から含めるが、要約中心にする。
+Include network logs from the initial version, but keep them summary-oriented.
 
-保存するもの:
+Persist:
 
 - method
 - url
@@ -74,8 +74,8 @@ network log は初版から含めるが、要約中心にする。
 - failed flag
 - error message
 
-保存しないもの:
+Do not persist:
 
-- body 全文
+- Full bodies
 - binary
-- 大きな header 全文
+- Large full header sets

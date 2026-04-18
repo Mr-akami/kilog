@@ -2,33 +2,34 @@
 
 ## Summary
 
-`logit`は、local development 用の logging OSS である。
+`logit` is an OSS logging tool for local development.
 
-目的:
+Goals:
 
-- ブラウザログをローカル保存する
-- Node.js などの runtime ログをローカル保存する
-- 保存したログを後から簡単に検索する
-- 既存の開発コマンドをなるべく壊さず導入できるようにする
+- Store browser logs locally
+- Store runtime logs such as Node.js logs locally
+- Make saved logs easy to query later
+- Integrate with minimal changes to existing development commands
 
 ## Scope
 
-初期ターゲットは以下。
+Initial target scope:
 
-- Browser: Vite dev server 前提
+- Browser: Vite dev server
 - Runtime: Node.js first, Bun second, Deno experimental
 - Query UX: CLI first
-- UI: sample Web UI を付属
-- Repository: pnpm workspace を使う monorepo
+- UI: include a sample web UI
+- Repository: use a pnpm workspace monorepo
+- Initial implementation: start with `core`, `cli`, `vite-plugin`, and `runtime-node`
 
 ## Positioning
 
-`logit`は本番向けの集中管理基盤ではなく、local dev に特化した観測と検索のためのツールとする。
+`logit` is not a centralized production logging platform. It is a tool for local development observability and query workflows.
 
-次の価値を優先する。
+Priorities:
 
-- 導入の軽さ
-- raw data を失わないこと
-- query しやすい保存形式
-- source map や redaction を後から改善できる構成
-- package 単位で責務を分離できる構成
+- Lightweight adoption
+- Preserving raw data
+- Query-friendly storage formats
+- An architecture that allows sourcemap and redaction improvements later
+- Package-oriented separation of responsibilities

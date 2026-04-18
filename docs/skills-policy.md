@@ -2,31 +2,31 @@
 
 ## Principle
 
-Skillには、そのSkillにしか属さない情報だけを書く。
+Write only skill-specific information in a skill file.
 
-例:
+Examples:
 
-- 何をするSkillか
-- どの入力を期待するか
-- どの出力を返すか
-- そのSkill特有の制約
-- そのSkill特有の実行手順
+- What the skill does
+- What inputs it expects
+- What outputs it returns
+- Constraints specific to that skill
+- Execution steps specific to that skill
 
-以下は原則として`docs/`へ置く。
+The following should generally live in `docs/`:
 
-- 共通用語
-- 全体アーキテクチャ
-- 共通運用ルール
-- 他Skillでも使う判断基準
+- Shared terminology
+- Overall architecture
+- Shared operating rules
+- Decision criteria reused across multiple skills
 
 ## Skill File Pattern
 
-各Skillファイルは、少なくとも次を持つ。
+Each skill file should contain at least:
 
-- 概要
-- 参照ドキュメント
-- Skill固有ルール
+- Overview
+- Referenced documents
+- Skill-specific rules
 
 ## Reference Rule
 
-Skillファイルでは、詳細を直接長く書かず、`docs/`内の文書へリンクする。
+Do not repeat long explanations inside skill files. Link to documents in `docs/` instead.
