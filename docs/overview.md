@@ -1,11 +1,21 @@
 # Overview
 
-`agent/`は、LLM向けのagent定義、運用ルール、Skill参照方針を整理するためのディレクトリです。
+`logit`は、local development 環境向けのログ収集・保存・検索ツールです。
+
+このリポジトリでは、ブラウザと runtime のログをローカルに保存し、CLI を中心に簡単に検索できる OSS を構築します。
 
 基本方針は以下です。
 
-- 共通知識はルートの`docs/`に集約する
-- `agent.md`は人とLLMの両方が最初に読む索引として使う
-- `skills/`は最小限に保ち、Skill固有の内容だけを持つ
+- Browser は Vite plugin で収集する
+- Runtime は preload/import で差し込める形を優先する
+- raw log は JSONL に保存する
+- query backend は DuckDB を使う
+- CLI を主導線にし、Web UI は sample として付属させる
 
-この構成により、共通知識の重複を減らし、更新箇所を`docs/`へ寄せられます。
+関連仕様は以下を参照する。
+
+- [Product](product.md)
+- [Requirements](requirements.md)
+- [Architecture](architecture.md)
+- [Runtime Integration](runtime-integration.md)
+- [Query Model](query-model.md)
