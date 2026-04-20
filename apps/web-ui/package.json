@@ -9,5 +9,10 @@
   },
   "scripts": {
     "build": "tsc"
+  },
+  "dependencies": {
+    "@logit/core": "workspace:*",
+    "hono": "*",
+    "@hono/node-server": "*"
   }
 }

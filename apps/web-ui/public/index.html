@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>logit</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; background: #f5f5f5; color: #333; }
+    header { background: #1a1a2e; color: #fff; padding: 12px 24px; }
+    header h1 { font-size: 18px; font-weight: 600; }
+    .filters {
+      display: flex; gap: 8px; padding: 12px 24px;
+      background: #fff; border-bottom: 1px solid #ddd; flex-wrap: wrap;
+    }
+    .filters select, .filters input {
+      padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;
+    }
+    .filters input[type="text"] { min-width: 200px; }
+    .filters button {
+      padding: 6px 16px; background: #1a1a2e; color: #fff;
+      border: none; border-radius: 4px; cursor: pointer; font-size: 13px;
+    }
+    #log-table {
+      width: 100%; border-collapse: collapse; background: #fff;
+      font-size: 13px; table-layout: fixed;
+    }
+    #log-table th {
+      text-align: left; padding: 8px 12px; background: #eee;
+      border-bottom: 2px solid #ddd; position: sticky; top: 0;
+    }
+    #log-table td {
+      padding: 6px 12px; border-bottom: 1px solid #eee;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .level-error { color: #d32f2f; font-weight: 600; }
+    .level-warn { color: #f57c00; font-weight: 600; }
+    .level-info { color: #1976d2; }
+    .level-debug { color: #888; }
+    .table-wrap { overflow-x: auto; padding: 0 24px 24px; }
+    #status { padding: 8px 24px; font-size: 12px; color: #666; }
+  </style>
+</head>
+<body>
+  <header><h1>logit</h1></header>
+  <div class="filters">
+    <select id="filter-runtime">
+      <option value="">All runtimes</option>
+      <option value="node">node</option>
+      <option value="browser">browser</option>
+      <option value="bun">bun</option>
+      <option value="deno">deno</option>
+    </select>
+    <select id="filter-type">
+      <option value="">All types</option>
+      <option value="console">console</option>
+      <option value="error">error</option>
+      <option value="network">network</option>
+      <option value="unhandled-rejection">unhandled-rejection</option>
+    </select>
+    <select id="filter-level">
+      <option value="">All levels</option>
+      <option value="debug">debug</option>
+      <option value="info">info</option>
+      <option value="warn">warn</option>
+      <option value="error">error</option>
+    </select>
+    <input type="text" id="filter-search" placeholder="Search...">
+    <button id="btn-search">Filter</button>
+  </div>
+  <div id="status"></div>
+  <div class="table-wrap">
+    <table id="log-table">
+      <thead>
+        <tr>
+          <th style="width:180px">Timestamp</th>
+          <th style="width:80px">Runtime</th>
+          <th style="width:80px">Type</th>
+          <th style="width:60px">Level</th>
+          <th>Message</th>
+        </tr>
+      </thead>
+      <tbody id="log-body"></tbody>
+    </table>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
