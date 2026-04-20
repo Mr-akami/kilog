@@ -22,6 +22,16 @@ export function generateBrowserRuntime(): string {
     }).catch(function(e) { origError("[logit] sendEvents failed:", e); });
   }
 
+  function formatArg(v) {
+    if (typeof v === "string") return v;
+    if (typeof v === "number" || typeof v === "boolean" || v == null) return String(v);
+    if (v instanceof Error) return v.stack || (v.name + ": " + v.message);
+    try { return JSON.stringify(v); } catch (e) { return String(v); }
+  }
+  function formatArgs(args) {
+    return args.map(formatArg).join(" ");
+  }
+
   function makeEvent(type, level, extra) {
     var event = {
       id: crypto.randomUUID(),
@@ -40,7 +50,7 @@ export function generateBrowserRuntime(): string {
       var args = Array.prototype.slice.call(arguments);
       original.apply(console, args);
       var event = makeEvent("console", level, {
-        message: args.map(String).join(" "),
+        message: formatArgs(args),
         args: args
       });
       sendEvents([event]);

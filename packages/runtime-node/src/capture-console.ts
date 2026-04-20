@@ -1,4 +1,5 @@
 import type { ConsoleEvent, LogLevel } from "@logit/core";
+import { formatArgs } from "@logit/core";
 import { createBaseFields } from "./context.js";
 import type { RuntimeContext } from "./context.js";
 
@@ -21,7 +22,7 @@ export function captureConsole(ctx: RuntimeContext): void {
         ...createBaseFields(ctx),
         type: "console",
         level: LEVEL_MAP[method],
-        message: args.map(String).join(" "),
+        message: formatArgs(args),
         args,
       };
       void ctx.writer.append(event);
