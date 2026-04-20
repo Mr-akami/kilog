@@ -1,11 +1,25 @@
 {
   "name": "@logit/vite-plugin",
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "Vite plugin for logit structured logging",
+  "keywords": ["logit", "logging", "vite", "vite-plugin"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mr-akami/logit.git",
+    "directory": "packages/vite-plugin"
+  },
+  "homepage": "https://github.com/Mr-akami/logit/tree/main/packages/vite-plugin#readme",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "build": "tsc",

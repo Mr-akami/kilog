@@ -1,11 +1,25 @@
 {
   "name": "@logit/web-ui",
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "Web UI for logit structured logging viewer",
+  "keywords": ["logit", "logging", "web-ui", "dashboard"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mr-akami/logit.git",
+    "directory": "packages/web-ui"
+  },
+  "homepage": "https://github.com/Mr-akami/logit/tree/main/packages/web-ui#readme",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "build": "vp build && tsc",

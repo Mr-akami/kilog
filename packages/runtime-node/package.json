@@ -1,12 +1,26 @@
 {
   "name": "@logit/runtime-node",
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "Node.js runtime for logit structured logging",
+  "keywords": ["logit", "logging", "node", "runtime"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mr-akami/logit.git",
+    "directory": "packages/runtime-node"
+  },
+  "homepage": "https://github.com/Mr-akami/logit/tree/main/packages/runtime-node#readme",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
     "./register": "./dist/register.js"
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "build": "tsc",

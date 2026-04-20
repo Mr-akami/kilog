@@ -1,0 +1,8 @@
+{
+  "packages/core": "0.1.0",
+  "packages/runtime-node": "0.1.0",
+  "packages/vite-plugin": "0.1.0",
+  "packages/cli": "0.1.0",
+  "packages/web-ui": "0.1.0",
+  "packages/register": "0.1.0"
+}

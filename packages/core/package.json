@@ -1,11 +1,25 @@
 {
   "name": "@logit/core",
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "Core library for logit structured logging",
+  "keywords": ["logit", "logging", "structured-logging", "duckdb"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mr-akami/logit.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/Mr-akami/logit/tree/main/packages/core#readme",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "build": "tsc",
