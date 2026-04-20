@@ -1,13 +1,19 @@
 {
   "name": "@logit/example-node-server",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": "./dist/index.js"
-  },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "dev": "node --import @logit/runtime-node/register ./src/index.ts",
+    "logit": "logit"
+  },
+  "dependencies": {
+    "hono": "*",
+    "@hono/node-server": "*",
+    "@logit/runtime-node": "workspace:*"
+  },
+  "devDependencies": {
+    "@logit/cli": "workspace:*"
   }
 }
