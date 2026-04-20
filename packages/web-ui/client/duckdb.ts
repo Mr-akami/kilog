@@ -57,6 +57,30 @@ async function ensureSchema(db: duckdb.AsyncDuckDB): Promise<void> {
   }
 }
 
+function formatArg(v: unknown): string {
+  if (typeof v === "string") return v;
+  if (typeof v === "number" || typeof v === "boolean" || v == null) return String(v);
+  if (v instanceof Error) return v.stack ?? `${v.name}: ${v.message}`;
+  try {
+    return JSON.stringify(v);
+  } catch {
+    return String(v);
+  }
+}
+
+/**
+ * Recompute the display message from structured `args`. This makes the UI
+ * resilient to JSONL files captured by older runtimes that stored
+ * "[object Object]" in `message` while still holding the real args array.
+ */
+function reformatMessage(event: Record<string, unknown>): string | null {
+  const args = event.args;
+  if (event.type === "console" && Array.isArray(args)) {
+    return args.map(formatArg).join(" ");
+  }
+  return (event.message as string | undefined) ?? null;
+}
+
 export async function insertLogEvent(
   db: duckdb.AsyncDuckDB,
   event: Record<string, unknown>,
@@ -77,7 +101,7 @@ export async function insertLogEvent(
         event.session,
         event.type,
         event.level ?? null,
-        event.message ?? null,
+        reformatMessage(event),
         event.name ?? null,
         event.stack != null ? JSON.stringify(event.stack) : null,
         event.method ?? null,
