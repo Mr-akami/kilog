@@ -4,10 +4,21 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "logit": "./dist/index.js"
+  },
   "exports": {
     ".": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc"
+  },
+  "dependencies": {
+    "@logit/core": "workspace:*",
+    "@logit/web-ui": "workspace:*",
+    "yargs": "*"
+  },
+  "devDependencies": {
+    "@types/yargs": "*"
   }
 }
