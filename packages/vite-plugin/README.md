@@ -32,4 +32,4 @@ Written to `.devlogs/raw/{date}.browser.jsonl` under the cwd. Override with the 
 
 ## Viewing logs
 
-Use [`@logit/cli`](../cli/README.md) or the [Web UI](../../apps/web-ui/README.md).
+Use [`@logit/cli`](../cli/README.md) or the [Web UI](../web-ui/README.md).

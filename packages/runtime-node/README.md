@@ -41,4 +41,4 @@ captureErrors(ctx);
 
 ## Viewing logs
 
-Use [`@logit/cli`](../cli/README.md) or the [Web UI](../../apps/web-ui/README.md).
+Use [`@logit/cli`](../cli/README.md) or the [Web UI](../web-ui/README.md).

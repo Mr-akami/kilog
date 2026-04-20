@@ -22,7 +22,7 @@ Initial repository packages and apps:
 - `packages/cli`
 - `packages/vite-plugin`
 - `packages/runtime-node`
-- `apps/web-ui`
+- `packages/web-ui`
 - `examples/vite-client`
 - `examples/node-server`
 - `tests/e2e`

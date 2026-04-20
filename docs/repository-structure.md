@@ -133,7 +133,7 @@ packages/runtime-node/
 
 ## Application Role
 
-### `apps/web-ui`
+### `packages/web-ui`
 
 This app is a sample web UI, not the primary product surface.
 

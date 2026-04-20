@@ -44,4 +44,4 @@ pnpm logit ui --port 4000    # dev server uses 3000, so use a different port
 
 > `npx logit` will not work: since it isn't published yet, npx tries to fetch it from the registry and fails. Use `pnpm` instead.
 
-See [`@logit/cli`](../../packages/cli/README.md) and [Web UI](../../apps/web-ui/README.md) for details.
+See [`@logit/cli`](../../packages/cli/README.md) and [Web UI](../../packages/web-ui/README.md) for details.

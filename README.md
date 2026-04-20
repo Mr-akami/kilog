@@ -1,13 +1,14 @@
 # logit
 
-Capture `console`, `fetch`, and uncaught errors from your app during development, then search and browse them via CLI or Web UI.
+Capture `console`, `fetch`, and uncaught errors from your app during development, then search and browse them via CLI or a browser UI powered by DuckDB-wasm.
 
 ## Features
 
 - Zero-code integration (`--import` flag or Vite plugin)
 - Works in Node and the browser
-- Stored locally under `.devlogs/` (JSONL + DuckDB index)
-- CLI (`logit tail / query / ui ...`) and Web UI for browsing
+- Per-project storage under each project's `.devlogs/` (JSONL + DuckDB index)
+- CLI (`logit tail / query / ui / ...`) with filters, aggregation, and raw SQL
+- Web UI: Hono SSR shell + in-browser DuckDB-wasm, 2 s live updates, raw SQL input, editable root, "Clear DuckDB" and "Clear logs on disk" buttons, auto-shutdown when the tab closes
 
 ## Quick start
 
@@ -36,14 +37,26 @@ export default { plugins: [logit()] };
 ### View logs
 
 ```bash
-pnpm logit tail     # live stream
+pnpm logit tail     # live stream across every .devlogs/ under cwd
 pnpm logit query    # search / filter
-pnpm logit ui       # Web UI
+pnpm logit ui       # browser UI (auto-shuts down when you close the tab)
 ```
 
-(Not published yet, so `npx logit` **does not work**. Add `@logit/cli` as a devDependency and use `pnpm logit ...`.)
+Not published to npm yet. Inside the workspace, add `@logit/cli` as a devDependency and invoke via `pnpm logit`.
 
-→ [`packages/cli`](./packages/cli/README.md) / [`apps/web-ui`](./apps/web-ui/README.md)
+→ [`packages/cli`](./packages/cli/README.md) / [`packages/web-ui`](./packages/web-ui/README.md)
+
+## Storage model
+
+Each project keeps its own, self-contained `.devlogs/`:
+
+```
+<project>/.devlogs/
+├── raw/     # JSONL: {date}.{runtime}.jsonl
+└── index/   # DuckDB: logs.duckdb
+```
+
+The CLI and UI walk down from the **invocation directory** (or `--root <path>`) to find every `.devlogs/` under it, then operate on each one independently. No unified database — each `.devlogs/` is standalone and portable.
 
 ## Packages
 
@@ -52,25 +65,13 @@ pnpm logit ui       # Web UI
 | [`@logit/runtime-node`](./packages/runtime-node/README.md) | Node runtime instrumentation |
 | [`@logit/vite-plugin`](./packages/vite-plugin/README.md) | Vite plugin (browser instrumentation + dev-server receiver) |
 | [`@logit/cli`](./packages/cli/README.md) | `logit` CLI |
-| [`@logit/web-ui`](./apps/web-ui/README.md) | Web UI server |
-| [`@logit/core`](./packages/core/README.md) | Internal: storage / query |
+| [`@logit/web-ui`](./packages/web-ui/README.md) | Hono server + DuckDB-wasm browser UI |
+| [`@logit/core`](./packages/core/README.md) | Internal: storage / discovery / index / query |
 
 ## Examples
 
 - [`examples/node-server`](./examples/node-server) — Hono + runtime-node
 - [`examples/vite-client`](./examples/vite-client) — Vite + vite-plugin
-
-## Log storage
-
-Under the current working directory's `.devlogs/`:
-
-```
-.devlogs/
-├── raw/     # JSONL: {date}.{runtime}.jsonl
-└── index/   # DuckDB: logs.duckdb
-```
-
-CLI and UI read from the cwd's `.devlogs/`, so run them in the same directory as your app.
 
 ## Development (monorepo)
 
@@ -80,20 +81,18 @@ Requires Node >= 24 and pnpm. Not published to npm yet, so it only works inside 
 
 ```bash
 pnpm install
-pnpm build        # build every package into its dist/
+pnpm build        # build every package + bundle the browser client
 ```
 
-Packages reference each other via `workspace:*` and their `main` points to `./dist/index.js`, so **an initial build (and a rebuild after changes) is required**.
+Packages reference each other via `workspace:*` and their `main` points to `./dist/`, so **an initial build (and a rebuild after changes) is required**. `@logit/web-ui` additionally bundles its browser client with Vite.
 
 ### Watch
 
-To edit TypeScript while running:
-
 ```bash
-pnpm tsc -b --watch    # watch every package from the root
+pnpm tsc -b --watch    # server-side TS (core, cli, web-ui server, etc.)
+# and in packages/web-ui, for the client side:
+pnpm --filter @logit/web-ui dev:client
 ```
-
-Run examples / CLI in separate terminals.
 
 ### Test / typecheck / lint
 
@@ -107,11 +106,3 @@ pnpm lint
 
 - [`examples/node-server`](./examples/node-server/README.md) — Node runtime instrumentation
 - [`examples/vite-client`](./examples/vite-client/README.md) — Browser instrumentation
-
-### Per-package docs
-
-- [`@logit/runtime-node`](./packages/runtime-node/README.md)
-- [`@logit/vite-plugin`](./packages/vite-plugin/README.md)
-- [`@logit/cli`](./packages/cli/README.md)
-- [`@logit/web-ui`](./apps/web-ui/README.md) ← includes dev workflow
-- [`@logit/core`](./packages/core/README.md)
