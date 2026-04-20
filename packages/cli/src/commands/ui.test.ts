@@ -6,25 +6,25 @@ vi.mock("@logit/web-ui", () => ({
 }));
 
 describe("handleUi", () => {
-  it("should call startServer with provided port and baseDir", async () => {
+  it("should call startServer with provided port and root", async () => {
     const { startServer } = await import("@logit/web-ui");
 
-    await handleUi({ baseDir: "/project", port: 4000 });
+    await handleUi({ root: "/project", port: 4000 });
 
     expect(startServer).toHaveBeenCalledWith({
       port: 4000,
-      baseDir: "/project",
+      root: "/project",
     });
   });
 
   it("should call startServer with default port 3000", async () => {
     const { startServer } = await import("@logit/web-ui");
 
-    await handleUi({ baseDir: "/project", port: 3000 });
+    await handleUi({ root: "/project", port: 3000 });
 
     expect(startServer).toHaveBeenCalledWith({
       port: 3000,
-      baseDir: "/project",
+      root: "/project",
     });
   });
 });

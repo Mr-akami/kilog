@@ -104,7 +104,7 @@ describe("handleQuery", () => {
 
   it("should output all logs when no filter specified", async () => {
     const output = await captureStdout(() =>
-      handleQuery({ baseDir, dbPath }),
+      handleQuery({ root: baseDir }),
     );
 
     expect(output).toContain("hello");
@@ -113,7 +113,7 @@ describe("handleQuery", () => {
 
   it("should filter by runtime", async () => {
     const output = await captureStdout(() =>
-      handleQuery({ baseDir, dbPath, runtime: "browser" }),
+      handleQuery({ root: baseDir, runtime: "browser" }),
     );
 
     expect(output).toContain("GET");
@@ -122,7 +122,7 @@ describe("handleQuery", () => {
 
   it("should filter by level", async () => {
     const output = await captureStdout(() =>
-      handleQuery({ baseDir, dbPath, level: "error" }),
+      handleQuery({ root: baseDir, level: "error" }),
     );
 
     expect(output).toContain("crash");
@@ -131,7 +131,7 @@ describe("handleQuery", () => {
 
   it("should filter by type", async () => {
     const output = await captureStdout(() =>
-      handleQuery({ baseDir, dbPath, type: "network" }),
+      handleQuery({ root: baseDir, type: "network" }),
     );
 
     expect(output).toContain("GET");
@@ -140,7 +140,7 @@ describe("handleQuery", () => {
 
   it("should filter by search term", async () => {
     const output = await captureStdout(() =>
-      handleQuery({ baseDir, dbPath, search: "warning" }),
+      handleQuery({ root: baseDir, search: "warning" }),
     );
 
     expect(output).toContain("warning");
@@ -149,7 +149,7 @@ describe("handleQuery", () => {
 
   it("should respect limit", async () => {
     const output = await captureStdout(() =>
-      handleQuery({ baseDir, dbPath, limit: 1 }),
+      handleQuery({ root: baseDir, limit: 1 }),
     );
 
     // output should contain exactly 1 event's data
@@ -161,7 +161,7 @@ describe("handleQuery", () => {
 
   it("should output valid JSON when --json is set", async () => {
     const output = await captureStdout(() =>
-      handleQuery({ baseDir, dbPath, json: true }),
+      handleQuery({ root: baseDir, json: true }),
     );
 
     const parsed = JSON.parse(output);
@@ -173,7 +173,7 @@ describe("handleQuery", () => {
 
   it("should output aggregated results when --aggregate is set", async () => {
     const output = await captureStdout(() =>
-      handleQuery({ baseDir, dbPath, aggregate: true }),
+      handleQuery({ root: baseDir, aggregate: true }),
     );
 
     expect(output).toContain("runtime");
@@ -184,7 +184,7 @@ describe("handleQuery", () => {
 
   it("should handle empty results gracefully", async () => {
     const output = await captureStdout(() =>
-      handleQuery({ baseDir, dbPath, search: "nonexistent_xyz" }),
+      handleQuery({ root: baseDir, search: "nonexistent_xyz" }),
     );
 
     expect(typeof output).toBe("string");

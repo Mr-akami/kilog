@@ -60,7 +60,7 @@ describe("handlePrune", () => {
       serialize(newEvent) + "\n",
     );
 
-    await handlePrune({ baseDir, before: "2026-04-15" });
+    await handlePrune({ root: baseDir, before: "2026-04-15" });
 
     const remaining = await readdir(rawDir);
     expect(remaining).toContain("2026-04-18.node.jsonl");
@@ -77,7 +77,7 @@ describe("handlePrune", () => {
       serialize(makeConsoleEvent()) + "\n",
     );
 
-    await handlePrune({ baseDir, before: "2026-04-15" });
+    await handlePrune({ root: baseDir, before: "2026-04-15" });
 
     const remaining = await readdir(rawDir);
     expect(remaining).not.toContain("2026-04-15.node.jsonl");
@@ -95,7 +95,7 @@ describe("handlePrune", () => {
     );
 
     const output = await captureStdout(() =>
-      handlePrune({ baseDir, before: "2026-04-10" }),
+      handlePrune({ root: baseDir, before: "2026-04-10" }),
     );
 
     expect(output).toContain("2");
@@ -108,7 +108,7 @@ describe("handlePrune", () => {
     );
 
     const output = await captureStdout(() =>
-      handlePrune({ baseDir, before: "2026-04-10" }),
+      handlePrune({ root: baseDir, before: "2026-04-10" }),
     );
 
     expect(output).toContain("reindex");
@@ -123,7 +123,7 @@ describe("handlePrune", () => {
     );
 
     const output = await captureStdout(() =>
-      handlePrune({ baseDir, before: "2026-04-01" }),
+      handlePrune({ root: baseDir, before: "2026-04-01" }),
     );
 
     const remaining = await readdir(rawDir);
@@ -135,7 +135,7 @@ describe("handlePrune", () => {
 
   it("should handle empty raw directory", async () => {
     const output = await captureStdout(() =>
-      handlePrune({ baseDir, before: "2026-04-18" }),
+      handlePrune({ root: baseDir, before: "2026-04-18" }),
     );
 
     expect(output).toContain("0");
@@ -147,7 +147,7 @@ describe("handlePrune", () => {
     const emptyBase = await mkdtemp(path.join(tmpdir(), "logit-cli-prune-empty-"));
 
     await expect(
-      handlePrune({ baseDir: emptyBase, before: "2026-04-18" }),
+      handlePrune({ root: emptyBase, before: "2026-04-18" }),
     ).resolves.not.toThrow();
 
     await rm(emptyBase, { recursive: true, force: true });
@@ -165,7 +165,7 @@ describe("handlePrune", () => {
       serialize(makeConsoleEvent({ runtime: "browser" })) + "\n",
     );
 
-    await handlePrune({ baseDir, before: "2026-04-10" });
+    await handlePrune({ root: baseDir, before: "2026-04-10" });
 
     const remaining = await readdir(rawDir);
     expect(remaining).toHaveLength(0);

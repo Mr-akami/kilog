@@ -48,7 +48,7 @@ describe("handleDoctor", () => {
 
   it("should report when .devlogs directory is missing", async () => {
     const output = await captureStdout(() =>
-      handleDoctor({ baseDir, dbPath }),
+      handleDoctor({ root: baseDir }),
     );
 
     expect(output).toContain(".devlogs");
@@ -59,7 +59,7 @@ describe("handleDoctor", () => {
     await mkdir(path.join(baseDir, ".devlogs", "index"), { recursive: true });
 
     const output = await captureStdout(() =>
-      handleDoctor({ baseDir, dbPath }),
+      handleDoctor({ root: baseDir }),
     );
 
     expect(output).toContain(".devlogs");
@@ -79,7 +79,7 @@ describe("handleDoctor", () => {
     await reindex({ baseDir, dbPath });
 
     const output = await captureStdout(() =>
-      handleDoctor({ baseDir, dbPath }),
+      handleDoctor({ root: baseDir }),
     );
 
     // should show raw count and index count are equal
@@ -106,7 +106,7 @@ describe("handleDoctor", () => {
     );
 
     const output = await captureStdout(() =>
-      handleDoctor({ baseDir, dbPath }),
+      handleDoctor({ root: baseDir }),
     );
 
     expect(output).toContain("reindex");
@@ -122,7 +122,7 @@ describe("handleDoctor", () => {
     );
 
     const output = await captureStdout(() =>
-      handleDoctor({ baseDir, dbPath }),
+      handleDoctor({ root: baseDir }),
     );
 
     expect(output).toContain("reindex");
@@ -136,7 +136,7 @@ describe("handleDoctor", () => {
     await reindex({ baseDir, dbPath });
 
     const output = await captureStdout(() =>
-      handleDoctor({ baseDir, dbPath }),
+      handleDoctor({ root: baseDir }),
     );
 
     expect(output).toContain("0");

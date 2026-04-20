@@ -41,7 +41,7 @@ describe("handleTail", () => {
     const controller = new AbortController();
 
     const tailPromise = handleTail({
-      baseDir,
+      root: baseDir,
       signal: controller.signal,
       onLine: (line: string) => { lines.push(line); },
     });
@@ -70,7 +70,7 @@ describe("handleTail", () => {
     const controller = new AbortController();
 
     const tailPromise = handleTail({
-      baseDir,
+      root: baseDir,
       runtime: "node",
       signal: controller.signal,
       onLine: (line: string) => { lines.push(line); },
@@ -100,7 +100,7 @@ describe("handleTail", () => {
 
     // should not throw
     const tailPromise = handleTail({
-      baseDir: emptyBase,
+      root: emptyBase,
       signal: controller.signal,
       onLine: () => {},
     });
@@ -117,7 +117,7 @@ describe("handleTail", () => {
     const controller = new AbortController();
 
     const tailPromise = handleTail({
-      baseDir,
+      root: baseDir,
       signal: controller.signal,
       onLine: (line: string) => { lines.push(line); },
     });

@@ -7,8 +7,8 @@ describe("formatTable", () => {
 
   it("should format rows with headers", () => {
     const rows: AggregateRow[] = [
-      { runtime: "node", type: "console", level: "info", count: 5 },
-      { runtime: "browser", type: "network", level: "info", count: 3 },
+      { runtime: "node", type: "console", level: "info", count: 5, project: null },
+      { runtime: "browser", type: "network", level: "info", count: 3, project: null },
     ];
     const output = formatTable(rows);
 
@@ -24,8 +24,8 @@ describe("formatTable", () => {
 
   it("should align columns", () => {
     const rows: AggregateRow[] = [
-      { runtime: "node", type: "console", level: "info", count: 5 },
-      { runtime: "browser", type: "error", level: "error", count: 12 },
+      { runtime: "node", type: "console", level: "info", count: 5, project: null },
+      { runtime: "browser", type: "error", level: "error", count: 12, project: null },
     ];
     const output = formatTable(rows);
     const lines = output.trim().split("\n");
@@ -46,7 +46,7 @@ describe("formatTable", () => {
 
   it("should format a single row", () => {
     const rows: AggregateRow[] = [
-      { runtime: "node", type: "console", level: "debug", count: 1 },
+      { runtime: "node", type: "console", level: "debug", count: 1, project: null },
     ];
     const output = formatTable(rows);
 
@@ -57,8 +57,8 @@ describe("formatTable", () => {
   // ── long values ──
 
   it("should handle long string values", () => {
-    const rows = [
-      { runtime: "node", type: "console", level: "info", count: 999999 },
+    const rows: AggregateRow[] = [
+      { runtime: "node", type: "console", level: "info", count: 999999, project: null },
     ];
     const output = formatTable(rows);
 

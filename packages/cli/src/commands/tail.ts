@@ -1,12 +1,12 @@
-import { watch } from "node:fs";
+import { watch, type FSWatcher } from "node:fs";
 import { readdir, stat, open, mkdir } from "node:fs/promises";
 import path from "node:path";
-import { RAW_DIR, deserialize } from "@logit/core";
+import { deserialize, findDevlogsDirs } from "@logit/core";
 import type { Runtime } from "@logit/core";
 import { formatLogLine } from "../format/log-line.js";
 
 export interface TailOptions {
-  baseDir: string;
+  root: string;
   signal: AbortSignal;
   onLine: (line: string) => void;
   runtime?: Runtime;
@@ -39,19 +39,17 @@ function runtimeFromFilename(filename: string): string | null {
   return match ? match[1] : null;
 }
 
-export async function handleTail(options: TailOptions): Promise<void> {
-  const rawDir = path.join(options.baseDir, RAW_DIR);
-
+async function watchRawDir(
+  rawDir: string,
+  options: TailOptions,
+  fileOffsets: Map<string, number>,
+): Promise<FSWatcher> {
   try {
     await stat(rawDir);
   } catch {
-    // directory doesn't exist; create it so we can watch
     await mkdir(rawDir, { recursive: true });
   }
 
-  const fileOffsets = new Map<string, number>();
-
-  // Initialize offsets for existing files
   try {
     const files = await readdir(rawDir);
     for (const file of files) {
@@ -92,19 +90,31 @@ export async function handleTail(options: TailOptions): Promise<void> {
     }
   }
 
-  const watcher = watch(rawDir, async (eventType, filename) => {
+  return watch(rawDir, async (_eventType, filename) => {
     if (!filename || !filename.endsWith(".jsonl")) return;
     const filePath = path.join(rawDir, filename);
     await processFile(filePath);
   });
+}
+
+export async function handleTail(options: TailOptions): Promise<void> {
+  const dirs = await findDevlogsDirs(options.root);
+  const rawDirs = dirs.length > 0
+    ? dirs.map((d) => path.join(d, "raw"))
+    : [path.join(options.root, ".devlogs", "raw")]; // watch even if not yet created
+
+  const fileOffsets = new Map<string, number>();
+  const watchers: FSWatcher[] = [];
+
+  for (const rawDir of rawDirs) {
+    watchers.push(await watchRawDir(rawDir, options, fileOffsets));
+  }
 
   options.signal.addEventListener("abort", () => {
-    watcher.close();
+    for (const w of watchers) w.close();
   });
 
   return new Promise<void>((resolve) => {
-    options.signal.addEventListener("abort", () => {
-      resolve();
-    });
+    options.signal.addEventListener("abort", () => resolve());
   });
 }

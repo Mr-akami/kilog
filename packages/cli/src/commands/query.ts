@@ -5,17 +5,28 @@ import {
   queryLogs,
   aggregateLogs,
   resolveStackFrames,
+  catchUpFile,
+  discoverSources,
+  listRawFilesIn,
+  dbFilePathFromDevlogs,
 } from "@logit/core";
-import type { QueryFilter, Runtime, EventType, LogLevel, LogEvent } from "@logit/core";
+import type {
+  QueryFilter,
+  Runtime,
+  EventType,
+  LogLevel,
+  LogEvent,
+  AggregateRow,
+} from "@logit/core";
 import { formatLogLine } from "../format/log-line.js";
 import { formatTable } from "../format/table.js";
 
 export interface QueryOptions {
-  baseDir: string;
-  dbPath: string;
+  root: string;
   runtime?: Runtime;
   type?: EventType;
   level?: LogLevel;
+  project?: string;
   search?: string;
   from?: string;
   to?: string;
@@ -41,40 +52,72 @@ async function applySourcemapResolution(
   return resolved;
 }
 
-export async function handleQuery(options: QueryOptions): Promise<void> {
-  const { baseDir, dbPath, json, aggregate, ...rest } = options;
-  const cacheDir = path.join(baseDir, ".devlogs", "cache", "sourcemaps");
-
+function buildFilter(opts: QueryOptions): QueryFilter {
   const filter: QueryFilter = {};
-  if (rest.runtime) filter.runtime = rest.runtime;
-  if (rest.type) filter.type = rest.type;
-  if (rest.level) filter.level = rest.level;
-  if (rest.search) filter.search = rest.search;
-  if (rest.from) filter.from = rest.from;
-  if (rest.to) filter.to = rest.to;
-  if (rest.limit != null) filter.limit = rest.limit;
-  if (rest.offset != null) filter.offset = rest.offset;
+  if (opts.runtime) filter.runtime = opts.runtime;
+  if (opts.type) filter.type = opts.type;
+  if (opts.level) filter.level = opts.level;
+  if (opts.project) filter.project = opts.project;
+  if (opts.search) filter.search = opts.search;
+  if (opts.from) filter.from = opts.from;
+  if (opts.to) filter.to = opts.to;
+  return filter;
+}
 
-  const db = await openIndex(dbPath);
-  try {
-    if (aggregate) {
-      const rows = await aggregateLogs(db, filter);
-      process.stdout.write(formatTable(rows) + "\n");
-      return;
+export async function handleQuery(options: QueryOptions): Promise<void> {
+  const sources = await discoverSources([options.root]);
+  const filter = buildFilter(options);
+
+  if (options.aggregate) {
+    const merged: AggregateRow[] = [];
+    for (const src of sources) {
+      const dbPath = dbFilePathFromDevlogs(src.devlogsDir);
+      const db = await openIndex(dbPath);
+      try {
+        for (const raw of await listRawFilesIn(src.devlogsDir)) {
+          await catchUpFile(db, raw, src.project);
+        }
+        const rows = await aggregateLogs(db, filter);
+        merged.push(...rows);
+      } finally {
+        await closeIndex(db);
+      }
     }
+    process.stdout.write(formatTable(merged) + "\n");
+    return;
+  }
 
-    const rawEvents = await queryLogs(db, filter);
-    const events = await applySourcemapResolution(rawEvents, cacheDir);
-
-    if (json) {
-      process.stdout.write(JSON.stringify(events) + "\n");
-      return;
+  const perSource: LogEvent[] = [];
+  for (const src of sources) {
+    const dbPath = dbFilePathFromDevlogs(src.devlogsDir);
+    const cacheDir = path.join(src.devlogsDir, "cache", "sourcemaps");
+    const db = await openIndex(dbPath);
+    try {
+      for (const raw of await listRawFilesIn(src.devlogsDir)) {
+        await catchUpFile(db, raw, src.project);
+      }
+      const raw = await queryLogs(db, filter);
+      const resolved = await applySourcemapResolution(raw, cacheDir);
+      perSource.push(...resolved);
+    } finally {
+      await closeIndex(db);
     }
+  }
 
-    for (const event of events) {
-      process.stdout.write(formatLogLine(event) + "\n");
-    }
-  } finally {
-    await closeIndex(db);
+  perSource.sort((a, b) => (a.timestamp < b.timestamp ? -1 : a.timestamp > b.timestamp ? 1 : 0));
+
+  const sliced = (() => {
+    const start = options.offset ?? 0;
+    const end = options.limit != null ? start + options.limit : undefined;
+    return perSource.slice(start, end);
+  })();
+
+  if (options.json) {
+    process.stdout.write(JSON.stringify(sliced) + "\n");
+    return;
+  }
+
+  for (const event of sliced) {
+    process.stdout.write(formatLogLine(event) + "\n");
   }
 }

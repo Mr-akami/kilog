@@ -1,21 +1,20 @@
 import { stat } from "node:fs/promises";
 import path from "node:path";
 import {
-  DEVLOGS_DIR,
-  listRawFiles,
+  discoverSources,
+  listRawFilesIn,
   readLogFile,
   openIndex,
   closeIndex,
   queryLogs,
+  dbFilePathFromDevlogs,
 } from "@logit/core";
 
 export interface DoctorOptions {
-  baseDir: string;
-  dbPath: string;
+  root: string;
 }
 
-async function countRawEvents(baseDir: string): Promise<number> {
-  const files = await listRawFiles(baseDir);
+async function countEventsIn(files: string[]): Promise<number> {
   let count = 0;
   for (const file of files) {
     for await (const _ of readLogFile(file)) {
@@ -41,40 +40,32 @@ async function countIndexedEvents(dbPath: string): Promise<number> {
 }
 
 export async function handleDoctor(options: DoctorOptions): Promise<void> {
-  const devlogsPath = path.join(options.baseDir, DEVLOGS_DIR);
+  const sources = await discoverSources([options.root]);
 
-  let devlogsExists = false;
-  try {
-    await stat(devlogsPath);
-    devlogsExists = true;
-  } catch {
-    // does not exist
-  }
-
-  if (!devlogsExists) {
-    process.stdout.write(".devlogs directory: missing\n");
+  if (sources.length === 0) {
+    process.stdout.write(`.devlogs directories: none found under ${options.root}\n`);
     process.stdout.write("Run your app with logit to create .devlogs\n");
     return;
   }
 
-  process.stdout.write(".devlogs directory: found\n");
+  process.stdout.write(`.devlogs directories: ${sources.length} found\n`);
 
-  const rawCount = await countRawEvents(options.baseDir);
-  const indexedCount = await countIndexedEvents(options.dbPath);
+  for (const src of sources) {
+    const display = path.relative(options.root, src.devlogsDir) || src.devlogsDir;
+    process.stdout.write(`\n  [${src.project}] ${display}\n`);
+    const rawFiles = await listRawFilesIn(src.devlogsDir);
+    const rawCount = await countEventsIn(rawFiles);
+    const dbPath = dbFilePathFromDevlogs(src.devlogsDir);
+    const indexedCount = await countIndexedEvents(dbPath);
 
-  if (indexedCount === -1) {
-    process.stdout.write(`Raw events: ${rawCount}\n`);
-    process.stdout.write("Index: not found\n");
-    process.stdout.write("Run `logit reindex` to build the index\n");
-    return;
-  }
-
-  process.stdout.write(`Raw events: ${rawCount}\n`);
-  process.stdout.write(`Indexed events: ${indexedCount}\n`);
-
-  if (rawCount !== indexedCount) {
-    process.stdout.write(
-      `Mismatch: raw=${rawCount}, indexed=${indexedCount}. Run \`logit reindex\` to fix\n`,
-    );
+    if (indexedCount === -1) {
+      process.stdout.write(`    raw=${rawCount}, index=missing (run \`logit reindex\`)\n`);
+    } else {
+      process.stdout.write(`    raw=${rawCount}, indexed=${indexedCount}`);
+      if (rawCount !== indexedCount) {
+        process.stdout.write("  [mismatch — run `logit reindex`]");
+      }
+      process.stdout.write("\n");
+    }
   }
 }

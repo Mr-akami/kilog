@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import path from "node:path";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { handleTail } from "./commands/tail.js";
@@ -7,14 +8,19 @@ import { handleReindex } from "./commands/reindex.js";
 import { handlePrune } from "./commands/prune.js";
 import { handleDoctor } from "./commands/doctor.js";
 import { handleUi } from "./commands/ui.js";
-import { dbFilePath } from "@logit/core";
 import type { Runtime, EventType, LogLevel } from "@logit/core";
 
-const DEFAULT_BASE_DIR = process.cwd();
-const DEFAULT_DB_PATH = dbFilePath(DEFAULT_BASE_DIR);
+function resolveRoot(argvRoot: string | undefined): string {
+  return path.resolve(argvRoot ?? process.cwd());
+}
 
 yargs(hideBin(process.argv))
   .scriptName("logit")
+  .option("root", {
+    type: "string",
+    describe:
+      "Scan scope for .devlogs/ discovery (default: cwd). Each .devlogs/ keeps its own independent index.",
+  })
   .command(
     "tail",
     "Stream new log entries in real-time",
@@ -27,7 +33,7 @@ yargs(hideBin(process.argv))
       const ac = new AbortController();
       process.on("SIGINT", () => ac.abort());
       await handleTail({
-        baseDir: DEFAULT_BASE_DIR,
+        root: resolveRoot(argv.root),
         signal: ac.signal,
         onLine: (line) => process.stdout.write(line + "\n"),
         runtime: argv.runtime as Runtime | undefined,
@@ -42,6 +48,7 @@ yargs(hideBin(process.argv))
         .option("runtime", { type: "string", describe: "Filter by runtime" })
         .option("type", { type: "string", describe: "Filter by event type" })
         .option("level", { type: "string", describe: "Filter by log level" })
+        .option("project", { type: "string", describe: "Filter by project label" })
         .option("search", { type: "string", describe: "Full-text search" })
         .option("from", { type: "string", describe: "Start date (ISO)" })
         .option("to", { type: "string", describe: "End date (ISO)" })
@@ -50,15 +57,15 @@ yargs(hideBin(process.argv))
         .option("json", { type: "boolean", describe: "Output as JSON" })
         .option("aggregate", {
           type: "boolean",
-          describe: "Aggregate mode",
+          describe: "Aggregate mode (counts per project)",
         }),
     async (argv) => {
       await handleQuery({
-        baseDir: DEFAULT_BASE_DIR,
-        dbPath: DEFAULT_DB_PATH,
+        root: resolveRoot(argv.root),
         runtime: argv.runtime as Runtime | undefined,
         type: argv.type as EventType | undefined,
         level: argv.level as LogLevel | undefined,
+        project: argv.project,
         search: argv.search,
         from: argv.from,
         to: argv.to,
@@ -71,13 +78,10 @@ yargs(hideBin(process.argv))
   )
   .command(
     "reindex",
-    "Rebuild the DuckDB index from raw JSONL files",
+    "Rebuild the DuckDB index for every discovered .devlogs/",
     () => {},
-    async () => {
-      await handleReindex({
-        baseDir: DEFAULT_BASE_DIR,
-        dbPath: DEFAULT_DB_PATH,
-      });
+    async (argv) => {
+      await handleReindex({ root: resolveRoot(argv.root) });
     },
   )
   .command(
@@ -90,21 +94,15 @@ yargs(hideBin(process.argv))
         describe: "Delete logs before this date (YYYY-MM-DD)",
       }),
     async (argv) => {
-      await handlePrune({
-        baseDir: DEFAULT_BASE_DIR,
-        before: argv.before,
-      });
+      await handlePrune({ root: resolveRoot(argv.root), before: argv.before });
     },
   )
   .command(
     "doctor",
-    "Check .devlogs health and index consistency",
+    "Check .devlogs health and per-project index consistency",
     () => {},
-    async () => {
-      await handleDoctor({
-        baseDir: DEFAULT_BASE_DIR,
-        dbPath: DEFAULT_DB_PATH,
-      });
+    async (argv) => {
+      await handleDoctor({ root: resolveRoot(argv.root) });
     },
   )
   .command(
@@ -117,10 +115,7 @@ yargs(hideBin(process.argv))
         describe: "Server port",
       }),
     async (argv) => {
-      await handleUi({
-        baseDir: DEFAULT_BASE_DIR,
-        port: argv.port,
-      });
+      await handleUi({ root: resolveRoot(argv.root), port: argv.port });
     },
   )
   .demandCommand(1, "Please specify a command")

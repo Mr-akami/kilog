@@ -1,11 +1,19 @@
-import { reindex } from "@logit/core";
+import path from "node:path";
+import { reindex, discoverSources, dbFilePathFromDevlogs } from "@logit/core";
 
 export interface ReindexHandlerOptions {
-  baseDir: string;
-  dbPath: string;
+  root: string;
 }
 
 export async function handleReindex(options: ReindexHandlerOptions): Promise<void> {
-  const result = await reindex(options);
-  process.stdout.write(`Reindexed ${result.count} events\n`);
+  const sources = await discoverSources([options.root]);
+  let total = 0;
+  for (const src of sources) {
+    const result = await reindex({
+      baseDir: path.dirname(src.devlogsDir),
+      dbPath: dbFilePathFromDevlogs(src.devlogsDir),
+    });
+    total += result.count;
+  }
+  process.stdout.write(`Reindexed ${total} events across ${sources.length} project(s)\n`);
 }

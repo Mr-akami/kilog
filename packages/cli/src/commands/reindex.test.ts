@@ -58,7 +58,7 @@ describe("handleReindex", () => {
     );
 
     const output = await captureStdout(() =>
-      handleReindex({ baseDir, dbPath }),
+      handleReindex({ root: baseDir }),
     );
 
     expect(output).toContain("3");
@@ -66,7 +66,7 @@ describe("handleReindex", () => {
 
   it("should display 0 when no jsonl files exist", async () => {
     const output = await captureStdout(() =>
-      handleReindex({ baseDir, dbPath }),
+      handleReindex({ root: baseDir }),
     );
 
     expect(output).toContain("0");
@@ -84,7 +84,7 @@ describe("handleReindex", () => {
     );
 
     const output = await captureStdout(() =>
-      handleReindex({ baseDir, dbPath }),
+      handleReindex({ root: baseDir }),
     );
 
     expect(output).toContain("3");
