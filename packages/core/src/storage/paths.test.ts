@@ -3,8 +3,10 @@ import {
   DEVLOGS_DIR,
   RAW_DIR,
   INDEX_DIR,
+  DB_FILE,
   rawFileName,
   rawFilePath,
+  dbFilePath,
 } from "./paths.js";
 
 describe("constants", () => {
@@ -18,6 +20,17 @@ describe("constants", () => {
 
   it("INDEX_DIR should be .devlogs/index", () => {
     expect(INDEX_DIR).toBe(".devlogs/index");
+  });
+
+  it("DB_FILE should be logs.duckdb", () => {
+    expect(DB_FILE).toBe("logs.duckdb");
+  });
+});
+
+describe("dbFilePath", () => {
+  it("should compose INDEX_DIR and DB_FILE", () => {
+    const result = dbFilePath("/project");
+    expect(result).toBe("/project/.devlogs/index/logs.duckdb");
   });
 });
 

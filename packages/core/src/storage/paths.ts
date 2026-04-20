@@ -4,6 +4,11 @@ import type { Runtime } from "../schema/types.js";
 export const DEVLOGS_DIR = ".devlogs";
 export const RAW_DIR = ".devlogs/raw";
 export const INDEX_DIR = ".devlogs/index";
+export const DB_FILE = "logs.duckdb";
+
+export function dbFilePath(baseDir: string): string {
+  return path.join(baseDir, INDEX_DIR, DB_FILE);
+}
 
 export function rawFileName(date: string, runtime: Runtime): string {
   return `${date}.${runtime}.jsonl`;
