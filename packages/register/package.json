@@ -1,0 +1,19 @@
+{
+  "name": "@logit/register",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./register": "./dist/register.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@logit/core": "workspace:*",
+    "@logit/runtime-node": "workspace:*"
+  }
+}
