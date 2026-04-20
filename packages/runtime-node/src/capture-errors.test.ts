@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vite-plus/test";
 import type { ErrorEvent, LogEvent, UnhandledRejectionEvent } from "@logit/core";
 import { captureErrors } from "./capture-errors.js";
 import { createMockContext } from "./testing.js";
@@ -9,10 +9,7 @@ describe("captureErrors", () => {
 
   afterEach(() => {
     if (errorHandler) {
-      process.removeListener(
-        "uncaughtException",
-        errorHandler as NodeJS.UncaughtExceptionListener,
-      );
+      process.removeListener("uncaughtException", errorHandler as NodeJS.UncaughtExceptionListener);
       errorHandler = undefined;
     }
     if (rejectionHandler) {
@@ -32,14 +29,10 @@ describe("captureErrors", () => {
     captureErrors(ctx);
 
     const errorListeners = process.rawListeners("uncaughtException");
-    errorHandler = errorListeners[errorCountBefore] as (
-      ...args: unknown[]
-    ) => void;
+    errorHandler = errorListeners[errorCountBefore] as (...args: unknown[]) => void;
 
     const rejectionListeners = process.rawListeners("unhandledRejection");
-    rejectionHandler = rejectionListeners[rejectionCountBefore] as (
-      ...args: unknown[]
-    ) => void;
+    rejectionHandler = rejectionListeners[rejectionCountBefore] as (...args: unknown[]) => void;
 
     return { events };
   }

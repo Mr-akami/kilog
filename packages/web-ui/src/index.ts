@@ -40,9 +40,7 @@ async function findFreePort(preferred: number, maxAttempts: number): Promise<num
     });
     if (available) return candidate;
   }
-  throw new Error(
-    `no free port in range ${preferred}-${preferred + maxAttempts - 1}`,
-  );
+  throw new Error(`no free port in range ${preferred}-${preferred + maxAttempts - 1}`);
 }
 
 export async function startServer(options: ServerOptions): Promise<void> {
@@ -56,17 +54,7 @@ export async function startServer(options: ServerOptions): Promise<void> {
   }
 
   let lastActivity = Date.now();
-  let server: ReturnType<typeof serve> | undefined;
-  let watchdog: ReturnType<typeof setInterval> | undefined;
   let shuttingDown = false;
-
-  const shutdown = () => {
-    if (shuttingDown) return;
-    shuttingDown = true;
-    if (watchdog) clearInterval(watchdog);
-    server?.close(() => process.exit(0));
-    setTimeout(() => process.exit(0), 1000).unref();
-  };
 
   const app = createApp({
     root: options.root,
@@ -75,12 +63,20 @@ export async function startServer(options: ServerOptions): Promise<void> {
     },
   });
 
-  server = serve({ fetch: app.fetch, port }, (info) => {
+  const server = serve({ fetch: app.fetch, port }, (info) => {
     console.log(`logit UI running on http://localhost:${info.port}`);
     console.log(`(auto-shutdown after ${idleTimeoutMs / 1000}s with no browser heartbeat)`);
   });
 
-  watchdog = setInterval(() => {
+  const shutdown = () => {
+    if (shuttingDown) return;
+    shuttingDown = true;
+    clearInterval(watchdog);
+    server.close(() => process.exit(0));
+    setTimeout(() => process.exit(0), 1000).unref();
+  };
+
+  const watchdog = setInterval(() => {
     if (Date.now() - lastActivity >= idleTimeoutMs) {
       console.log("logit UI: idle timeout reached, shutting down");
       shutdown();

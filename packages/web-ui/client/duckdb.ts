@@ -130,7 +130,9 @@ export async function runQuery(
   const conn = await db.connect();
   try {
     const result = await conn.query(sql);
-    return result.toArray().map((row) => (row as unknown as { toJSON: () => Record<string, unknown> }).toJSON());
+    return result
+      .toArray()
+      .map((row) => (row as unknown as { toJSON: () => Record<string, unknown> }).toJSON());
   } finally {
     await conn.close();
   }

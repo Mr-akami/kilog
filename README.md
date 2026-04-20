@@ -60,13 +60,13 @@ The CLI and UI walk down from the **invocation directory** (or `--root <path>`) 
 
 ## Packages
 
-| Package | Role |
-|---|---|
-| [`@logit/runtime-node`](./packages/runtime-node/README.md) | Node runtime instrumentation |
-| [`@logit/vite-plugin`](./packages/vite-plugin/README.md) | Vite plugin (browser instrumentation + dev-server receiver) |
-| [`@logit/cli`](./packages/cli/README.md) | `logit` CLI |
-| [`@logit/web-ui`](./packages/web-ui/README.md) | Hono server + DuckDB-wasm browser UI |
-| [`@logit/core`](./packages/core/README.md) | Internal: storage / discovery / index / query |
+| Package                                                    | Role                                                        |
+| ---------------------------------------------------------- | ----------------------------------------------------------- |
+| [`@logit/runtime-node`](./packages/runtime-node/README.md) | Node runtime instrumentation                                |
+| [`@logit/vite-plugin`](./packages/vite-plugin/README.md)   | Vite plugin (browser instrumentation + dev-server receiver) |
+| [`@logit/cli`](./packages/cli/README.md)                   | `logit` CLI                                                 |
+| [`@logit/web-ui`](./packages/web-ui/README.md)             | Hono server + DuckDB-wasm browser UI                        |
+| [`@logit/core`](./packages/core/README.md)                 | Internal: storage / discovery / index / query               |
 
 ## Examples
 

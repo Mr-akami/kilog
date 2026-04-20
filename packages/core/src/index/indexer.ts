@@ -1,6 +1,11 @@
 import type { DuckDBInstance } from "@duckdb/node-api";
 import { openIndex, closeIndex } from "./connection.js";
-import { CREATE_LOGS_TABLE, DROP_LOGS_TABLE, DROP_SOURCES_TABLE, CREATE_SOURCES_TABLE } from "./schema.sql.js";
+import {
+  CREATE_LOGS_TABLE,
+  DROP_LOGS_TABLE,
+  DROP_SOURCES_TABLE,
+  CREATE_SOURCES_TABLE,
+} from "./schema.sql.js";
 import { readLogFile, listRawFiles } from "../storage/reader.js";
 import { insertEvents } from "./insert.js";
 import type { LogEvent } from "../schema/types.js";
@@ -62,4 +67,3 @@ export async function reindex(options: ReindexOptions): Promise<ReindexResult> {
     await closeIndex(db);
   }
 }
-

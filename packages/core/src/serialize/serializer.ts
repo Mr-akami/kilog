@@ -1,11 +1,6 @@
 import type { LogEvent, EventType } from "../schema/types.js";
 
-const VALID_TYPES: Set<EventType> = new Set([
-  "console",
-  "error",
-  "network",
-  "unhandled-rejection",
-]);
+const VALID_TYPES: Set<EventType> = new Set(["console", "error", "network", "unhandled-rejection"]);
 
 export function serialize(event: LogEvent): string {
   return JSON.stringify(event);

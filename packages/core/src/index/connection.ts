@@ -20,7 +20,8 @@ export async function openIndex(dbPath: string): Promise<DuckDBInstance> {
 }
 
 export async function closeIndex(instance: DuckDBInstance): Promise<void> {
-  if (typeof (instance as any).close === "function") {
-    await (instance as any).close();
+  const maybeCloseable = instance as { close?: () => Promise<void> };
+  if (typeof maybeCloseable.close === "function") {
+    await maybeCloseable.close();
   }
 }

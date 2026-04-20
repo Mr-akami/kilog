@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vite-plus/test";
 import { formatArg, formatArgs } from "./format-args.js";
 
 describe("formatArg", () => {
@@ -37,8 +37,6 @@ describe("formatArg", () => {
 
 describe("formatArgs", () => {
   it("joins with spaces", () => {
-    expect(formatArgs(["fetched:", { origin: "1.2.3.4" }])).toBe(
-      'fetched: {"origin":"1.2.3.4"}',
-    );
+    expect(formatArgs(["fetched:", { origin: "1.2.3.4" }])).toBe('fetched: {"origin":"1.2.3.4"}');
   });
 });

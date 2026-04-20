@@ -71,22 +71,23 @@ export async function queryLogs(db: DuckDBInstance, filter: QueryFilter): Promis
     sql += ` OFFSET ${Number(filter.offset)}`;
   }
 
-  const result = params.length > 0
-    ? await conn.runAndReadAll(sql, params)
-    : await conn.runAndReadAll(sql);
+  const result =
+    params.length > 0 ? await conn.runAndReadAll(sql, params) : await conn.runAndReadAll(sql);
   const rows = result.getRows();
   return rows.map((row: unknown[]) => JSON.parse(row[0] as string) as LogEvent);
 }
 
-export async function aggregateLogs(db: DuckDBInstance, filter: QueryFilter): Promise<AggregateRow[]> {
+export async function aggregateLogs(
+  db: DuckDBInstance,
+  filter: QueryFilter,
+): Promise<AggregateRow[]> {
   const conn = await db.connect();
   const { clause, params } = buildWhere(filter);
 
   const sql = `SELECT runtime, type, level, project, COUNT(*)::INTEGER as count FROM logs${clause} GROUP BY runtime, type, level, project ORDER BY project NULLS FIRST, runtime, type, level`;
 
-  const result = params.length > 0
-    ? await conn.runAndReadAll(sql, params)
-    : await conn.runAndReadAll(sql);
+  const result =
+    params.length > 0 ? await conn.runAndReadAll(sql, params) : await conn.runAndReadAll(sql);
   const rows = result.getRows();
   return rows.map((row: unknown[]) => ({
     runtime: row[0] as string,

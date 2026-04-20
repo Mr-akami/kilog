@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
 import { mkdtemp, rm, writeFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -25,7 +25,8 @@ describe("resolveStackFrames", () => {
   // ── no source map available ──
 
   it("should return original stack when no .map files exist", async () => {
-    const stack = "Error: boom\n  at foo (/app/dist/index.js:10:5)\n  at bar (/app/dist/util.js:20:3)";
+    const stack =
+      "Error: boom\n  at foo (/app/dist/index.js:10:5)\n  at bar (/app/dist/util.js:20:3)";
 
     const resolved = await resolveStackFrames(stack, cacheDir);
 
@@ -107,10 +108,7 @@ describe("resolveStackFrames", () => {
     };
     const jsPath = path.join(sourceDir, "found.js");
     await writeFile(jsPath, "// code\n");
-    await writeFile(
-      path.join(sourceDir, "found.js.map"),
-      JSON.stringify(sourceMap),
-    );
+    await writeFile(path.join(sourceDir, "found.js.map"), JSON.stringify(sourceMap));
 
     const stack = [
       "Error: mixed",
@@ -138,10 +136,7 @@ describe("resolveStackFrames", () => {
     };
     const jsPath = path.join(sourceDir, "multi.js");
     await writeFile(jsPath, "line1;\nline2;\n");
-    await writeFile(
-      path.join(sourceDir, "multi.js.map"),
-      JSON.stringify(sourceMap),
-    );
+    await writeFile(path.join(sourceDir, "multi.js.map"), JSON.stringify(sourceMap));
 
     const stack = `Error: multi\n  at fn (${jsPath}:2:1)`;
     const resolved = await resolveStackFrames(stack, cacheDir);
@@ -160,10 +155,7 @@ describe("resolveStackFrames", () => {
     };
     const jsPath = path.join(sourceDir, "segments.js");
     await writeFile(jsPath, "var a = b;\n");
-    await writeFile(
-      path.join(sourceDir, "segments.js.map"),
-      JSON.stringify(sourceMap),
-    );
+    await writeFile(path.join(sourceDir, "segments.js.map"), JSON.stringify(sourceMap));
 
     const stack = `Error: seg\n  at fn (${jsPath}:1:4)`;
     const resolved = await resolveStackFrames(stack, cacheDir);
@@ -177,10 +169,7 @@ describe("resolveStackFrames", () => {
   it("should handle corrupted source map file gracefully", async () => {
     const jsPath = path.join(sourceDir, "bad.js");
     await writeFile(jsPath, "// code\n");
-    await writeFile(
-      path.join(sourceDir, "bad.js.map"),
-      "not valid json {{{",
-    );
+    await writeFile(path.join(sourceDir, "bad.js.map"), "not valid json {{{");
 
     const stack = `Error: bad\n  at fn (${jsPath}:1:1)`;
     const resolved = await resolveStackFrames(stack, cacheDir);

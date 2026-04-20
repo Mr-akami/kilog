@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "vitest run"
+    "test": "vp test run"
   },
   "dependencies": {
     "@logit/core": "workspace:*"

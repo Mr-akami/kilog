@@ -40,13 +40,13 @@ The spec is generated from the route definitions via [`hono-openapi`](https://gi
 
 The browser UI depends on these routes:
 
-| Route | Purpose |
-|---|---|
-| `GET /` | SSR HTML with initial state embedded as `window.__LOGIT_SSR__` |
-| `GET /api/sources?root=<path>` | Discovered JSONL files |
-| `GET /api/read?path=<abs>&offset=<n>` | Byte-range streaming; `X-File-Size` header |
-| `GET /api/heartbeat` | Resets the idle-shutdown timer |
-| `POST /api/clear` | Destructive: removes raw JSONL + per-project index dirs |
+| Route                                 | Purpose                                                        |
+| ------------------------------------- | -------------------------------------------------------------- |
+| `GET /`                               | SSR HTML with initial state embedded as `window.__LOGIT_SSR__` |
+| `GET /api/sources?root=<path>`        | Discovered JSONL files                                         |
+| `GET /api/read?path=<abs>&offset=<n>` | Byte-range streaming; `X-File-Size` header                     |
+| `GET /api/heartbeat`                  | Resets the idle-shutdown timer                                 |
+| `POST /api/clear`                     | Destructive: removes raw JSONL + per-project index dirs        |
 
 Example:
 
@@ -61,7 +61,7 @@ open http://localhost:3000/docs      # interactive reference
 import { startServer } from "@logit/web-ui";
 
 await startServer({
-  port: 3000,            // auto-incremented if busy
+  port: 3000, // auto-incremented if busy
   root: process.cwd(),
   idleTimeoutMs: 15_000, // default
   watchdogIntervalMs: 5_000,

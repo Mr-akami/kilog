@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { mkdtemp, rm, readdir, readFile, mkdir } from "node:fs/promises";
+import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
+import { mkdtemp, rm, readdir, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { getCachedResolution, setCachedResolution } from "./cache.js";
@@ -94,7 +94,8 @@ describe("sourcemap cache", () => {
   // ── special characters in resolved content ──
 
   it("should handle multi-line stack traces with special chars", async () => {
-    const stack = 'Error: "quotes" & <tags>\n  at foo (file:///path/to/file.ts:10:5)\n  at bar (C:\\Users\\test\\app.js:20:3)';
+    const stack =
+      'Error: "quotes" & <tags>\n  at foo (file:///path/to/file.ts:10:5)\n  at bar (C:\\Users\\test\\app.js:20:3)';
 
     await setCachedResolution(cacheDir, "special", stack);
     const result = await getCachedResolution(cacheDir, "special");

@@ -49,7 +49,10 @@ function parseMappings(mappings: string): number[][][] {
   const lines = mappings.split(";");
   return lines.map((line) => {
     if (!line) return [];
-    return line.split(",").map(decodeVlqSegment).filter((s) => s.length > 0);
+    return line
+      .split(",")
+      .map(decodeVlqSegment)
+      .filter((s) => s.length > 0);
   });
 }
 
@@ -137,10 +140,7 @@ async function loadSourceMap(mapPath: string): Promise<SourceMap | null> {
   }
 }
 
-export async function resolveStackFrames(
-  stack: string,
-  cacheDir: string,
-): Promise<string> {
+export async function resolveStackFrames(stack: string, cacheDir: string): Promise<string> {
   if (stack === "") return "";
 
   const cached = await getCachedResolution(cacheDir, stack);

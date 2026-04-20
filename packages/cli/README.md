@@ -57,18 +57,18 @@ pnpm logit query --aggregate              # per-project counts
 
 Filters:
 
-| Option | Value | Description |
-|---|---|---|
-| `--runtime` | `node` / `browser` / `bun` / `deno` | Runtime |
-| `--type` | `console` / `error` / `network` / `unhandled-rejection` | Event type |
-| `--level` | `debug` / `info` / `warn` / `error` | Log level |
-| `--project` | string | Project label (see the `doctor` output) |
-| `--search` | string | Full-text search over messages |
-| `--from` / `--to` | ISO datetime | Date range |
-| `--limit` / `--offset` | number | Paging (applied after merge) |
-| `--json` | flag | JSON output |
-| `--aggregate` | flag | Per-project count aggregation |
-| `--root` | path | Override the discovery root (default: cwd) |
+| Option                 | Value                                                   | Description                                |
+| ---------------------- | ------------------------------------------------------- | ------------------------------------------ |
+| `--runtime`            | `node` / `browser` / `bun` / `deno`                     | Runtime                                    |
+| `--type`               | `console` / `error` / `network` / `unhandled-rejection` | Event type                                 |
+| `--level`              | `debug` / `info` / `warn` / `error`                     | Log level                                  |
+| `--project`            | string                                                  | Project label (see the `doctor` output)    |
+| `--search`             | string                                                  | Full-text search over messages             |
+| `--from` / `--to`      | ISO datetime                                            | Date range                                 |
+| `--limit` / `--offset` | number                                                  | Paging (applied after merge)               |
+| `--json`               | flag                                                    | JSON output                                |
+| `--aggregate`          | flag                                                    | Per-project count aggregation              |
+| `--root`               | path                                                    | Override the discovery root (default: cwd) |
 
 Under the hood, `query` opens each project's DuckDB, does a differential catch-up from the raw JSONL (only new bytes since last run), runs the filter, and merges results sorted by timestamp.
 

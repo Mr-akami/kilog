@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vite-plus/test";
 import logitPlugin from "./index.js";
 
 describe("logitPlugin", () => {
@@ -23,14 +23,12 @@ describe("logitPlugin", () => {
     const hook = plugin.transformIndexHtml;
 
     if (typeof hook === "function") {
-      const result = hook("<html></html>", {} as never);
+      const result = (hook as (html: string, ctx: never) => unknown)("<html></html>", {} as never);
       expect(result).toBeDefined();
 
       if (Array.isArray(result)) {
         expect(result).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({ tag: "script" }),
-          ]),
+          expect.arrayContaining([expect.objectContaining({ tag: "script" })]),
         );
       }
     }

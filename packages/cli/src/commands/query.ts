@@ -36,10 +36,7 @@ export interface QueryOptions {
   aggregate?: boolean;
 }
 
-async function applySourcemapResolution(
-  events: LogEvent[],
-  cacheDir: string,
-): Promise<LogEvent[]> {
+async function applySourcemapResolution(events: LogEvent[], cacheDir: string): Promise<LogEvent[]> {
   const resolved: LogEvent[] = [];
   for (const event of events) {
     if ("stack" in event && event.stack) {

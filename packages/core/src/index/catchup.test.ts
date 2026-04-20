@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { mkdtemp, rm, writeFile, appendFile, mkdir, truncate } from "node:fs/promises";
+import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
+import { mkdtemp, rm, writeFile, appendFile, truncate } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { openIndex, closeIndex } from "./connection.js";

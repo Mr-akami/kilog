@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi } from "vite-plus/test";
 import { handleUi } from "./ui.js";
 
 vi.mock("@logit/web-ui", () => ({

@@ -8,21 +8,22 @@
     ".": "./dist/index.js"
   },
   "scripts": {
-    "build": "vite build && tsc",
-    "build:client": "vite build",
+    "build": "vp build && tsc",
+    "build:client": "vp build",
     "build:server": "tsc",
-    "dev:client": "vite"
+    "dev:client": "vp dev"
   },
   "dependencies": {
-    "@logit/core": "workspace:*",
-    "hono": "*",
     "@hono/node-server": "*",
-    "hono-openapi": "*",
     "@hono/standard-validator": "*",
-    "@scalar/hono-api-reference": "*"
+    "@logit/core": "workspace:*",
+    "@scalar/hono-api-reference": "*",
+    "hono": "*",
+    "hono-openapi": "*"
   },
   "devDependencies": {
     "@duckdb/duckdb-wasm": "*",
-    "vite": "*"
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
   }
 }

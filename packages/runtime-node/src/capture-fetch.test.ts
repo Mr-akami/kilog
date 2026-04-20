@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vite-plus/test";
 import type { NetworkEvent } from "@logit/core";
 import { captureFetch } from "./capture-fetch.js";
 import { createMockContext } from "./testing.js";
@@ -9,7 +9,7 @@ describe("captureFetch", () => {
 
   beforeEach(() => {
     mockFetch = vi.fn();
-    globalThis.fetch = mockFetch;
+    globalThis.fetch = mockFetch as unknown as typeof globalThis.fetch;
   });
 
   afterEach(() => {
@@ -82,9 +82,7 @@ describe("captureFetch", () => {
     const { ctx, events } = createMockContext();
     captureFetch(ctx);
 
-    await expect(
-      globalThis.fetch("https://example.com/api"),
-    ).rejects.toThrow("connection refused");
+    await expect(globalThis.fetch("https://example.com/api")).rejects.toThrow("connection refused");
     await vi.waitFor(() => expect(events).toHaveLength(1));
 
     const event = events[0] as NetworkEvent;

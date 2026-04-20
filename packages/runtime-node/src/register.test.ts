@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, beforeAll, afterAll } from "vite-plus/test";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -54,15 +54,11 @@ describe("register", () => {
   });
 
   it("should register uncaughtException listener", () => {
-    expect(process.listenerCount("uncaughtException")).toBeGreaterThan(
-      errorCountBefore,
-    );
+    expect(process.listenerCount("uncaughtException")).toBeGreaterThan(errorCountBefore);
   });
 
   it("should register unhandledRejection listener", () => {
-    expect(process.listenerCount("unhandledRejection")).toBeGreaterThan(
-      rejectionCountBefore,
-    );
+    expect(process.listenerCount("unhandledRejection")).toBeGreaterThan(rejectionCountBefore);
   });
 
   it("should register exit listener for graceful shutdown", () => {

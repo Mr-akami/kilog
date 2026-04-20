@@ -31,7 +31,12 @@ Written to `.devlogs/raw/{date}.node.jsonl` under the cwd. Override with the `LO
 Use `/register` in most cases; for manual setup:
 
 ```ts
-import { createRuntimeContext, captureConsole, captureFetch, captureErrors } from "@logit/runtime-node";
+import {
+  createRuntimeContext,
+  captureConsole,
+  captureFetch,
+  captureErrors,
+} from "@logit/runtime-node";
 
 const ctx = createRuntimeContext();
 captureConsole(ctx);

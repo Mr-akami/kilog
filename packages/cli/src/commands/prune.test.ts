@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
 import { mkdtemp, rm, writeFile, mkdir, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -26,9 +26,11 @@ function captureStdout(fn: () => Promise<void>): Promise<string> {
     chunks.push(typeof chunk === "string" ? chunk : new TextDecoder().decode(chunk));
     return true;
   };
-  return fn().finally(() => {
-    process.stdout.write = originalWrite;
-  }).then(() => chunks.join(""));
+  return fn()
+    .finally(() => {
+      process.stdout.write = originalWrite;
+    })
+    .then(() => chunks.join(""));
 }
 
 describe("handlePrune", () => {
@@ -51,14 +53,8 @@ describe("handlePrune", () => {
     const oldEvent = makeConsoleEvent({ timestamp: "2026-04-10T10:00:00.000Z" });
     const newEvent = makeConsoleEvent({ timestamp: "2026-04-18T10:00:00.000Z" });
 
-    await writeFile(
-      path.join(rawDir, "2026-04-10.node.jsonl"),
-      serialize(oldEvent) + "\n",
-    );
-    await writeFile(
-      path.join(rawDir, "2026-04-18.node.jsonl"),
-      serialize(newEvent) + "\n",
-    );
+    await writeFile(path.join(rawDir, "2026-04-10.node.jsonl"), serialize(oldEvent) + "\n");
+    await writeFile(path.join(rawDir, "2026-04-18.node.jsonl"), serialize(newEvent) + "\n");
 
     await handlePrune({ root: baseDir, before: "2026-04-15" });
 
@@ -94,9 +90,7 @@ describe("handlePrune", () => {
       serialize(makeConsoleEvent({ runtime: "browser" })) + "\n",
     );
 
-    const output = await captureStdout(() =>
-      handlePrune({ root: baseDir, before: "2026-04-10" }),
-    );
+    const output = await captureStdout(() => handlePrune({ root: baseDir, before: "2026-04-10" }));
 
     expect(output).toContain("2");
   });
@@ -107,9 +101,7 @@ describe("handlePrune", () => {
       serialize(makeConsoleEvent()) + "\n",
     );
 
-    const output = await captureStdout(() =>
-      handlePrune({ root: baseDir, before: "2026-04-10" }),
-    );
+    const output = await captureStdout(() => handlePrune({ root: baseDir, before: "2026-04-10" }));
 
     expect(output).toContain("reindex");
   });
@@ -122,9 +114,7 @@ describe("handlePrune", () => {
       serialize(makeConsoleEvent()) + "\n",
     );
 
-    const output = await captureStdout(() =>
-      handlePrune({ root: baseDir, before: "2026-04-01" }),
-    );
+    const output = await captureStdout(() => handlePrune({ root: baseDir, before: "2026-04-01" }));
 
     const remaining = await readdir(rawDir);
     expect(remaining).toHaveLength(1);
@@ -134,9 +124,7 @@ describe("handlePrune", () => {
   // ── empty directory ──
 
   it("should handle empty raw directory", async () => {
-    const output = await captureStdout(() =>
-      handlePrune({ root: baseDir, before: "2026-04-18" }),
-    );
+    const output = await captureStdout(() => handlePrune({ root: baseDir, before: "2026-04-18" }));
 
     expect(output).toContain("0");
   });
@@ -146,9 +134,7 @@ describe("handlePrune", () => {
   it("should handle missing .devlogs/raw directory", async () => {
     const emptyBase = await mkdtemp(path.join(tmpdir(), "logit-cli-prune-empty-"));
 
-    await expect(
-      handlePrune({ root: emptyBase, before: "2026-04-18" }),
-    ).resolves.not.toThrow();
+    await expect(handlePrune({ root: emptyBase, before: "2026-04-18" })).resolves.not.toThrow();
 
     await rm(emptyBase, { recursive: true, force: true });
   });

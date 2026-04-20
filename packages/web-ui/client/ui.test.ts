@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vite-plus/test";
 import { buildFilterSQL } from "./ui.js";
 
 describe("buildFilterSQL", () => {

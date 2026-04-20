@@ -7,10 +7,7 @@ function keyToFileName(key: string): string {
   return `${hash}.json`;
 }
 
-export async function getCachedResolution(
-  cacheDir: string,
-  key: string,
-): Promise<string | null> {
+export async function getCachedResolution(cacheDir: string, key: string): Promise<string | null> {
   const filePath = path.join(cacheDir, keyToFileName(key));
   try {
     const content = await readFile(filePath, "utf-8");

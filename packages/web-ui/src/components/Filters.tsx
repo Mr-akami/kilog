@@ -10,12 +10,18 @@ export function Filters() {
       <DropdownWithAll id="filter-type" placeholder="All types" options={EVENT_TYPES} />
       <DropdownWithAll id="filter-level" placeholder="All levels" options={LEVELS} />
       <input type="text" id="filter-search" placeholder="Search..." />
-      <button id="btn-search" type="button">Filter</button>
+      <button id="btn-search" type="button">
+        Filter
+      </button>
     </div>
   );
 }
 
-function DropdownWithAll({ id, placeholder, options }: {
+function DropdownWithAll({
+  id,
+  placeholder,
+  options,
+}: {
   id: string;
   placeholder: string;
   options: readonly string[];
@@ -24,7 +30,9 @@ function DropdownWithAll({ id, placeholder, options }: {
     <select id={id}>
       <option value="">{placeholder}</option>
       {options.map((o) => (
-        <option value={o}>{o}</option>
+        <option key={o} value={o}>
+          {o}
+        </option>
       ))}
     </select>
   );

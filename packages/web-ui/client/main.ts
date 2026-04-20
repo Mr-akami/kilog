@@ -193,7 +193,9 @@ async function main(): Promise<void> {
 
   // Clear DuckDB (browser-only)
   document.getElementById("clear-db")?.addEventListener("click", async () => {
-    if (!confirm("Clear all rows from the in-browser DuckDB? (Raw log files on disk are untouched.)"))
+    if (
+      !confirm("Clear all rows from the in-browser DuckDB? (Raw log files on disk are untouched.)")
+    )
       return;
     await truncateLogs(db);
     ingester.resetOffsets();
@@ -231,9 +233,7 @@ async function main(): Promise<void> {
       ingester.resetOffsets();
       await refreshProjectList(db);
       await refreshFilterQuery(db);
-      setHeaderStatus(
-        `cleared ${rawFilesDeleted} raw file(s), ${indexDbsDeleted} index dir(s)`,
-      );
+      setHeaderStatus(`cleared ${rawFilesDeleted} raw file(s), ${indexDbsDeleted} index dir(s)`);
     } catch (err) {
       setHeaderStatus(`clear error: ${String(err)}`);
     }

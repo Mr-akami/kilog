@@ -1,12 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vite-plus/test";
 import { createRedactor } from "./redactor.js";
 import { DEFAULT_RULES } from "./patterns.js";
 import type { RedactRule } from "./patterns.js";
-import type {
-  ConsoleEvent,
-  NetworkEvent,
-  LogEvent,
-} from "../schema/types.js";
+import type { ConsoleEvent, NetworkEvent } from "../schema/types.js";
 
 // ── helpers ──
 
@@ -97,7 +93,7 @@ describe("createRedactor (defaults)", () => {
       args: [{ config: { apiKey: "sk-12345" } }],
     });
     const result = redact(event) as ConsoleEvent;
-    const nested = (result.args as any)[0].config;
+    const nested = (result.args as Array<{ config: { apiKey: string } }>)[0].config;
     expect(nested.apiKey).not.toBe("sk-12345");
   });
 
@@ -106,7 +102,7 @@ describe("createRedactor (defaults)", () => {
       args: [{ token: "my-secret-token" }],
     });
     const result = redact(event) as ConsoleEvent;
-    expect((result.args as any)[0].token).not.toBe("my-secret-token");
+    expect((result.args as Array<Record<string, string>>)[0].token).not.toBe("my-secret-token");
   });
 
   it("should mask secret key in args", () => {
@@ -114,7 +110,7 @@ describe("createRedactor (defaults)", () => {
       args: [{ secret: "top-secret-value" }],
     });
     const result = redact(event) as ConsoleEvent;
-    expect((result.args as any)[0].secret).not.toBe("top-secret-value");
+    expect((result.args as Array<Record<string, string>>)[0].secret).not.toBe("top-secret-value");
   });
 
   it("should mask Cookie header value in message", () => {
@@ -196,7 +192,9 @@ describe("createRedactor (custom rules)", () => {
       args: [{ creditCard: "4111-1111-1111-1111" }],
     });
     const result = redact(event) as ConsoleEvent;
-    expect((result.args as any)[0].creditCard).not.toBe("4111-1111-1111-1111");
+    expect((result.args as Array<Record<string, string>>)[0].creditCard).not.toBe(
+      "4111-1111-1111-1111",
+    );
   });
 });
 
@@ -253,7 +251,8 @@ describe("createRedactor edge cases", () => {
       args: [{ a: { b: { c: { password: "deep-secret" } } } }],
     });
     const result = redact(event) as ConsoleEvent;
-    expect((result.args as any)[0].a.b.c.password).not.toBe("deep-secret");
+    type DeepShape = { a: { b: { c: { password: string } } } };
+    expect((result.args as DeepShape[])[0].a.b.c.password).not.toBe("deep-secret");
   });
 
   it("should handle empty args array", () => {

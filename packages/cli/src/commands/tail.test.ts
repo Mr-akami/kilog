@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
 import { mkdtemp, rm, writeFile, appendFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -43,7 +43,9 @@ describe("handleTail", () => {
     const tailPromise = handleTail({
       root: baseDir,
       signal: controller.signal,
-      onLine: (line: string) => { lines.push(line); },
+      onLine: (line: string) => {
+        lines.push(line);
+      },
     });
 
     // append a new event after a short delay
@@ -73,7 +75,9 @@ describe("handleTail", () => {
       root: baseDir,
       runtime: "node",
       signal: controller.signal,
-      onLine: (line: string) => { lines.push(line); },
+      onLine: (line: string) => {
+        lines.push(line);
+      },
     });
 
     await new Promise((resolve) => setTimeout(resolve, 200));
@@ -119,7 +123,9 @@ describe("handleTail", () => {
     const tailPromise = handleTail({
       root: baseDir,
       signal: controller.signal,
-      onLine: (line: string) => { lines.push(line); },
+      onLine: (line: string) => {
+        lines.push(line);
+      },
     });
 
     await new Promise((resolve) => setTimeout(resolve, 200));

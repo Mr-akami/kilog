@@ -9,9 +9,9 @@
     "logit": "logit"
   },
   "dependencies": {
-    "hono": "*",
     "@hono/node-server": "*",
-    "@logit/runtime-node": "workspace:*"
+    "@logit/runtime-node": "workspace:*",
+    "hono": "*"
   },
   "devDependencies": {
     "@logit/cli": "workspace:*"

@@ -62,10 +62,7 @@ export class Ingester {
     return inserted;
   }
 
-  private async catchUpFile(
-    db: duckdb.AsyncDuckDB,
-    src: SourceDescriptor,
-  ): Promise<number> {
+  private async catchUpFile(db: duckdb.AsyncDuckDB, src: SourceDescriptor): Promise<number> {
     const prev = this.state.get(src.path);
     let offset = prev?.offset ?? 0;
     const truncated = offset > src.size;

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
 import { mkdtemp, rm, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -48,12 +48,7 @@ describe("createWriter", () => {
     await writer.append(event);
     await writer.close();
 
-    const filePath = path.join(
-      baseDir,
-      ".devlogs",
-      "raw",
-      "2026-04-18.node.jsonl",
-    );
+    const filePath = path.join(baseDir, ".devlogs", "raw", "2026-04-18.node.jsonl");
     const content = await readFile(filePath, "utf-8");
     const lines = content.trim().split("\n");
     expect(lines).toHaveLength(1);
@@ -68,12 +63,7 @@ describe("createWriter", () => {
     await writer.append(e2);
     await writer.close();
 
-    const filePath = path.join(
-      baseDir,
-      ".devlogs",
-      "raw",
-      "2026-04-18.node.jsonl",
-    );
+    const filePath = path.join(baseDir, ".devlogs", "raw", "2026-04-18.node.jsonl");
     const content = await readFile(filePath, "utf-8");
     const lines = content.trim().split("\n");
     expect(lines).toHaveLength(2);
@@ -115,22 +105,18 @@ describe("createWriter", () => {
   });
 
   it("should apply redactor when provided", async () => {
-    const mockRedactor = (event: LogEvent): LogEvent => ({
-      ...event,
-      message: "[REDACTED]",
-    } as LogEvent);
+    const mockRedactor = (event: LogEvent): LogEvent =>
+      ({
+        ...event,
+        message: "[REDACTED]",
+      }) as LogEvent;
 
     const writer = createWriter({ baseDir, redactor: mockRedactor });
     const event = makeConsoleEvent({ message: "secret data" });
     await writer.append(event);
     await writer.close();
 
-    const filePath = path.join(
-      baseDir,
-      ".devlogs",
-      "raw",
-      "2026-04-18.node.jsonl",
-    );
+    const filePath = path.join(baseDir, ".devlogs", "raw", "2026-04-18.node.jsonl");
     const content = await readFile(filePath, "utf-8");
     const restored = deserialize(content.trim());
     expect(restored.message).toBe("[REDACTED]");
@@ -142,12 +128,7 @@ describe("createWriter", () => {
     await writer.append(event);
     await writer.close();
 
-    const filePath = path.join(
-      baseDir,
-      ".devlogs",
-      "raw",
-      "2026-04-18.node.jsonl",
-    );
+    const filePath = path.join(baseDir, ".devlogs", "raw", "2026-04-18.node.jsonl");
     const content = await readFile(filePath, "utf-8");
     const restored = deserialize(content.trim());
     expect(restored.message).toBe("no redaction");

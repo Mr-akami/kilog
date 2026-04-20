@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vite-plus/test";
 import { mkdtemp, rm, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -6,11 +6,7 @@ import { Readable } from "node:stream";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { createLogitMiddleware } from "./server-middleware.js";
 
-function createReq(
-  method: string,
-  url: string,
-  body: string,
-): IncomingMessage {
+function createReq(method: string, url: string, body: string): IncomingMessage {
   const stream = Readable.from([body]);
   return Object.assign(stream, {
     method,
@@ -104,12 +100,7 @@ describe("createLogitMiddleware", () => {
     middleware(req, res, vi.fn());
     await endPromise;
 
-    const filePath = path.join(
-      baseDir,
-      ".devlogs",
-      "raw",
-      "2026-04-18.browser.jsonl",
-    );
+    const filePath = path.join(baseDir, ".devlogs", "raw", "2026-04-18.browser.jsonl");
     const content = await readFile(filePath, "utf-8");
     expect(content).toContain("browser log entry");
   });
@@ -142,12 +133,7 @@ describe("createLogitMiddleware", () => {
     middleware(req, res, vi.fn());
     await endPromise;
 
-    const filePath = path.join(
-      baseDir,
-      ".devlogs",
-      "raw",
-      "2026-04-18.browser.jsonl",
-    );
+    const filePath = path.join(baseDir, ".devlogs", "raw", "2026-04-18.browser.jsonl");
     const content = await readFile(filePath, "utf-8");
     const lines = content.trim().split("\n");
     expect(lines).toHaveLength(2);

@@ -26,10 +26,7 @@ function extractRequestInfo(
 export function captureFetch(ctx: RuntimeContext): void {
   const original = globalThis.fetch;
 
-  globalThis.fetch = async (
-    input: RequestInfo | URL,
-    init?: RequestInit,
-  ): Promise<Response> => {
+  globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
     const { method, url, normalizedPath } = extractRequestInfo(input, init);
     const start = performance.now();
 

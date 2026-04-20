@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
 import { mkdtemp, rm, mkdir, writeFile, appendFile, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -66,7 +66,13 @@ describe("web-ui server", () => {
     expect(res.status).toBe(200);
     const body = (await res.json()) as {
       root: string;
-      sources: { path: string; displayPath: string; project: string; size: number; mtime: string }[];
+      sources: {
+        path: string;
+        displayPath: string;
+        project: string;
+        size: number;
+        mtime: string;
+      }[];
     };
     expect(body.sources).toHaveLength(1);
     expect(body.sources[0].path).toBe(jsonlPath);
@@ -111,7 +117,9 @@ describe("web-ui server", () => {
   it("GET /api/read 400s on bad inputs", async () => {
     const app = createApp({ root });
     expect((await app.request("/api/read")).status).toBe(400);
-    expect((await app.request(`/api/read?path=${encodeURIComponent(jsonlPath)}&offset=-1`)).status).toBe(400);
+    expect(
+      (await app.request(`/api/read?path=${encodeURIComponent(jsonlPath)}&offset=-1`)).status,
+    ).toBe(400);
   });
 
   it("GET /openapi.json returns an OpenAPI 3.1 document", async () => {

@@ -99,9 +99,10 @@ async function watchRawDir(
 
 export async function handleTail(options: TailOptions): Promise<void> {
   const dirs = await findDevlogsDirs(options.root);
-  const rawDirs = dirs.length > 0
-    ? dirs.map((d) => path.join(d, "raw"))
-    : [path.join(options.root, ".devlogs", "raw")]; // watch even if not yet created
+  const rawDirs =
+    dirs.length > 0
+      ? dirs.map((d) => path.join(d, "raw"))
+      : [path.join(options.root, ".devlogs", "raw")]; // watch even if not yet created
 
   const fileOffsets = new Map<string, number>();
   const watchers: FSWatcher[] = [];

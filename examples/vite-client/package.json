@@ -4,15 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vp dev",
+    "build": "vp build",
     "logit": "logit"
   },
   "dependencies": {
     "@logit/vite-plugin": "workspace:*"
   },
   "devDependencies": {
-    "vite": "*",
-    "@logit/cli": "workspace:*"
+    "@logit/cli": "workspace:*",
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
   }
 }

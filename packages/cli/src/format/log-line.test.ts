@@ -1,11 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vite-plus/test";
 import { formatLogLine } from "./log-line.js";
-import type {
-  ConsoleEvent,
-  ErrorEvent,
-  NetworkEvent,
-  UnhandledRejectionEvent,
-} from "@logit/core";
+import type { ConsoleEvent, ErrorEvent, NetworkEvent, UnhandledRejectionEvent } from "@logit/core";
 
 function makeConsoleEvent(overrides?: Partial<ConsoleEvent>): ConsoleEvent {
   return {

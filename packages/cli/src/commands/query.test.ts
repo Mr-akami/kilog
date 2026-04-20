@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
 import { mkdtemp, rm, writeFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -58,9 +58,11 @@ function captureStdout(fn: () => Promise<void>): Promise<string> {
     chunks.push(typeof chunk === "string" ? chunk : new TextDecoder().decode(chunk));
     return true;
   };
-  return fn().finally(() => {
-    process.stdout.write = originalWrite;
-  }).then(() => chunks.join(""));
+  return fn()
+    .finally(() => {
+      process.stdout.write = originalWrite;
+    })
+    .then(() => chunks.join(""));
 }
 
 // ── fixtures ──
@@ -85,11 +87,17 @@ describe("handleQuery", () => {
 
     await writeFile(
       path.join(rawDir, "2026-04-18.node.jsonl"),
-      events.filter((e) => e.runtime === "node").map(serialize).join("\n") + "\n",
+      events
+        .filter((e) => e.runtime === "node")
+        .map(serialize)
+        .join("\n") + "\n",
     );
     await writeFile(
       path.join(rawDir, "2026-04-18.browser.jsonl"),
-      events.filter((e) => e.runtime === "browser").map(serialize).join("\n") + "\n",
+      events
+        .filter((e) => e.runtime === "browser")
+        .map(serialize)
+        .join("\n") + "\n",
     );
 
     dbPath = path.join(indexDir, "logs.duckdb");
@@ -103,66 +111,55 @@ describe("handleQuery", () => {
   // ── normal query ──
 
   it("should output all logs when no filter specified", async () => {
-    const output = await captureStdout(() =>
-      handleQuery({ root: baseDir }),
-    );
+    const output = await captureStdout(() => handleQuery({ root: baseDir }));
 
     expect(output).toContain("hello");
     expect(output).toContain("crash");
   });
 
   it("should filter by runtime", async () => {
-    const output = await captureStdout(() =>
-      handleQuery({ root: baseDir, runtime: "browser" }),
-    );
+    const output = await captureStdout(() => handleQuery({ root: baseDir, runtime: "browser" }));
 
     expect(output).toContain("GET");
     expect(output).not.toContain("hello");
   });
 
   it("should filter by level", async () => {
-    const output = await captureStdout(() =>
-      handleQuery({ root: baseDir, level: "error" }),
-    );
+    const output = await captureStdout(() => handleQuery({ root: baseDir, level: "error" }));
 
     expect(output).toContain("crash");
     expect(output).not.toContain("hello");
   });
 
   it("should filter by type", async () => {
-    const output = await captureStdout(() =>
-      handleQuery({ root: baseDir, type: "network" }),
-    );
+    const output = await captureStdout(() => handleQuery({ root: baseDir, type: "network" }));
 
     expect(output).toContain("GET");
     expect(output).not.toContain("hello");
   });
 
   it("should filter by search term", async () => {
-    const output = await captureStdout(() =>
-      handleQuery({ root: baseDir, search: "warning" }),
-    );
+    const output = await captureStdout(() => handleQuery({ root: baseDir, search: "warning" }));
 
     expect(output).toContain("warning");
     expect(output).not.toContain("crash");
   });
 
   it("should respect limit", async () => {
-    const output = await captureStdout(() =>
-      handleQuery({ root: baseDir, limit: 1 }),
-    );
+    const output = await captureStdout(() => handleQuery({ root: baseDir, limit: 1 }));
 
     // output should contain exactly 1 event's data
-    const lines = output.trim().split("\n").filter((l) => l.trim() !== "");
+    const lines = output
+      .trim()
+      .split("\n")
+      .filter((l) => l.trim() !== "");
     expect(lines.length).toBeGreaterThanOrEqual(1);
   });
 
   // ── JSON output ──
 
   it("should output valid JSON when --json is set", async () => {
-    const output = await captureStdout(() =>
-      handleQuery({ root: baseDir, json: true }),
-    );
+    const output = await captureStdout(() => handleQuery({ root: baseDir, json: true }));
 
     const parsed = JSON.parse(output);
     expect(Array.isArray(parsed)).toBe(true);
@@ -172,9 +169,7 @@ describe("handleQuery", () => {
   // ── aggregate mode ──
 
   it("should output aggregated results when --aggregate is set", async () => {
-    const output = await captureStdout(() =>
-      handleQuery({ root: baseDir, aggregate: true }),
-    );
+    const output = await captureStdout(() => handleQuery({ root: baseDir, aggregate: true }));
 
     expect(output).toContain("runtime");
     expect(output).toContain("count");

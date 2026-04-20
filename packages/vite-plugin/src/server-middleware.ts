@@ -3,11 +3,7 @@ import { createWriter, createRedactor } from "@logit/core";
 import type { LogEvent } from "@logit/core";
 
 type NextFunction = () => void;
-type Middleware = (
-  req: IncomingMessage,
-  res: ServerResponse,
-  next: NextFunction,
-) => void;
+type Middleware = (req: IncomingMessage, res: ServerResponse, next: NextFunction) => void;
 
 import { ENDPOINT } from "./constants.js";
 

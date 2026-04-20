@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
 import { mkdtemp, rm, writeFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -26,20 +26,20 @@ function captureStdout(fn: () => Promise<void>): Promise<string> {
     chunks.push(typeof chunk === "string" ? chunk : new TextDecoder().decode(chunk));
     return true;
   };
-  return fn().finally(() => {
-    process.stdout.write = originalWrite;
-  }).then(() => chunks.join(""));
+  return fn()
+    .finally(() => {
+      process.stdout.write = originalWrite;
+    })
+    .then(() => chunks.join(""));
 }
 
 describe("handleReindex", () => {
   let baseDir: string;
-  let dbPath: string;
 
   beforeEach(async () => {
     baseDir = await mkdtemp(path.join(tmpdir(), "logit-cli-reindex-"));
     await mkdir(path.join(baseDir, ".devlogs", "raw"), { recursive: true });
     await mkdir(path.join(baseDir, ".devlogs", "index"), { recursive: true });
-    dbPath = path.join(baseDir, ".devlogs", "index", "logs.duckdb");
   });
 
   afterEach(async () => {
@@ -57,17 +57,13 @@ describe("handleReindex", () => {
       events.map(serialize).join("\n") + "\n",
     );
 
-    const output = await captureStdout(() =>
-      handleReindex({ root: baseDir }),
-    );
+    const output = await captureStdout(() => handleReindex({ root: baseDir }));
 
     expect(output).toContain("3");
   });
 
   it("should display 0 when no jsonl files exist", async () => {
-    const output = await captureStdout(() =>
-      handleReindex({ root: baseDir }),
-    );
+    const output = await captureStdout(() => handleReindex({ root: baseDir }));
 
     expect(output).toContain("0");
   });
@@ -83,9 +79,7 @@ describe("handleReindex", () => {
       [makeConsoleEvent({ runtime: "browser" })].map(serialize).join("\n") + "\n",
     );
 
-    const output = await captureStdout(() =>
-      handleReindex({ root: baseDir }),
-    );
+    const output = await captureStdout(() => handleReindex({ root: baseDir }));
 
     expect(output).toContain("3");
   });

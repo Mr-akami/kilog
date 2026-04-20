@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
 import { mkdtemp, rm, mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -124,9 +124,7 @@ describe("listRawFilesIn", () => {
   it("returns absolute paths of jsonl files under raw/", async () => {
     await mkDevlogs(root, "{}\n");
     const files = await listRawFilesIn(path.join(root, ".devlogs"));
-    expect(files).toEqual([
-      path.join(root, ".devlogs", "raw", "2026-04-20.node.jsonl"),
-    ]);
+    expect(files).toEqual([path.join(root, ".devlogs", "raw", "2026-04-20.node.jsonl")]);
   });
 
   it("returns [] when raw/ does not exist", async () => {

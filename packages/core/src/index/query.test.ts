@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, beforeAll, afterAll } from "vite-plus/test";
 import { mkdtemp, rm, writeFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -88,12 +88,29 @@ describe("queryLogs", () => {
     await mkdir(path.join(baseDir, ".devlogs", "index"), { recursive: true });
 
     allEvents = [
-      makeConsoleEvent({ message: "debug msg", level: "debug", timestamp: "2026-04-18T08:00:00.000Z" }),
-      makeConsoleEvent({ message: "info msg", level: "info", timestamp: "2026-04-18T09:00:00.000Z" }),
-      makeConsoleEvent({ message: "warn msg", level: "warn", timestamp: "2026-04-18T10:00:00.000Z" }),
+      makeConsoleEvent({
+        message: "debug msg",
+        level: "debug",
+        timestamp: "2026-04-18T08:00:00.000Z",
+      }),
+      makeConsoleEvent({
+        message: "info msg",
+        level: "info",
+        timestamp: "2026-04-18T09:00:00.000Z",
+      }),
+      makeConsoleEvent({
+        message: "warn msg",
+        level: "warn",
+        timestamp: "2026-04-18T10:00:00.000Z",
+      }),
       makeErrorEvent({ message: "type error", timestamp: "2026-04-18T11:00:00.000Z" }),
       makeNetworkEvent({ status: 200, duration: 50, timestamp: "2026-04-18T12:00:00.000Z" }),
-      makeNetworkEvent({ status: 500, failed: true, errorMessage: "server error", timestamp: "2026-04-18T12:30:00.000Z" }),
+      makeNetworkEvent({
+        status: 500,
+        failed: true,
+        errorMessage: "server error",
+        timestamp: "2026-04-18T12:30:00.000Z",
+      }),
       makeUnhandledRejectionEvent({ timestamp: "2026-04-18T13:00:00.000Z" }),
     ];
 
@@ -328,11 +345,17 @@ describe("aggregateLogs", () => {
     const rawDir = path.join(baseDir, ".devlogs", "raw");
     await writeFile(
       path.join(rawDir, "2026-04-18.node.jsonl"),
-      events.filter((e) => e.runtime === "node").map(serialize).join("\n") + "\n",
+      events
+        .filter((e) => e.runtime === "node")
+        .map(serialize)
+        .join("\n") + "\n",
     );
     await writeFile(
       path.join(rawDir, "2026-04-18.browser.jsonl"),
-      events.filter((e) => e.runtime === "browser").map(serialize).join("\n") + "\n",
+      events
+        .filter((e) => e.runtime === "browser")
+        .map(serialize)
+        .join("\n") + "\n",
     );
 
     const dbPath = path.join(baseDir, ".devlogs", "index", "logs.duckdb");
@@ -365,9 +388,7 @@ describe("aggregateLogs", () => {
 
   it("should count console/info as 2", async () => {
     const result = await aggregateLogs(db, {});
-    const consoleInfo = result.find(
-      (r) => r.type === "console" && r.level === "info",
-    );
+    const consoleInfo = result.find((r) => r.type === "console" && r.level === "info");
     expect(consoleInfo).toBeDefined();
     expect(consoleInfo!.count).toBe(2);
   });

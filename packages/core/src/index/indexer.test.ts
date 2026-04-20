@@ -1,15 +1,11 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
 import { mkdtemp, rm, writeFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { reindex, indexFile } from "./indexer.js";
 import { openIndex, closeIndex } from "./connection.js";
 import { serialize } from "../serialize/serializer.js";
-import type {
-  ConsoleEvent,
-  ErrorEvent,
-  NetworkEvent,
-} from "../schema/types.js";
+import type { ConsoleEvent, ErrorEvent, NetworkEvent } from "../schema/types.js";
 
 function makeConsoleEvent(overrides?: Partial<ConsoleEvent>): ConsoleEvent {
   return {
@@ -127,11 +123,7 @@ describe("reindex", () => {
   });
 
   it("should handle mixed event types", async () => {
-    const events = [
-      makeConsoleEvent(),
-      makeErrorEvent(),
-      makeNetworkEvent(),
-    ];
+    const events = [makeConsoleEvent(), makeErrorEvent(), makeNetworkEvent()];
     const rawDir = path.join(baseDir, ".devlogs", "raw");
     await writeFile(
       path.join(rawDir, "2026-04-18.node.jsonl"),

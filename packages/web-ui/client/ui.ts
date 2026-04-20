@@ -42,7 +42,8 @@ let currentSinceIso: string | undefined;
 let currentExtraWhere: string | undefined;
 
 export function setTimeWindow(minutes: number | null): void {
-  currentSinceIso = minutes == null ? undefined : new Date(Date.now() - minutes * 60_000).toISOString();
+  currentSinceIso =
+    minutes == null ? undefined : new Date(Date.now() - minutes * 60_000).toISOString();
 }
 
 export function setExtraWhere(where: string | null): void {
@@ -65,7 +66,6 @@ function readFilter(): Filter {
     extraWhere: currentExtraWhere,
   };
 }
-
 
 function el<T extends HTMLElement = HTMLElement>(id: string): T {
   const n = document.getElementById(id);
@@ -127,10 +127,7 @@ export function restoreDefaultHeader(): void {
 }
 
 function escapeHtml(v: string): string {
-  return v
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+  return v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 export async function refreshFilterQuery(db: duckdb.AsyncDuckDB): Promise<void> {

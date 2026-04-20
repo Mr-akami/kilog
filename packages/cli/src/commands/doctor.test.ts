@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
 import { mkdtemp, rm, writeFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -26,9 +26,11 @@ function captureStdout(fn: () => Promise<void>): Promise<string> {
     chunks.push(typeof chunk === "string" ? chunk : new TextDecoder().decode(chunk));
     return true;
   };
-  return fn().finally(() => {
-    process.stdout.write = originalWrite;
-  }).then(() => chunks.join(""));
+  return fn()
+    .finally(() => {
+      process.stdout.write = originalWrite;
+    })
+    .then(() => chunks.join(""));
 }
 
 describe("handleDoctor", () => {
@@ -47,9 +49,7 @@ describe("handleDoctor", () => {
   // ── .devlogs directory check ──
 
   it("should report when .devlogs directory is missing", async () => {
-    const output = await captureStdout(() =>
-      handleDoctor({ root: baseDir }),
-    );
+    const output = await captureStdout(() => handleDoctor({ root: baseDir }));
 
     expect(output).toContain(".devlogs");
   });
@@ -58,9 +58,7 @@ describe("handleDoctor", () => {
     await mkdir(path.join(baseDir, ".devlogs", "raw"), { recursive: true });
     await mkdir(path.join(baseDir, ".devlogs", "index"), { recursive: true });
 
-    const output = await captureStdout(() =>
-      handleDoctor({ root: baseDir }),
-    );
+    const output = await captureStdout(() => handleDoctor({ root: baseDir }));
 
     expect(output).toContain(".devlogs");
   });
@@ -78,9 +76,7 @@ describe("handleDoctor", () => {
     );
     await reindex({ baseDir, dbPath });
 
-    const output = await captureStdout(() =>
-      handleDoctor({ root: baseDir }),
-    );
+    const output = await captureStdout(() => handleDoctor({ root: baseDir }));
 
     // should show raw count and index count are equal
     expect(output).toContain("2");
@@ -105,9 +101,7 @@ describe("handleDoctor", () => {
       [serialize(event1), serialize(event2)].join("\n") + "\n",
     );
 
-    const output = await captureStdout(() =>
-      handleDoctor({ root: baseDir }),
-    );
+    const output = await captureStdout(() => handleDoctor({ root: baseDir }));
 
     expect(output).toContain("reindex");
   });
@@ -121,9 +115,7 @@ describe("handleDoctor", () => {
       serialize(makeConsoleEvent()) + "\n",
     );
 
-    const output = await captureStdout(() =>
-      handleDoctor({ root: baseDir }),
-    );
+    const output = await captureStdout(() => handleDoctor({ root: baseDir }));
 
     expect(output).toContain("reindex");
   });
@@ -135,9 +127,7 @@ describe("handleDoctor", () => {
     await mkdir(path.join(baseDir, ".devlogs", "index"), { recursive: true });
     await reindex({ baseDir, dbPath });
 
-    const output = await captureStdout(() =>
-      handleDoctor({ root: baseDir }),
-    );
+    const output = await captureStdout(() => handleDoctor({ root: baseDir }));
 
     expect(output).toContain("0");
   });

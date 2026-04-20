@@ -1,11 +1,10 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vite-plus/test";
 import { serialize, deserialize } from "./serializer.js";
 import type {
   ConsoleEvent,
   ErrorEvent,
   NetworkEvent,
   UnhandledRejectionEvent,
-  LogEvent,
 } from "../schema/types.js";
 
 // ── helpers ──
@@ -174,9 +173,7 @@ describe("deserialize", () => {
 
   it("should handle leading/trailing whitespace in line", () => {
     const event = makeConsoleEvent();
-    const line = `  ${serialize(event)}  `;
-    // implementation may or may not trim — if it throws, that's also acceptable
-    // we test that valid trimmed JSON works
+    // Implementation may or may not trim. We test the trimmed form works.
     const trimmed = serialize(event);
     expect(deserialize(trimmed)).toEqual(event);
   });

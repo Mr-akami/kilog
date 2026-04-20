@@ -67,7 +67,11 @@ export function createApp(options: AppOptions): Hono {
       responses: {
         200: {
           description: "Alive.",
-          content: { "application/json": { schema: { type: "object", properties: { ok: { const: true } }, required: ["ok"] } } },
+          content: {
+            "application/json": {
+              schema: { type: "object", properties: { ok: { const: true } }, required: ["ok"] },
+            },
+          },
         },
       },
     }),
@@ -134,18 +138,45 @@ export function createApp(options: AppOptions): Hono {
       description:
         "Returns the contents of the file starting at `offset`. The response header `X-File-Size` reports the file size when the stream was opened, which the client uses to advance its offset.",
       parameters: [
-        { name: "path", in: "query", required: true, schema: { type: "string" }, description: "Absolute path to the JSONL file (must be inside the resolved root)." },
-        { name: "offset", in: "query", required: false, schema: { type: "integer", minimum: 0 }, description: "Byte offset from which to start streaming. Default: 0." },
-        { name: "root", in: "query", required: false, schema: { type: "string" }, description: "Override the discovery root." },
+        {
+          name: "path",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "Absolute path to the JSONL file (must be inside the resolved root).",
+        },
+        {
+          name: "offset",
+          in: "query",
+          required: false,
+          schema: { type: "integer", minimum: 0 },
+          description: "Byte offset from which to start streaming. Default: 0.",
+        },
+        {
+          name: "root",
+          in: "query",
+          required: false,
+          schema: { type: "string" },
+          description: "Override the discovery root.",
+        },
       ],
       responses: {
         200: {
           description: "Bytes from offset to end-of-file. Headers: `X-File-Size`.",
           content: { "application/x-ndjson": { schema: { type: "string" } } },
         },
-        400: { description: "Bad inputs.", content: { "text/plain": { schema: { type: "string" } } } },
-        403: { description: "Forbidden path.", content: { "text/plain": { schema: { type: "string" } } } },
-        404: { description: "File not found.", content: { "text/plain": { schema: { type: "string" } } } },
+        400: {
+          description: "Bad inputs.",
+          content: { "text/plain": { schema: { type: "string" } } },
+        },
+        403: {
+          description: "Forbidden path.",
+          content: { "text/plain": { schema: { type: "string" } } },
+        },
+        404: {
+          description: "File not found.",
+          content: { "text/plain": { schema: { type: "string" } } },
+        },
       },
     }),
     async (c) => {
@@ -198,7 +229,10 @@ export function createApp(options: AppOptions): Hono {
             schema: {
               type: "object",
               properties: {
-                root: { type: "string", description: "Override the root under which files are deleted." },
+                root: {
+                  type: "string",
+                  description: "Override the root under which files are deleted.",
+                },
               },
             },
           },

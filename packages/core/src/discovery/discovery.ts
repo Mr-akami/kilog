@@ -17,11 +17,7 @@ export interface DiscoverOptions {
   excludes?: Set<string>;
 }
 
-async function walk(
-  dir: string,
-  acc: string[],
-  excludes: Set<string>,
-): Promise<void> {
+async function walk(dir: string, acc: string[], excludes: Set<string>): Promise<void> {
   let entries: { name: string; isDirectory(): boolean }[];
   try {
     entries = (await readdir(dir, { withFileTypes: true })) as {
@@ -54,11 +50,7 @@ export async function findDevlogsDirs(
   return results.sort();
 }
 
-function projectLabel(
-  devlogsDir: string,
-  target: string,
-  multiTarget: boolean,
-): string {
+function projectLabel(devlogsDir: string, target: string, multiTarget: boolean): string {
   const parent = path.dirname(devlogsDir);
   const rel = path.relative(target, parent);
   const targetName = path.basename(path.resolve(target));
@@ -120,4 +112,3 @@ export async function discoverSourceFiles(
   }
   return out;
 }
-
