@@ -1,27 +1,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import type {
-  ErrorEvent,
-  UnhandledRejectionEvent,
-  LogEvent,
-} from "@logit/core";
-import type { RuntimeContext } from "./context.js";
+import type { ErrorEvent, LogEvent, UnhandledRejectionEvent } from "@logit/core";
 import { captureErrors } from "./capture-errors.js";
-
-function createMockContext(): { ctx: RuntimeContext; events: LogEvent[] } {
-  const events: LogEvent[] = [];
-  return {
-    ctx: {
-      session: "test-session",
-      writer: {
-        async append(event: LogEvent) {
-          events.push(event);
-        },
-        async close() {},
-      },
-    },
-    events,
-  };
-}
+import { createMockContext } from "./testing.js";
 
 describe("captureErrors", () => {
   let errorHandler: ((...args: unknown[]) => void) | undefined;

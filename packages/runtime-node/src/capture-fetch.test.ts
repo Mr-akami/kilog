@@ -1,23 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import type { NetworkEvent, LogEvent } from "@logit/core";
-import type { RuntimeContext } from "./context.js";
+import type { NetworkEvent } from "@logit/core";
 import { captureFetch } from "./capture-fetch.js";
-
-function createMockContext(): { ctx: RuntimeContext; events: LogEvent[] } {
-  const events: LogEvent[] = [];
-  return {
-    ctx: {
-      session: "test-session",
-      writer: {
-        async append(event: LogEvent) {
-          events.push(event);
-        },
-        async close() {},
-      },
-    },
-    events,
-  };
-}
+import { createMockContext } from "./testing.js";
 
 describe("captureFetch", () => {
   const originalFetch = globalThis.fetch;
@@ -142,5 +126,37 @@ describe("captureFetch", () => {
     await vi.waitFor(() => expect(events).toHaveLength(1));
 
     expect((events[0] as NetworkEvent).duration).toBeGreaterThanOrEqual(0);
+  });
+
+  it("should handle Request object input", async () => {
+    mockFetch.mockResolvedValue(new Response("ok", { status: 200 }));
+    const { ctx, events } = createMockContext();
+    captureFetch(ctx);
+
+    const request = new Request("https://example.com/api/data", {
+      method: "PUT",
+    });
+    await globalThis.fetch(request);
+    await vi.waitFor(() => expect(events).toHaveLength(1));
+
+    const event = events[0] as NetworkEvent;
+    expect(event.method).toBe("PUT");
+    expect(event.url).toBe("https://example.com/api/data");
+    expect(event.normalizedPath).toBe("/api/data");
+  });
+
+  it("should delegate Request object to original fetch", async () => {
+    mockFetch.mockResolvedValue(new Response("ok", { status: 200 }));
+    const { ctx } = createMockContext();
+    captureFetch(ctx);
+
+    const request = new Request("https://example.com/api", {
+      method: "DELETE",
+    });
+    await globalThis.fetch(request);
+
+    expect(mockFetch).toHaveBeenCalledOnce();
+    const passedArgs = mockFetch.mock.calls[0];
+    expect(passedArgs[0]).toBe(request);
   });
 });

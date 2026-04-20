@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import type { ConsoleEvent, LogEvent } from "@logit/core";
-import type { RuntimeContext } from "./context.js";
+import type { ConsoleEvent } from "@logit/core";
 import { captureConsole } from "./capture-console.js";
+import { createMockContext } from "./testing.js";
 
 const METHODS = ["log", "info", "warn", "error", "debug"] as const;
 
@@ -12,22 +12,6 @@ const EXPECTED_LEVEL: Record<string, ConsoleEvent["level"]> = {
   error: "error",
   debug: "debug",
 };
-
-function createMockContext(): { ctx: RuntimeContext; events: LogEvent[] } {
-  const events: LogEvent[] = [];
-  return {
-    ctx: {
-      session: "test-session",
-      writer: {
-        async append(event: LogEvent) {
-          events.push(event);
-        },
-        async close() {},
-      },
-    },
-    events,
-  };
-}
 
 describe("captureConsole", () => {
   const originals: Record<string, typeof console.log> = {};

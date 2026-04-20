@@ -2,8 +2,9 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { mkdtemp, rm, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { createRuntimeContext } from "./context.js";
+import { createRuntimeContext, createBaseFields } from "./context.js";
 import type { ConsoleEvent } from "@logit/core";
+import { createMockContext } from "./testing.js";
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
@@ -60,5 +61,38 @@ describe("createRuntimeContext", () => {
     const rawDir = path.join(dir, ".devlogs", "raw");
     const files = await readdir(rawDir);
     expect(files).toContain("2026-04-18.node.jsonl");
+  });
+});
+
+describe("createBaseFields", () => {
+  it("should return id as UUID", () => {
+    const { ctx } = createMockContext();
+    const fields = createBaseFields(ctx);
+    expect(fields.id).toMatch(UUID_RE);
+  });
+
+  it("should return ISO timestamp", () => {
+    const { ctx } = createMockContext();
+    const fields = createBaseFields(ctx);
+    expect(fields.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+  });
+
+  it("should set runtime to node", () => {
+    const { ctx } = createMockContext();
+    const fields = createBaseFields(ctx);
+    expect(fields.runtime).toBe("node");
+  });
+
+  it("should use session from context", () => {
+    const { ctx } = createMockContext();
+    const fields = createBaseFields(ctx);
+    expect(fields.session).toBe("test-session");
+  });
+
+  it("should generate unique id per call", () => {
+    const { ctx } = createMockContext();
+    const a = createBaseFields(ctx);
+    const b = createBaseFields(ctx);
+    expect(a.id).not.toBe(b.id);
   });
 });
