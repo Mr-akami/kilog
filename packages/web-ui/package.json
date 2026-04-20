@@ -16,7 +16,10 @@
   "dependencies": {
     "@logit/core": "workspace:*",
     "hono": "*",
-    "@hono/node-server": "*"
+    "@hono/node-server": "*",
+    "hono-openapi": "*",
+    "@hono/standard-validator": "*",
+    "@scalar/hono-api-reference": "*"
   },
   "devDependencies": {
     "@duckdb/duckdb-wasm": "*",

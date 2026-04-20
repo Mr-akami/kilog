@@ -114,6 +114,32 @@ describe("web-ui server", () => {
     expect((await app.request(`/api/read?path=${encodeURIComponent(jsonlPath)}&offset=-1`)).status).toBe(400);
   });
 
+  it("GET /openapi.json returns an OpenAPI 3.1 document", async () => {
+    const app = createApp({ root });
+    const res = await app.request("/openapi.json");
+    expect(res.status).toBe(200);
+    const spec = (await res.json()) as {
+      openapi: string;
+      info: { title: string };
+      paths: Record<string, unknown>;
+    };
+    expect(spec.openapi).toMatch(/^3\./);
+    expect(spec.info.title).toContain("logit");
+    expect(spec.paths["/api/sources"]).toBeTruthy();
+    expect(spec.paths["/api/read"]).toBeTruthy();
+    expect(spec.paths["/api/heartbeat"]).toBeTruthy();
+    expect(spec.paths["/api/clear"]).toBeTruthy();
+  });
+
+  it("GET /docs serves the Scalar API reference UI", async () => {
+    const app = createApp({ root });
+    const res = await app.request("/docs");
+    expect(res.status).toBe(200);
+    const body = await res.text();
+    expect(body.toLowerCase()).toContain("<!doctype html>");
+    expect(body).toMatch(/scalar|api-reference|openapi\.json/i);
+  });
+
   it("POST /api/clear deletes raw jsonl and index dirs", async () => {
     const app = createApp({ root });
     const res = await app.request("/api/clear", {

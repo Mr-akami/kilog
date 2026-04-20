@@ -19,7 +19,8 @@ Use `--port` if it collides with your app's dev server. The server scans from cw
 - **DuckDB-wasm** is loaded in a Web Worker on page load. The schema matches the on-disk schema (`logs` table).
 - **Initial ingest**: browser fetches each JSONL over `/api/read` and INSERTs into the wasm DB.
 - **Live updates**: every 2 s, the client polls `/api/sources` and fetches only the new byte range since the last offset (per file).
-- **Heartbeat / auto-shutdown**: the client pings `/api/heartbeat` every 5 s. If the server sees no activity for 5 min it `process.exit(0)`s — so closing the tab and forgetting about it eventually reaps the process, but transient page reloads / backgrounded tabs do not kill it.
+- **Heartbeat / auto-shutdown**: the client pings `/api/heartbeat` every 5 s. If the server sees no activity for 15 s (default) it `process.exit(0)`s — so forgetting to Ctrl+C doesn't leave a zombie server running after you close the tab.
+- **Auto port**: if the requested port is busy, the server picks the next free port (up to +20) instead of failing.
 - **Client-side failure handling**: if three consecutive heartbeats fail (server already gone), the client stops polling and shows "server stopped" in the header.
 
 ## UI
@@ -32,16 +33,26 @@ Use `--port` if it collides with your app's dev server. The server scans from cw
 
 ## HTTP API
 
-- `GET /` — SSR HTML + embedded initial state (`window.__LOGIT_SSR__`)
-- `GET /api/sources?root=<path>` — discovered JSONL files: `{ root, sources: [{ path, displayPath, project, size, mtime }] }`
-- `GET /api/read?path=<abs>&offset=<n>` — streams bytes from `offset`; `X-File-Size` header reports current size for offset bookkeeping
-- `GET /api/heartbeat` — keeps the server alive (resets idle timer)
-- `POST /api/clear` (body: `{ root }`) — deletes all `.jsonl` files and `index/` directories under the root; returns `{ rawFilesDeleted, indexDbsDeleted }`
+The spec is generated from the route definitions via [`hono-openapi`](https://github.com/rhinobase/hono-openapi), so the API reference always matches the implementation:
+
+- `GET /openapi.json` — OpenAPI 3.1 document
+- `GET /docs` — Scalar API reference UI (interactive, try-it-out supported)
+
+The browser UI depends on these routes:
+
+| Route | Purpose |
+|---|---|
+| `GET /` | SSR HTML with initial state embedded as `window.__LOGIT_SSR__` |
+| `GET /api/sources?root=<path>` | Discovered JSONL files |
+| `GET /api/read?path=<abs>&offset=<n>` | Byte-range streaming; `X-File-Size` header |
+| `GET /api/heartbeat` | Resets the idle-shutdown timer |
+| `POST /api/clear` | Destructive: removes raw JSONL + per-project index dirs |
 
 Example:
 
 ```bash
-curl "http://localhost:3000/api/sources" | jq
+curl "http://localhost:3000/openapi.json" | jq '.paths | keys'
+open http://localhost:3000/docs      # interactive reference
 ```
 
 ## Programmatic API
@@ -50,10 +61,11 @@ curl "http://localhost:3000/api/sources" | jq
 import { startServer } from "@logit/web-ui";
 
 await startServer({
-  port: 3000,
+  port: 3000,            // auto-incremented if busy
   root: process.cwd(),
-  idleTimeoutMs: 5 * 60_000,   // default
-  watchdogIntervalMs: 10_000,  // default
+  idleTimeoutMs: 15_000, // default
+  watchdogIntervalMs: 5_000,
+  portRetry: 20,
 });
 ```
 
@@ -99,4 +111,4 @@ Run `pnpm --filter @logit/web-ui dev:client` for Vite's HMR, or `pnpm --filter @
 pnpm --filter @logit/web-ui test
 ```
 
-Covers SSR output, `/api/sources`, `/api/read` (including offset + security), `/api/clear`, and `/api/heartbeat`.
+Covers SSR output, `/api/sources`, `/api/read` (including offset + security), `/api/clear`, `/api/heartbeat`, `/openapi.json`, and `/docs`.

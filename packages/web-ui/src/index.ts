@@ -1,28 +1,59 @@
+import { createServer, type Server } from "node:http";
 import { serve } from "@hono/node-server";
 import { createApp } from "./server.js";
 
 export { createApp } from "./server.js";
 
 export interface ServerOptions {
+  /** Preferred port. If busy, the next free port is used automatically. */
   port: number;
   root: string;
   /**
-   * Idle timeout in ms. If no request is received in this window, `process.exit(0)` is called.
-   * The browser is expected to send `/api/heartbeat` periodically to keep the server alive.
+   * Idle timeout in ms. If no request is received in this window, the server
+   * `process.exit(0)`s. The browser pings `/api/heartbeat` every 5 s.
    * Default: 15000.
    */
   idleTimeoutMs?: number;
   /** How often the watchdog checks for idle. Default: 5000. */
   watchdogIntervalMs?: number;
+  /** Maximum port increments to try before giving up. Default: 20. */
+  portRetry?: number;
 }
 
-// Give enough slack for slow wasm init, backgrounded tabs, and brief reloads.
-const DEFAULT_IDLE_TIMEOUT_MS = 5 * 60_000;
-const DEFAULT_WATCHDOG_INTERVAL_MS = 10_000;
+const DEFAULT_IDLE_TIMEOUT_MS = 15_000;
+const DEFAULT_WATCHDOG_INTERVAL_MS = 5_000;
+const DEFAULT_PORT_RETRY = 20;
+
+/** Find the first free port starting at `preferred` (inclusive). */
+async function findFreePort(preferred: number, maxAttempts: number): Promise<number> {
+  for (let i = 0; i < maxAttempts; i++) {
+    const candidate = preferred + i;
+    const available = await new Promise<boolean>((resolve) => {
+      const probe: Server = createServer();
+      probe.once("error", () => {
+        probe.close();
+        resolve(false);
+      });
+      probe.listen(candidate, () => {
+        probe.close(() => resolve(true));
+      });
+    });
+    if (available) return candidate;
+  }
+  throw new Error(
+    `no free port in range ${preferred}-${preferred + maxAttempts - 1}`,
+  );
+}
 
 export async function startServer(options: ServerOptions): Promise<void> {
   const idleTimeoutMs = options.idleTimeoutMs ?? DEFAULT_IDLE_TIMEOUT_MS;
   const watchdogIntervalMs = options.watchdogIntervalMs ?? DEFAULT_WATCHDOG_INTERVAL_MS;
+  const portRetry = options.portRetry ?? DEFAULT_PORT_RETRY;
+
+  const port = await findFreePort(options.port, portRetry);
+  if (port !== options.port) {
+    console.log(`logit UI: port ${options.port} busy, using ${port} instead`);
+  }
 
   let lastActivity = Date.now();
   let server: ReturnType<typeof serve> | undefined;
@@ -34,7 +65,6 @@ export async function startServer(options: ServerOptions): Promise<void> {
     shuttingDown = true;
     if (watchdog) clearInterval(watchdog);
     server?.close(() => process.exit(0));
-    // fallback: force-exit after 1s if close hangs
     setTimeout(() => process.exit(0), 1000).unref();
   };
 
@@ -45,7 +75,7 @@ export async function startServer(options: ServerOptions): Promise<void> {
     },
   });
 
-  server = serve({ fetch: app.fetch, port: options.port }, (info) => {
+  server = serve({ fetch: app.fetch, port }, (info) => {
     console.log(`logit UI running on http://localhost:${info.port}`);
     console.log(`(auto-shutdown after ${idleTimeoutMs / 1000}s with no browser heartbeat)`);
   });
