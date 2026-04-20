@@ -1,0 +1,11 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/core" },
+    { "path": "packages/cli" },
+    { "path": "packages/runtime-node" },
+    { "path": "packages/vite-plugin" },
+    { "path": "apps/web-ui" },
+    { "path": "examples/node-server" }
+  ]
+}

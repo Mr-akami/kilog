@@ -18,5 +18,9 @@
   },
   "engines": {
     "node": ">=24"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.19.14",
+    "hono": "^4.12.14"
   }
 }
