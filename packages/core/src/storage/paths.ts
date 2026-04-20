@@ -10,6 +10,11 @@ export function dbFilePath(baseDir: string): string {
   return path.join(baseDir, INDEX_DIR, DB_FILE);
 }
 
+/** Given a `.devlogs/` directory (absolute), return the path to its DuckDB file. */
+export function dbFilePathFromDevlogs(devlogsDir: string): string {
+  return path.join(devlogsDir, "index", DB_FILE);
+}
+
 export function rawFileName(date: string, runtime: Runtime): string {
   return `${date}.${runtime}.jsonl`;
 }

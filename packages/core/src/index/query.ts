@@ -8,6 +8,7 @@ export interface QueryFilter {
   search?: string;
   from?: string;
   to?: string;
+  project?: string;
   limit?: number;
   offset?: number;
 }
@@ -16,6 +17,7 @@ export interface AggregateRow {
   runtime: string;
   type: string;
   level: string;
+  project: string | null;
   count: number;
 }
 
@@ -48,6 +50,10 @@ function buildWhere(filter: QueryFilter): { clause: string; params: (string | nu
     conditions.push(`timestamp <= $${idx++}`);
     params.push(filter.to);
   }
+  if (filter.project) {
+    conditions.push(`project = $${idx++}`);
+    params.push(filter.project);
+  }
 
   const clause = conditions.length > 0 ? " WHERE " + conditions.join(" AND ") : "";
   return { clause, params };
@@ -76,7 +82,7 @@ export async function aggregateLogs(db: DuckDBInstance, filter: QueryFilter): Pr
   const conn = await db.connect();
   const { clause, params } = buildWhere(filter);
 
-  const sql = `SELECT runtime, type, level, COUNT(*)::INTEGER as count FROM logs${clause} GROUP BY runtime, type, level ORDER BY runtime, type, level`;
+  const sql = `SELECT runtime, type, level, project, COUNT(*)::INTEGER as count FROM logs${clause} GROUP BY runtime, type, level, project ORDER BY project NULLS FIRST, runtime, type, level`;
 
   const result = params.length > 0
     ? await conn.runAndReadAll(sql, params)
@@ -86,6 +92,15 @@ export async function aggregateLogs(db: DuckDBInstance, filter: QueryFilter): Pr
     runtime: row[0] as string,
     type: row[1] as string,
     level: row[2] as string,
-    count: Number(row[3]),
+    project: (row[3] as string | null) ?? null,
+    count: Number(row[4]),
   }));
+}
+
+export async function listProjects(db: DuckDBInstance): Promise<string[]> {
+  const conn = await db.connect();
+  const result = await conn.runAndReadAll(
+    `SELECT DISTINCT project FROM logs WHERE project IS NOT NULL ORDER BY project`,
+  );
+  return result.getRows().map((row: unknown[]) => row[0] as string);
 }
