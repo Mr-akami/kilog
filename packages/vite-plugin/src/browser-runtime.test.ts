@@ -75,4 +75,16 @@ describe("generateBrowserRuntime", () => {
     const matches = script.match(emptyCatchPattern);
     expect(matches).toBeNull();
   });
+
+  it("should JSON-stringify non-string args instead of producing [object Object]", () => {
+    const script = generateBrowserRuntime();
+    // The generated script must use formatArgs (JSON-stringify), not the old
+    // args.map(String).join(" ") which produced "[object Object]".
+    expect(script).toContain("formatArgs");
+    expect(script).toContain("JSON.stringify");
+    expect(script).not.toMatch(/args\.map\(String\)/);
+    // The formatArg helper must handle object-typed args with JSON.stringify
+    // (we cannot easily invoke the IIFE, so we verify the source).
+    expect(script).toMatch(/function formatArg\([\s\S]*?JSON\.stringify/);
+  });
 });
