@@ -39,12 +39,12 @@ describe("captureErrors", () => {
 
   it("should register uncaughtException listener", () => {
     setupCapture();
-    expect(errorHandler).toBeDefined();
+    expect(typeof errorHandler).toBe("function");
   });
 
   it("should register unhandledRejection listener", () => {
     setupCapture();
-    expect(rejectionHandler).toBeDefined();
+    expect(typeof rejectionHandler).toBe("function");
   });
 
   it("should create ErrorEvent from uncaughtException", async () => {

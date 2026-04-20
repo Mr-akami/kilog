@@ -1,36 +1,45 @@
 import { describe, it, expect } from "vite-plus/test";
 import logitPlugin from "./index.js";
+import { ENDPOINT } from "./constants.js";
 
-describe("logitPlugin", () => {
-  it("should return plugin with name", () => {
-    const plugin = logitPlugin();
-    expect(plugin.name).toBeTruthy();
-    expect(typeof plugin.name).toBe("string");
+interface HtmlTag {
+  tag: string;
+  children?: string;
+  injectTo?: string;
+}
+
+interface PluginWithHooks {
+  name: string;
+  transformIndexHtml?: unknown;
+  configureServer?: unknown;
+}
+
+describe("logitPlugin()", () => {
+  it("uses a stable identifier as the plugin name", () => {
+    const plugin = logitPlugin() as PluginWithHooks;
+    expect(plugin.name).toBe("logit");
   });
 
-  it("should have transformIndexHtml hook", () => {
-    const plugin = logitPlugin();
-    expect(plugin.transformIndexHtml).toBeDefined();
+  it("exposes transformIndexHtml and configureServer hooks as functions", () => {
+    const plugin = logitPlugin() as PluginWithHooks;
+    expect(typeof plugin.transformIndexHtml).toBe("function");
+    expect(typeof plugin.configureServer).toBe("function");
   });
 
-  it("should have configureServer hook", () => {
-    const plugin = logitPlugin();
-    expect(plugin.configureServer).toBeDefined();
-  });
+  it("injects exactly one script tag into <head> that contains the browser runtime", () => {
+    const plugin = logitPlugin() as PluginWithHooks;
+    const hook = plugin.transformIndexHtml as (html: string, ctx: never) => HtmlTag[];
+    const result = hook("<html></html>", {} as never);
 
-  it("should return script tags from transformIndexHtml", () => {
-    const plugin = logitPlugin();
-    const hook = plugin.transformIndexHtml;
-
-    if (typeof hook === "function") {
-      const result = (hook as (html: string, ctx: never) => unknown)("<html></html>", {} as never);
-      expect(result).toBeDefined();
-
-      if (Array.isArray(result)) {
-        expect(result).toEqual(
-          expect.arrayContaining([expect.objectContaining({ tag: "script" })]),
-        );
-      }
-    }
+    expect(Array.isArray(result)).toBe(true);
+    expect(result).toHaveLength(1);
+    const [tag] = result;
+    expect(tag.tag).toBe("script");
+    expect(tag.injectTo).toBe("head");
+    // The injected script must know where to POST events.
+    expect(tag.children).toContain(ENDPOINT);
+    // It must wrap the console and fetch so events are captured.
+    expect(tag.children).toContain("wrapConsole");
+    expect(tag.children).toContain("fetch");
   });
 });

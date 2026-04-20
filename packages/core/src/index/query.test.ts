@@ -317,11 +317,12 @@ describe("queryLogs", () => {
     const result = await queryLogs(db, { limit: 1 });
     expect(result).toHaveLength(1);
     const event = result[0];
-    expect(event.id).toBeTruthy();
-    expect(event.timestamp).toBeTruthy();
-    expect(event.runtime).toBeTruthy();
-    expect(event.session).toBeTruthy();
-    expect(event.type).toBeTruthy();
+    expect(typeof event.id).toBe("string");
+    expect(event.id.length).toBeGreaterThan(0);
+    expect(() => new Date(event.timestamp).toISOString()).not.toThrow();
+    expect(["node", "browser", "bun", "deno"]).toContain(event.runtime);
+    expect(typeof event.session).toBe("string");
+    expect(["console", "error", "network", "unhandled-rejection"]).toContain(event.type);
   });
 });
 

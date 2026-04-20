@@ -25,7 +25,7 @@ const DEFAULT_WATCHDOG_INTERVAL_MS = 5_000;
 const DEFAULT_PORT_RETRY = 20;
 
 /** Find the first free port starting at `preferred` (inclusive). */
-async function findFreePort(preferred: number, maxAttempts: number): Promise<number> {
+export async function findFreePort(preferred: number, maxAttempts: number): Promise<number> {
   for (let i = 0; i < maxAttempts; i++) {
     const candidate = preferred + i;
     const available = await new Promise<boolean>((resolve) => {

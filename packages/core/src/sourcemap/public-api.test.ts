@@ -1,9 +1,16 @@
 import { describe, it, expect } from "vite-plus/test";
 import * as sourcemapExports from "./index.js";
 
-describe("sourcemap public API boundary", () => {
-  it("should only export resolveStackFrames", () => {
-    const exportedNames = Object.keys(sourcemapExports);
-    expect(exportedNames).toEqual(["resolveStackFrames"]);
+describe("sourcemap package boundary", () => {
+  it("exposes resolveStackFrames", () => {
+    expect(sourcemapExports).toHaveProperty("resolveStackFrames");
+    expect(typeof sourcemapExports.resolveStackFrames).toBe("function");
+  });
+
+  it("does not leak internal helpers (cache, resolver module internals)", () => {
+    const leaky = Object.keys(sourcemapExports).filter(
+      (k) => k !== "resolveStackFrames",
+    );
+    expect(leaky).toEqual([]);
   });
 });
