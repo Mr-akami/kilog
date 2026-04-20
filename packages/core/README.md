@@ -8,7 +8,7 @@ Rarely used directly. For runtime instrumentation see [`@logit/runtime-node`](..
 
 - **Types**: `LogEvent` / `Runtime` / `EventType` / `LogLevel` / `SourceFile` / `DiscoveredSource`
 - **Storage**: `createWriter`, `readLogFile`, `listRawFiles`, `dbFilePath`, `dbFilePathFromDevlogs`
-- **Discovery**: `findDevlogsDirs`, `discoverSources`, `discoverSourceFiles`, `listRawFilesIn` — walks down from a root and enumerates `.devlogs/` directories
+- **Discovery**: `findDevlogsDirs`, `discoverSources`, `discoverSourceFiles`, `listRawFilesIn` — walks down from a root and enumerates `.logit/` directories
 - **Index**: `openIndex` / `closeIndex` (ensures schema on open), `queryLogs`, `aggregateLogs`, `listProjects`
 - **Catch-up**: `catchUpFile`, `catchUpIndex` — differential indexing based on byte offset + mtime tracked in a `sources` table inside each DuckDB
 - **Reindex**: `reindex` — drops and rebuilds one project's index from raw JSONL

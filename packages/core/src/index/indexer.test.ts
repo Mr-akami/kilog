@@ -55,8 +55,8 @@ describe("reindex", () => {
 
   beforeEach(async () => {
     baseDir = await mkdtemp(path.join(tmpdir(), "logit-indexer-"));
-    await mkdir(path.join(baseDir, ".devlogs", "raw"), { recursive: true });
-    await mkdir(path.join(baseDir, ".devlogs", "index"), { recursive: true });
+    await mkdir(path.join(baseDir, ".logit", "raw"), { recursive: true });
+    await mkdir(path.join(baseDir, ".logit", "index"), { recursive: true });
   });
 
   afterEach(async () => {
@@ -64,7 +64,7 @@ describe("reindex", () => {
   });
 
   it("should return count 0 when no jsonl files exist", async () => {
-    const dbPath = path.join(baseDir, ".devlogs", "index", "logs.duckdb");
+    const dbPath = path.join(baseDir, ".logit", "index", "logs.duckdb");
     const result = await reindex({ baseDir, dbPath });
     expect(result.count).toBe(0);
   });
@@ -75,13 +75,13 @@ describe("reindex", () => {
       makeConsoleEvent({ message: "two" }),
       makeConsoleEvent({ message: "three" }),
     ];
-    const rawDir = path.join(baseDir, ".devlogs", "raw");
+    const rawDir = path.join(baseDir, ".logit", "raw");
     await writeFile(
       path.join(rawDir, "2026-04-18.node.jsonl"),
       events.map(serialize).join("\n") + "\n",
     );
 
-    const dbPath = path.join(baseDir, ".devlogs", "index", "logs.duckdb");
+    const dbPath = path.join(baseDir, ".logit", "index", "logs.duckdb");
     const result = await reindex({ baseDir, dbPath });
     expect(result.count).toBe(3);
   });
@@ -92,7 +92,7 @@ describe("reindex", () => {
       makeConsoleEvent({ message: "node-2" }),
     ];
     const browserEvents = [makeNetworkEvent()];
-    const rawDir = path.join(baseDir, ".devlogs", "raw");
+    const rawDir = path.join(baseDir, ".logit", "raw");
     await writeFile(
       path.join(rawDir, "2026-04-18.node.jsonl"),
       nodeEvents.map(serialize).join("\n") + "\n",
@@ -102,20 +102,20 @@ describe("reindex", () => {
       browserEvents.map(serialize).join("\n") + "\n",
     );
 
-    const dbPath = path.join(baseDir, ".devlogs", "index", "logs.duckdb");
+    const dbPath = path.join(baseDir, ".logit", "index", "logs.duckdb");
     const result = await reindex({ baseDir, dbPath });
     expect(result.count).toBe(3);
   });
 
   it("should drop and recreate on reindex (idempotent)", async () => {
     const events = [makeConsoleEvent()];
-    const rawDir = path.join(baseDir, ".devlogs", "raw");
+    const rawDir = path.join(baseDir, ".logit", "raw");
     await writeFile(
       path.join(rawDir, "2026-04-18.node.jsonl"),
       events.map(serialize).join("\n") + "\n",
     );
 
-    const dbPath = path.join(baseDir, ".devlogs", "index", "logs.duckdb");
+    const dbPath = path.join(baseDir, ".logit", "index", "logs.duckdb");
     await reindex({ baseDir, dbPath });
     const result = await reindex({ baseDir, dbPath });
     // should still be 1, not 2 (table was dropped and recreated)
@@ -124,13 +124,13 @@ describe("reindex", () => {
 
   it("should handle mixed event types", async () => {
     const events = [makeConsoleEvent(), makeErrorEvent(), makeNetworkEvent()];
-    const rawDir = path.join(baseDir, ".devlogs", "raw");
+    const rawDir = path.join(baseDir, ".logit", "raw");
     await writeFile(
       path.join(rawDir, "2026-04-18.node.jsonl"),
       events.map(serialize).join("\n") + "\n",
     );
 
-    const dbPath = path.join(baseDir, ".devlogs", "index", "logs.duckdb");
+    const dbPath = path.join(baseDir, ".logit", "index", "logs.duckdb");
     const result = await reindex({ baseDir, dbPath });
     expect(result.count).toBe(3);
   });
@@ -139,13 +139,13 @@ describe("reindex", () => {
     const events = Array.from({ length: 1100 }, (_, i) =>
       makeConsoleEvent({ message: `event-${i}`, id: crypto.randomUUID() }),
     );
-    const rawDir = path.join(baseDir, ".devlogs", "raw");
+    const rawDir = path.join(baseDir, ".logit", "raw");
     await writeFile(
       path.join(rawDir, "2026-04-18.node.jsonl"),
       events.map(serialize).join("\n") + "\n",
     );
 
-    const dbPath = path.join(baseDir, ".devlogs", "index", "logs.duckdb");
+    const dbPath = path.join(baseDir, ".logit", "index", "logs.duckdb");
     const result = await reindex({ baseDir, dbPath });
     expect(result.count).toBe(1100);
   });
@@ -156,8 +156,8 @@ describe("indexFile", () => {
 
   beforeEach(async () => {
     baseDir = await mkdtemp(path.join(tmpdir(), "logit-indexfile-"));
-    await mkdir(path.join(baseDir, ".devlogs", "raw"), { recursive: true });
-    await mkdir(path.join(baseDir, ".devlogs", "index"), { recursive: true });
+    await mkdir(path.join(baseDir, ".logit", "raw"), { recursive: true });
+    await mkdir(path.join(baseDir, ".logit", "index"), { recursive: true });
   });
 
   afterEach(async () => {
@@ -166,10 +166,10 @@ describe("indexFile", () => {
 
   it("should return count of indexed events from a single file", async () => {
     const events = [makeConsoleEvent(), makeConsoleEvent()];
-    const filePath = path.join(baseDir, ".devlogs", "raw", "test.jsonl");
+    const filePath = path.join(baseDir, ".logit", "raw", "test.jsonl");
     await writeFile(filePath, events.map(serialize).join("\n") + "\n");
 
-    const dbPath = path.join(baseDir, ".devlogs", "index", "logs.duckdb");
+    const dbPath = path.join(baseDir, ".logit", "index", "logs.duckdb");
     const db = await openIndex(dbPath);
     try {
       const count = await indexFile(db, filePath);
@@ -180,10 +180,10 @@ describe("indexFile", () => {
   });
 
   it("should return 0 for empty file", async () => {
-    const filePath = path.join(baseDir, ".devlogs", "raw", "empty.jsonl");
+    const filePath = path.join(baseDir, ".logit", "raw", "empty.jsonl");
     await writeFile(filePath, "");
 
-    const dbPath = path.join(baseDir, ".devlogs", "index", "logs.duckdb");
+    const dbPath = path.join(baseDir, ".logit", "index", "logs.duckdb");
     const db = await openIndex(dbPath);
     try {
       const count = await indexFile(db, filePath);

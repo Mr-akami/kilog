@@ -1,6 +1,6 @@
 # @logit/web-ui
 
-Browser UI for `.devlogs/` backed by DuckDB-wasm. The server is a thin Hono app that does SSR of the initial HTML and serves JSONL files on demand — all queries run in the browser.
+Browser UI for `.logit/` backed by DuckDB-wasm. The server is a thin Hono app that does SSR of the initial HTML and serves JSONL files on demand — all queries run in the browser.
 
 ## Usage
 
@@ -11,7 +11,7 @@ pnpm logit ui                 # http://localhost:3000
 pnpm logit ui --port 4000
 ```
 
-Use `--port` if it collides with your app's dev server. The server scans from cwd (or `--root <path>`) to discover every `.devlogs/` under it.
+Use `--port` if it collides with your app's dev server. The server scans from cwd (or `--root <path>`) to discover every `.logit/` under it.
 
 ## Runtime behavior
 
@@ -29,7 +29,7 @@ Use `--port` if it collides with your app's dev server. The server scans from cw
 - **Filter bar**: project / runtime / type / level dropdowns + free-text search.
 - **Raw SQL input**: run any SELECT against the wasm DB (`logs` table). Results render as a generic table.
 - **Clear DuckDB**: drop rows from the in-browser DB, then re-ingest from disk (non-destructive).
-- **Clear logs on disk**: delete every `.devlogs/raw/*.jsonl` and `.devlogs/index/` under the current root, then clear the wasm DB (destructive, requires confirmation).
+- **Clear logs on disk**: delete every `.logit/raw/*.jsonl` and `.logit/index/` under the current root, then clear the wasm DB (destructive, requires confirmation).
 
 ## HTTP API
 

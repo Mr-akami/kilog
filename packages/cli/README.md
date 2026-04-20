@@ -1,6 +1,6 @@
 # @logit/cli
 
-The `logit` command. Search, browse, and manage `.devlogs/` across every project under your invocation directory.
+The `logit` command. Search, browse, and manage `.logit/` across every project under your invocation directory.
 
 ## Usage
 
@@ -25,9 +25,9 @@ Once published, `npx logit <command>` will also work.
 
 ## How scope is resolved
 
-- By default, the CLI walks **down** from the current working directory and finds every `.devlogs/` under it.
+- By default, the CLI walks **down** from the current working directory and finds every `.logit/` under it.
 - `--root <path>` overrides the starting point.
-- Each discovered `.devlogs/` keeps its own independent `index/logs.duckdb` — there is no unified database. Results from multiple projects are merged in memory at query time.
+- Each discovered `.logit/` keeps its own independent `index/logs.duckdb` — there is no unified database. Results from multiple projects are merged in memory at query time.
 
 ## Commands
 
@@ -39,7 +39,7 @@ pnpm logit tail --runtime node
 pnpm logit tail --root ../other-project
 ```
 
-Streams like `tail -f` across every `.devlogs/raw/` under the root. Exit with Ctrl+C.
+Streams like `tail -f` across every `.logit/raw/` under the root. Exit with Ctrl+C.
 
 ### `query` — search / filter
 
@@ -88,7 +88,7 @@ The server auto-shuts down when you close the browser tab (via a heartbeat / bea
 pnpm logit reindex
 ```
 
-Discovers every `.devlogs/` under the root and rebuilds each `index/logs.duckdb` from scratch. Useful after editing JSONL by hand or when a DB is corrupted.
+Discovers every `.logit/` under the root and rebuilds each `index/logs.duckdb` from scratch. Useful after editing JSONL by hand or when a DB is corrupted.
 
 ### `prune` — delete old logs
 
@@ -96,7 +96,7 @@ Discovers every `.devlogs/` under the root and rebuilds each `index/logs.duckdb`
 pnpm logit prune --before 2026-04-01
 ```
 
-Deletes JSONL files older than the given date in every discovered `.devlogs/raw/`.
+Deletes JSONL files older than the given date in every discovered `.logit/raw/`.
 
 ### `doctor` — health check
 
@@ -104,4 +104,4 @@ Deletes JSONL files older than the given date in every discovered `.devlogs/raw/
 pnpm logit doctor
 ```
 
-Lists every discovered `.devlogs/`, the project label, raw event count, and index count. Flags any mismatches with a suggested `logit reindex`.
+Lists every discovered `.logit/`, the project label, raw event count, and index count. Flags any mismatches with a suggested `logit reindex`.

@@ -14,7 +14,7 @@ Just load the register entry with `--import`:
 }
 ```
 
-No code changes required. Instrumentation is enabled on startup, and events are written to `.devlogs/`.
+No code changes required. Instrumentation is enabled on startup, and events are written to `.logit/`.
 
 ## What is captured
 
@@ -24,7 +24,7 @@ No code changes required. Instrumentation is enabled on startup, and events are 
 
 ## Storage
 
-Written to `.devlogs/raw/{date}.node.jsonl` under the cwd. Override with the `LOGIT_DIR` environment variable.
+Written to `.logit/raw/{date}.node.jsonl` under the cwd. Override with the `LOGIT_DIR` environment variable.
 
 ## Programmatic API
 

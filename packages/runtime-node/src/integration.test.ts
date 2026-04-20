@@ -31,7 +31,7 @@ describe("runtime-node integration", () => {
 
     console.log("integration test message");
 
-    const rawDir = path.join(baseDir, ".devlogs", "raw");
+    const rawDir = path.join(baseDir, ".logit", "raw");
     await vi.waitFor(
       async () => {
         const files = await readdir(rawDir);
@@ -56,7 +56,7 @@ describe("runtime-node integration", () => {
     console.log("first");
     console.log("second");
 
-    const rawDir = path.join(baseDir, ".devlogs", "raw");
+    const rawDir = path.join(baseDir, ".logit", "raw");
     await vi.waitFor(
       async () => {
         const files = await readdir(rawDir);

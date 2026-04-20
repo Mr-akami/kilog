@@ -140,5 +140,5 @@ vite.config.ts.timestamp-*
 
 .serena/
 .pnpm-store/
-.devlogs/
+.logit/
 dist/

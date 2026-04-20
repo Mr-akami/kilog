@@ -25,7 +25,7 @@ describe("handleTail", () => {
 
   beforeEach(async () => {
     baseDir = await mkdtemp(path.join(tmpdir(), "logit-cli-tail-"));
-    rawDir = path.join(baseDir, ".devlogs", "raw");
+    rawDir = path.join(baseDir, ".logit", "raw");
     await mkdir(rawDir, { recursive: true });
   });
 
@@ -98,7 +98,7 @@ describe("handleTail", () => {
     expect(lines.some((l) => l.includes("browser event"))).toBe(false);
   });
 
-  it("should handle missing .devlogs/raw directory gracefully", async () => {
+  it("should handle missing .logit/raw directory gracefully", async () => {
     const emptyBase = await mkdtemp(path.join(tmpdir(), "logit-cli-tail-empty-"));
     const controller = new AbortController();
 

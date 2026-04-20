@@ -8,7 +8,7 @@ import {
   catchUpFile,
   discoverSources,
   listRawFilesIn,
-  dbFilePathFromDevlogs,
+  dbFilePathFromLogitDir,
 } from "@logit/core";
 import type {
   QueryFilter,
@@ -68,10 +68,10 @@ export async function handleQuery(options: QueryOptions): Promise<void> {
   if (options.aggregate) {
     const merged: AggregateRow[] = [];
     for (const src of sources) {
-      const dbPath = dbFilePathFromDevlogs(src.devlogsDir);
+      const dbPath = dbFilePathFromLogitDir(src.logitDir);
       const db = await openIndex(dbPath);
       try {
-        for (const raw of await listRawFilesIn(src.devlogsDir)) {
+        for (const raw of await listRawFilesIn(src.logitDir)) {
           await catchUpFile(db, raw, src.project);
         }
         const rows = await aggregateLogs(db, filter);
@@ -86,11 +86,11 @@ export async function handleQuery(options: QueryOptions): Promise<void> {
 
   const perSource: LogEvent[] = [];
   for (const src of sources) {
-    const dbPath = dbFilePathFromDevlogs(src.devlogsDir);
-    const cacheDir = path.join(src.devlogsDir, "cache", "sourcemaps");
+    const dbPath = dbFilePathFromLogitDir(src.logitDir);
+    const cacheDir = path.join(src.logitDir, "cache", "sourcemaps");
     const db = await openIndex(dbPath);
     try {
-      for (const raw of await listRawFilesIn(src.devlogsDir)) {
+      for (const raw of await listRawFilesIn(src.logitDir)) {
         await catchUpFile(db, raw, src.project);
       }
       const raw = await queryLogs(db, filter);

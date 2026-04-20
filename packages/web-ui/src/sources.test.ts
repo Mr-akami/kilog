@@ -15,12 +15,12 @@ describe("describeSources", () => {
     await rm(root, { recursive: true, force: true });
   });
 
-  it("returns empty when no .devlogs/ is found", async () => {
+  it("returns empty when no .logit/ is found", async () => {
     expect(await describeSources(root)).toEqual([]);
   });
 
   it("returns absolute path, display path, project, size, and ISO mtime", async () => {
-    const raw = path.join(root, "apps", "api", ".devlogs", "raw");
+    const raw = path.join(root, "apps", "api", ".logit", "raw");
     await mkdir(raw, { recursive: true });
     const jsonl = path.join(raw, "2026-04-20.node.jsonl");
     await writeFile(jsonl, '{"id":"a"}\n{"id":"b"}\n');
@@ -28,7 +28,7 @@ describe("describeSources", () => {
     const [desc] = await describeSources(root);
 
     expect(desc.path).toBe(jsonl);
-    expect(desc.displayPath).toBe(path.join("apps", "api", ".devlogs", "raw", "2026-04-20.node.jsonl"));
+    expect(desc.displayPath).toBe(path.join("apps", "api", ".logit", "raw", "2026-04-20.node.jsonl"));
     expect(desc.project).toBe(path.join("apps", "api"));
     expect(desc.size).toBeGreaterThan(0);
     expect(() => new Date(desc.mtime).toISOString()).not.toThrow();
@@ -36,11 +36,11 @@ describe("describeSources", () => {
   });
 
   it("returns one descriptor per JSONL across multiple projects", async () => {
-    await mkdir(path.join(root, "apps", "a", ".devlogs", "raw"), { recursive: true });
-    await mkdir(path.join(root, "apps", "b", ".devlogs", "raw"), { recursive: true });
-    await writeFile(path.join(root, "apps", "a", ".devlogs", "raw", "x.jsonl"), "");
-    await writeFile(path.join(root, "apps", "a", ".devlogs", "raw", "y.jsonl"), "");
-    await writeFile(path.join(root, "apps", "b", ".devlogs", "raw", "z.jsonl"), "");
+    await mkdir(path.join(root, "apps", "a", ".logit", "raw"), { recursive: true });
+    await mkdir(path.join(root, "apps", "b", ".logit", "raw"), { recursive: true });
+    await writeFile(path.join(root, "apps", "a", ".logit", "raw", "x.jsonl"), "");
+    await writeFile(path.join(root, "apps", "a", ".logit", "raw", "y.jsonl"), "");
+    await writeFile(path.join(root, "apps", "b", ".logit", "raw", "z.jsonl"), "");
 
     const descs = await describeSources(root);
 

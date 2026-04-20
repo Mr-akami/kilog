@@ -1,6 +1,6 @@
 import { readdir, unlink } from "node:fs/promises";
 import path from "node:path";
-import { findDevlogsDirs } from "@logit/core";
+import { findLogitDirs } from "@logit/core";
 
 export interface PruneOptions {
   root: string;
@@ -12,8 +12,8 @@ function extractDate(filename: string): string | null {
   return match ? match[1] : null;
 }
 
-async function pruneDevlogs(devlogsDir: string, before: string): Promise<number> {
-  const rawDir = path.join(devlogsDir, "raw");
+async function pruneLogitDir(logitDir: string, before: string): Promise<number> {
+  const rawDir = path.join(logitDir, "raw");
   let files: string[];
   try {
     files = await readdir(rawDir);
@@ -34,10 +34,10 @@ async function pruneDevlogs(devlogsDir: string, before: string): Promise<number>
 }
 
 export async function handlePrune(options: PruneOptions): Promise<void> {
-  const dirs = await findDevlogsDirs(options.root);
+  const dirs = await findLogitDirs(options.root);
   let total = 0;
   for (const dir of dirs) {
-    total += await pruneDevlogs(dir, options.before);
+    total += await pruneLogitDir(dir, options.before);
   }
   process.stdout.write(`Pruned ${total} files\n`);
   if (total > 0) {

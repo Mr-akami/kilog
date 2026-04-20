@@ -24,14 +24,14 @@ describe("clearAllLogs", () => {
     await rm(root, { recursive: true, force: true });
   });
 
-  it("returns zeros when no .devlogs/ exists", async () => {
+  it("returns zeros when no .logit/ exists", async () => {
     const result = await clearAllLogs(root);
     expect(result).toEqual({ rawFilesDeleted: 0, indexDbsDeleted: 0 });
   });
 
-  it("deletes every JSONL in every discovered .devlogs/raw/", async () => {
-    const a = path.join(root, "apps", "a", ".devlogs", "raw");
-    const b = path.join(root, "apps", "b", ".devlogs", "raw");
+  it("deletes every JSONL in every discovered .logit/raw/", async () => {
+    const a = path.join(root, "apps", "a", ".logit", "raw");
+    const b = path.join(root, "apps", "b", ".logit", "raw");
     await mkdir(a, { recursive: true });
     await mkdir(b, { recursive: true });
     await writeFile(path.join(a, "2026-04-20.node.jsonl"), "{}\n");
@@ -45,10 +45,10 @@ describe("clearAllLogs", () => {
     expect(await exists(path.join(b, "2026-04-20.browser.jsonl"))).toBe(false);
   });
 
-  it("removes each .devlogs/index/ directory entirely", async () => {
-    const devlogs = path.join(root, "apps", "a", ".devlogs");
-    const indexDir = path.join(devlogs, "index");
-    const rawDir = path.join(devlogs, "raw");
+  it("removes each .logit/index/ directory entirely", async () => {
+    const logitDir = path.join(root, "apps", "a", ".logit");
+    const indexDir = path.join(logitDir, "index");
+    const rawDir = path.join(logitDir, "raw");
     await mkdir(indexDir, { recursive: true });
     await mkdir(rawDir, { recursive: true });
     await writeFile(path.join(indexDir, "logs.duckdb"), "fake db");
@@ -61,7 +61,7 @@ describe("clearAllLogs", () => {
   });
 
   it("does not delete non-jsonl files in raw/", async () => {
-    const rawDir = path.join(root, "apps", "a", ".devlogs", "raw");
+    const rawDir = path.join(root, "apps", "a", ".logit", "raw");
     await mkdir(rawDir, { recursive: true });
     await writeFile(path.join(rawDir, "notes.txt"), "keep me");
     await writeFile(path.join(rawDir, "2026-04-20.node.jsonl"), "{}\n");
@@ -72,11 +72,11 @@ describe("clearAllLogs", () => {
     expect(await exists(path.join(rawDir, "notes.txt"))).toBe(true);
   });
 
-  it("leaves unrelated files outside .devlogs/ untouched", async () => {
+  it("leaves unrelated files outside .logit/ untouched", async () => {
     const keeper = path.join(root, "apps", "a", "src", "file.ts");
     await mkdir(path.dirname(keeper), { recursive: true });
     await writeFile(keeper, "source");
-    const rawDir = path.join(root, "apps", "a", ".devlogs", "raw");
+    const rawDir = path.join(root, "apps", "a", ".logit", "raw");
     await mkdir(rawDir, { recursive: true });
     await writeFile(path.join(rawDir, "2026-04-20.node.jsonl"), "{}\n");
 

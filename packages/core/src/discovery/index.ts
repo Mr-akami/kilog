@@ -1,5 +1,5 @@
 export {
-  findDevlogsDirs,
+  findLogitDirs,
   discoverSources,
   discoverSourceFiles,
   listRawFilesIn,

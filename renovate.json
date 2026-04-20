@@ -1,0 +1,34 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":automergeAll",
+    ":automergeBranch",
+    "group:monorepos",
+    "group:recommended"
+  ],
+  "schedule": ["* * * * 1"],
+  "timezone": "Asia/Tokyo",
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0,
+  "rangeStrategy": "bump",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["* * * * 1"]
+  },
+  "packageRules": [
+    {
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "automerge": true
+    },
+    {
+      "matchDatasources": ["node-version"],
+      "automerge": true
+    },
+    {
+      "matchDepNames": ["pnpm"],
+      "automerge": true
+    }
+  ]
+}

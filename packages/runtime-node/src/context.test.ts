@@ -57,7 +57,7 @@ describe("createRuntimeContext", () => {
     await ctx.writer.append(event);
     await ctx.writer.close();
 
-    const rawDir = path.join(dir, ".devlogs", "raw");
+    const rawDir = path.join(dir, ".logit", "raw");
     const files = await readdir(rawDir);
     expect(files).toContain("2026-04-18.node.jsonl");
   });

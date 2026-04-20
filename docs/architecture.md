@@ -73,7 +73,7 @@ Search:
 ## Storage Layout
 
 ```text
-.devlogs/
+.logit/
   raw/
     2026-04-18.browser.jsonl
     2026-04-18.node.jsonl

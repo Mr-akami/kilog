@@ -3,21 +3,21 @@ import { mkdtemp, rm, mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import {
-  findDevlogsDirs,
+  findLogitDirs,
   discoverSources,
   discoverSourceFiles,
   listRawFilesIn,
 } from "./discovery.js";
 
 async function mkDevlogs(dir: string, jsonlContent?: string): Promise<void> {
-  const raw = path.join(dir, ".devlogs", "raw");
+  const raw = path.join(dir, ".logit", "raw");
   await mkdir(raw, { recursive: true });
   if (jsonlContent != null) {
     await writeFile(path.join(raw, "2026-04-20.node.jsonl"), jsonlContent);
   }
 }
 
-describe("findDevlogsDirs", () => {
+describe("findLogitDirs", () => {
   let root: string;
 
   beforeEach(async () => {
@@ -28,33 +28,33 @@ describe("findDevlogsDirs", () => {
     await rm(root, { recursive: true, force: true });
   });
 
-  it("returns empty when no .devlogs exists", async () => {
-    const dirs = await findDevlogsDirs(root);
+  it("returns empty when no .logit exists", async () => {
+    const dirs = await findLogitDirs(root);
     expect(dirs).toEqual([]);
   });
 
-  it("finds a .devlogs at the root itself", async () => {
+  it("finds a .logit at the root itself", async () => {
     await mkDevlogs(root);
-    const dirs = await findDevlogsDirs(root);
-    expect(dirs).toEqual([path.join(root, ".devlogs")]);
+    const dirs = await findLogitDirs(root);
+    expect(dirs).toEqual([path.join(root, ".logit")]);
   });
 
-  it("finds nested .devlogs under children", async () => {
+  it("finds nested .logit under children", async () => {
     await mkDevlogs(path.join(root, "apps", "a"));
     await mkDevlogs(path.join(root, "apps", "b"));
-    const dirs = await findDevlogsDirs(root);
+    const dirs = await findLogitDirs(root);
     expect(dirs).toEqual([
-      path.join(root, "apps", "a", ".devlogs"),
-      path.join(root, "apps", "b", ".devlogs"),
+      path.join(root, "apps", "a", ".logit"),
+      path.join(root, "apps", "b", ".logit"),
     ]);
   });
 
-  it("does not descend into a .devlogs subtree", async () => {
+  it("does not descend into a .logit subtree", async () => {
     await mkDevlogs(root);
-    // nothing else should be found even if more dirs exist under .devlogs
-    await mkdir(path.join(root, ".devlogs", "raw", "junk"), { recursive: true });
-    const dirs = await findDevlogsDirs(root);
-    expect(dirs).toEqual([path.join(root, ".devlogs")]);
+    // nothing else should be found even if more dirs exist under .logit
+    await mkdir(path.join(root, ".logit", "raw", "junk"), { recursive: true });
+    const dirs = await findLogitDirs(root);
+    expect(dirs).toEqual([path.join(root, ".logit")]);
   });
 
   it("excludes node_modules / .git / dist by default", async () => {
@@ -62,8 +62,8 @@ describe("findDevlogsDirs", () => {
     await mkDevlogs(path.join(root, ".git", "hooks"));
     await mkDevlogs(path.join(root, "dist"));
     await mkDevlogs(path.join(root, "apps", "a"));
-    const dirs = await findDevlogsDirs(root);
-    expect(dirs).toEqual([path.join(root, "apps", "a", ".devlogs")]);
+    const dirs = await findLogitDirs(root);
+    expect(dirs).toEqual([path.join(root, "apps", "a", ".logit")]);
   });
 });
 
@@ -78,14 +78,14 @@ describe("discoverSources", () => {
     await rm(root, { recursive: true, force: true });
   });
 
-  it("assigns project = basename(target) for root-level .devlogs in single-target mode", async () => {
+  it("assigns project = basename(target) for root-level .logit in single-target mode", async () => {
     await mkDevlogs(root);
     const sources = await discoverSources([root]);
     expect(sources).toHaveLength(1);
     expect(sources[0].project).toBe(path.basename(root));
   });
 
-  it("assigns project = rel path for nested .devlogs in single-target mode", async () => {
+  it("assigns project = rel path for nested .logit in single-target mode", async () => {
     await mkDevlogs(path.join(root, "apps", "a"));
     const sources = await discoverSources([root]);
     expect(sources).toHaveLength(1);
@@ -123,12 +123,12 @@ describe("listRawFilesIn", () => {
 
   it("returns absolute paths of jsonl files under raw/", async () => {
     await mkDevlogs(root, "{}\n");
-    const files = await listRawFilesIn(path.join(root, ".devlogs"));
-    expect(files).toEqual([path.join(root, ".devlogs", "raw", "2026-04-20.node.jsonl")]);
+    const files = await listRawFilesIn(path.join(root, ".logit"));
+    expect(files).toEqual([path.join(root, ".logit", "raw", "2026-04-20.node.jsonl")]);
   });
 
   it("returns [] when raw/ does not exist", async () => {
-    const files = await listRawFilesIn(path.join(root, "missing", ".devlogs"));
+    const files = await listRawFilesIn(path.join(root, "missing", ".logit"));
     expect(files).toEqual([]);
   });
 });

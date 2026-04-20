@@ -130,7 +130,7 @@ describe("listRawFiles", () => {
 
   beforeEach(async () => {
     baseDir = await mkdtemp(path.join(tmpdir(), "logit-list-"));
-    await mkdir(path.join(baseDir, ".devlogs", "raw"), { recursive: true });
+    await mkdir(path.join(baseDir, ".logit", "raw"), { recursive: true });
   });
 
   afterEach(async () => {
@@ -143,7 +143,7 @@ describe("listRawFiles", () => {
   });
 
   it("should return jsonl files in raw directory", async () => {
-    const rawDir = path.join(baseDir, ".devlogs", "raw");
+    const rawDir = path.join(baseDir, ".logit", "raw");
     await writeFile(path.join(rawDir, "2026-04-18.node.jsonl"), "");
     await writeFile(path.join(rawDir, "2026-04-18.browser.jsonl"), "");
 
@@ -154,7 +154,7 @@ describe("listRawFiles", () => {
   });
 
   it("should not include non-jsonl files", async () => {
-    const rawDir = path.join(baseDir, ".devlogs", "raw");
+    const rawDir = path.join(baseDir, ".logit", "raw");
     await writeFile(path.join(rawDir, "2026-04-18.node.jsonl"), "");
     await writeFile(path.join(rawDir, "notes.txt"), "");
 

@@ -1,7 +1,7 @@
 import { watch, type FSWatcher } from "node:fs";
 import { readdir, stat, open, mkdir } from "node:fs/promises";
 import path from "node:path";
-import { deserialize, findDevlogsDirs } from "@logit/core";
+import { deserialize, findLogitDirs } from "@logit/core";
 import type { Runtime } from "@logit/core";
 import { formatLogLine } from "../format/log-line.js";
 
@@ -98,11 +98,11 @@ async function watchRawDir(
 }
 
 export async function handleTail(options: TailOptions): Promise<void> {
-  const dirs = await findDevlogsDirs(options.root);
+  const dirs = await findLogitDirs(options.root);
   const rawDirs =
     dirs.length > 0
       ? dirs.map((d) => path.join(d, "raw"))
-      : [path.join(options.root, ".devlogs", "raw")]; // watch even if not yet created
+      : [path.join(options.root, ".logit", "raw")]; // watch even if not yet created
 
   const fileOffsets = new Map<string, number>();
   const watchers: FSWatcher[] = [];

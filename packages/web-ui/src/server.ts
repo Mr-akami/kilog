@@ -82,7 +82,7 @@ export function createApp(options: AppOptions): Hono {
     "/api/sources",
     describeRoute({
       tags: ["discovery"],
-      summary: "List all .devlogs/raw/*.jsonl files under the root",
+      summary: "List all .logit/raw/*.jsonl files under the root",
       parameters: [
         {
           name: "root",
@@ -222,7 +222,7 @@ export function createApp(options: AppOptions): Hono {
       tags: ["maintenance"],
       summary: "Delete all raw JSONL files and per-project index directories",
       description:
-        "Destructive. Removes every `*.jsonl` under `<root>/**/.devlogs/raw/` and every `.devlogs/index/` directory. The browser UI confirms before calling this.",
+        "Destructive. Removes every `*.jsonl` under `<root>/**/.logit/raw/` and every `.logit/index/` directory. The browser UI confirms before calling this.",
       requestBody: {
         content: {
           "application/json": {

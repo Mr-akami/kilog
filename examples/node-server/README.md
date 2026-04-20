@@ -32,7 +32,7 @@ curl http://localhost:3000/throw   # uncaught error
 
 ## View logs
 
-Run these in this example's directory (the cwd where `.devlogs/` is created):
+Run these in this example's directory (the cwd where `.logit/` is created):
 
 ```bash
 pnpm logit tail

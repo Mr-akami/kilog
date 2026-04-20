@@ -6,7 +6,7 @@ Capture `console`, `fetch`, and uncaught errors from your app during development
 
 - Zero-code integration (`--import` flag or Vite plugin)
 - Works in Node and the browser
-- Per-project storage under each project's `.devlogs/` (JSONL + DuckDB index)
+- Per-project storage under each project's `.logit/` (JSONL + DuckDB index)
 - CLI (`logit tail / query / ui / ...`) with filters, aggregation, and raw SQL
 - Web UI: Hono SSR shell + in-browser DuckDB-wasm, 2 s live updates, raw SQL input, editable root, "Clear DuckDB" and "Clear logs on disk" buttons, auto-shutdown when the tab closes
 
@@ -37,7 +37,7 @@ export default { plugins: [logit()] };
 ### View logs
 
 ```bash
-pnpm logit tail     # live stream across every .devlogs/ under cwd
+pnpm logit tail     # live stream across every .logit/ under cwd
 pnpm logit query    # search / filter
 pnpm logit ui       # browser UI (auto-shuts down when you close the tab)
 ```
@@ -48,15 +48,15 @@ Not published to npm yet. Inside the workspace, add `@logit/cli` as a devDepende
 
 ## Storage model
 
-Each project keeps its own, self-contained `.devlogs/`:
+Each project keeps its own, self-contained `.logit/`:
 
 ```
-<project>/.devlogs/
+<project>/.logit/
 ├── raw/     # JSONL: {date}.{runtime}.jsonl
 └── index/   # DuckDB: logs.duckdb
 ```
 
-The CLI and UI walk down from the **invocation directory** (or `--root <path>`) to find every `.devlogs/` under it, then operate on each one independently. No unified database — each `.devlogs/` is standalone and portable.
+The CLI and UI walk down from the **invocation directory** (or `--root <path>`) to find every `.logit/` under it, then operate on each one independently. No unified database — each `.logit/` is standalone and portable.
 
 ## Packages
 

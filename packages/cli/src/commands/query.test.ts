@@ -73,8 +73,8 @@ describe("handleQuery", () => {
 
   beforeEach(async () => {
     baseDir = await mkdtemp(path.join(tmpdir(), "logit-cli-query-"));
-    const rawDir = path.join(baseDir, ".devlogs", "raw");
-    const indexDir = path.join(baseDir, ".devlogs", "index");
+    const rawDir = path.join(baseDir, ".logit", "raw");
+    const indexDir = path.join(baseDir, ".logit", "index");
     await mkdir(rawDir, { recursive: true });
     await mkdir(indexDir, { recursive: true });
 

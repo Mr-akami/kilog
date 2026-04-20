@@ -7,7 +7,7 @@ import {
   openIndex,
   closeIndex,
   queryLogs,
-  dbFilePathFromDevlogs,
+  dbFilePathFromLogitDir,
 } from "@logit/core";
 
 export interface DoctorOptions {
@@ -43,19 +43,19 @@ export async function handleDoctor(options: DoctorOptions): Promise<void> {
   const sources = await discoverSources([options.root]);
 
   if (sources.length === 0) {
-    process.stdout.write(`.devlogs directories: none found under ${options.root}\n`);
-    process.stdout.write("Run your app with logit to create .devlogs\n");
+    process.stdout.write(`.logit directories: none found under ${options.root}\n`);
+    process.stdout.write("Run your app with logit to create .logit\n");
     return;
   }
 
-  process.stdout.write(`.devlogs directories: ${sources.length} found\n`);
+  process.stdout.write(`.logit directories: ${sources.length} found\n`);
 
   for (const src of sources) {
-    const display = path.relative(options.root, src.devlogsDir) || src.devlogsDir;
+    const display = path.relative(options.root, src.logitDir) || src.logitDir;
     process.stdout.write(`\n  [${src.project}] ${display}\n`);
-    const rawFiles = await listRawFilesIn(src.devlogsDir);
+    const rawFiles = await listRawFilesIn(src.logitDir);
     const rawCount = await countEventsIn(rawFiles);
-    const dbPath = dbFilePathFromDevlogs(src.devlogsDir);
+    const dbPath = dbFilePathFromLogitDir(src.logitDir);
     const indexedCount = await countIndexedEvents(dbPath);
 
     if (indexedCount === -1) {

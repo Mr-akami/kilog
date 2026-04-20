@@ -24,7 +24,7 @@ Starts the Vite dev server. Open the page in a browser and click the buttons to 
 
 ## View logs
 
-Run these in this example's directory (the cwd where `.devlogs/` is created):
+Run these in this example's directory (the cwd where `.logit/` is created):
 
 ```bash
 pnpm logit tail

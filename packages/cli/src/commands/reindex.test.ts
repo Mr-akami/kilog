@@ -38,8 +38,8 @@ describe("handleReindex", () => {
 
   beforeEach(async () => {
     baseDir = await mkdtemp(path.join(tmpdir(), "logit-cli-reindex-"));
-    await mkdir(path.join(baseDir, ".devlogs", "raw"), { recursive: true });
-    await mkdir(path.join(baseDir, ".devlogs", "index"), { recursive: true });
+    await mkdir(path.join(baseDir, ".logit", "raw"), { recursive: true });
+    await mkdir(path.join(baseDir, ".logit", "index"), { recursive: true });
   });
 
   afterEach(async () => {
@@ -53,7 +53,7 @@ describe("handleReindex", () => {
       makeConsoleEvent({ message: "three" }),
     ];
     await writeFile(
-      path.join(baseDir, ".devlogs", "raw", "2026-04-18.node.jsonl"),
+      path.join(baseDir, ".logit", "raw", "2026-04-18.node.jsonl"),
       events.map(serialize).join("\n") + "\n",
     );
 
@@ -69,7 +69,7 @@ describe("handleReindex", () => {
   });
 
   it("should handle multiple files", async () => {
-    const rawDir = path.join(baseDir, ".devlogs", "raw");
+    const rawDir = path.join(baseDir, ".logit", "raw");
     await writeFile(
       path.join(rawDir, "2026-04-18.node.jsonl"),
       [makeConsoleEvent(), makeConsoleEvent()].map(serialize).join("\n") + "\n",

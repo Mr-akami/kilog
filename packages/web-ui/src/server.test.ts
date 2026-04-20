@@ -21,13 +21,13 @@ function makeEvent(message: string): ConsoleEvent {
 describe("web-ui server", () => {
   let root: string;
   let jsonlPath: string;
-  let devlogsDir: string;
+  let logitDir: string;
 
   beforeEach(async () => {
     root = await mkdtemp(path.join(tmpdir(), "logit-web-ui-"));
-    devlogsDir = path.join(root, "apps", "sample", ".devlogs");
-    const rawDir = path.join(devlogsDir, "raw");
-    const indexDir = path.join(devlogsDir, "index");
+    logitDir = path.join(root, "apps", "sample", ".logit");
+    const rawDir = path.join(logitDir, "raw");
+    const indexDir = path.join(logitDir, "index");
     await mkdir(rawDir, { recursive: true });
     await mkdir(indexDir, { recursive: true });
     jsonlPath = path.join(rawDir, "2026-04-20.browser.jsonl");
@@ -108,7 +108,7 @@ describe("web-ui server", () => {
 
   it("GET /api/read rejects non-jsonl paths", async () => {
     const app = createApp({ root });
-    const otherFile = path.join(root, "apps", "sample", ".devlogs", "raw", "readme.txt");
+    const otherFile = path.join(root, "apps", "sample", ".logit", "raw", "readme.txt");
     await writeFile(otherFile, "");
     const res = await app.request(`/api/read?path=${encodeURIComponent(otherFile)}`);
     expect(res.status).toBe(403);
@@ -161,6 +161,6 @@ describe("web-ui server", () => {
     expect(body.indexDbsDeleted).toBe(1);
 
     await expect(stat(jsonlPath)).rejects.toThrow();
-    await expect(stat(path.join(devlogsDir, "index"))).rejects.toThrow();
+    await expect(stat(path.join(logitDir, "index"))).rejects.toThrow();
   });
 });

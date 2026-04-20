@@ -39,7 +39,7 @@ describe("handlePrune", () => {
 
   beforeEach(async () => {
     baseDir = await mkdtemp(path.join(tmpdir(), "logit-cli-prune-"));
-    rawDir = path.join(baseDir, ".devlogs", "raw");
+    rawDir = path.join(baseDir, ".logit", "raw");
     await mkdir(rawDir, { recursive: true });
   });
 
@@ -131,7 +131,7 @@ describe("handlePrune", () => {
 
   // ── missing directory ──
 
-  it("should handle missing .devlogs/raw directory", async () => {
+  it("should handle missing .logit/raw directory", async () => {
     const emptyBase = await mkdtemp(path.join(tmpdir(), "logit-cli-prune-empty-"));
 
     await expect(handlePrune({ root: emptyBase, before: "2026-04-18" })).resolves.not.toThrow();

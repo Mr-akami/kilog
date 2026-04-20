@@ -13,7 +13,7 @@ export async function clearAllLogs(root: string): Promise<ClearResult> {
   let indexDbsDeleted = 0;
 
   for (const src of sources) {
-    const rawDir = path.join(src.devlogsDir, "raw");
+    const rawDir = path.join(src.logitDir, "raw");
     try {
       const entries = await readdir(rawDir);
       for (const e of entries) {
@@ -25,7 +25,7 @@ export async function clearAllLogs(root: string): Promise<ClearResult> {
       // raw dir missing
     }
 
-    const indexDir = path.join(src.devlogsDir, "index");
+    const indexDir = path.join(src.logitDir, "index");
     try {
       await rm(indexDir, { recursive: true, force: true });
       indexDbsDeleted++;

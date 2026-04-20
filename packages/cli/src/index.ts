@@ -19,7 +19,7 @@ yargs(hideBin(process.argv))
   .option("root", {
     type: "string",
     describe:
-      "Scan scope for .devlogs/ discovery (default: cwd). Each .devlogs/ keeps its own independent index.",
+      "Scan scope for .logit/ discovery (default: cwd). Each .logit/ keeps its own independent index.",
   })
   .command(
     "tail",
@@ -78,7 +78,7 @@ yargs(hideBin(process.argv))
   )
   .command(
     "reindex",
-    "Rebuild the DuckDB index for every discovered .devlogs/",
+    "Rebuild the DuckDB index for every discovered .logit/",
     () => {},
     async (argv) => {
       await handleReindex({ root: resolveRoot(argv.root) });
@@ -99,7 +99,7 @@ yargs(hideBin(process.argv))
   )
   .command(
     "doctor",
-    "Check .devlogs health and per-project index consistency",
+    "Check .logit health and per-project index consistency",
     () => {},
     async (argv) => {
       await handleDoctor({ root: resolveRoot(argv.root) });

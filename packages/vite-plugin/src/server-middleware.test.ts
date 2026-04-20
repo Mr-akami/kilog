@@ -100,7 +100,7 @@ describe("createLogitMiddleware", () => {
     middleware(req, res, vi.fn());
     await endPromise;
 
-    const filePath = path.join(baseDir, ".devlogs", "raw", "2026-04-18.browser.jsonl");
+    const filePath = path.join(baseDir, ".logit", "raw", "2026-04-18.browser.jsonl");
     const content = await readFile(filePath, "utf-8");
     expect(content).toContain("browser log entry");
   });
@@ -133,7 +133,7 @@ describe("createLogitMiddleware", () => {
     middleware(req, res, vi.fn());
     await endPromise;
 
-    const filePath = path.join(baseDir, ".devlogs", "raw", "2026-04-18.browser.jsonl");
+    const filePath = path.join(baseDir, ".logit", "raw", "2026-04-18.browser.jsonl");
     const content = await readFile(filePath, "utf-8");
     const lines = content.trim().split("\n");
     expect(lines).toHaveLength(2);
