@@ -34,7 +34,7 @@ export function buildFilterSQL(filter: Filter): string {
       CASE WHEN failed = true THEN ' [failed' || CASE WHEN error_message IS NULL THEN ']' ELSE ': ' || error_message || ']' END ELSE '' END
     ELSE COALESCE(message, '')
   END AS message`;
-  return `SELECT timestamp, project, runtime, type, level, ${displayMessage} FROM logs${where} ORDER BY timestamp DESC LIMIT 500`;
+  return `SELECT timestamp, project, runtime, type, level, stack, ${displayMessage} FROM logs${where} ORDER BY timestamp DESC LIMIT 500`;
 }
 
 // Module state for preset-driven constraints that aren't represented in DOM.
@@ -79,15 +79,49 @@ export function renderRows(rows: Record<string, unknown>[]): void {
   for (const row of rows) {
     const tr = document.createElement("tr");
     const level = String(row.level ?? "");
+    const stack = typeof row.stack === "string" ? row.stack : "";
+    const hasStack = stack.length > 0;
     const cols = ["timestamp", "project", "runtime", "type", "level", "message"];
+    if (hasStack) tr.classList.add("expandable");
+
     for (const c of cols) {
       const td = document.createElement("td");
-      const v = row[c];
-      td.textContent = v == null ? "" : String(v);
+      if (c === "message") {
+        // Prefix the message with a chevron so it's obvious the row expands.
+        td.textContent = (hasStack ? "▸ " : "  ") + (row[c] == null ? "" : String(row[c]));
+      } else {
+        const v = row[c];
+        td.textContent = v == null ? "" : String(v);
+      }
       if (c === "level" && level) td.className = `level-${level}`;
       tr.appendChild(td);
     }
-    tbody.appendChild(tr);
+
+    if (hasStack) {
+      const detail = document.createElement("tr");
+      detail.className = "stack-detail";
+      detail.style.display = "none";
+      const cell = document.createElement("td");
+      cell.colSpan = cols.length;
+      const pre = document.createElement("pre");
+      pre.className = "stack";
+      pre.textContent = stack;
+      cell.appendChild(pre);
+      detail.appendChild(cell);
+
+      tr.addEventListener("click", () => {
+        const visible = detail.style.display !== "none";
+        detail.style.display = visible ? "none" : "table-row";
+        const msgCell = tr.children[cols.indexOf("message")] as HTMLTableCellElement;
+        msgCell.textContent =
+          (visible ? "▸ " : "▾ ") + (row.message == null ? "" : String(row.message));
+      });
+
+      tbody.appendChild(tr);
+      tbody.appendChild(detail);
+    } else {
+      tbody.appendChild(tr);
+    }
   }
 }
 

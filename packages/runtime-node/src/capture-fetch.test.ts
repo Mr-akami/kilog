@@ -153,8 +153,41 @@ describe("captureFetch", () => {
     });
     await globalThis.fetch(request);
 
+
     expect(mockFetch).toHaveBeenCalledOnce();
     const passedArgs = mockFetch.mock.calls[0];
     expect(passedArgs[0]).toBe(request);
+  });
+
+  it("captures a stack trace that points at the fetch caller", async () => {
+    mockFetch.mockResolvedValue(new Response("ok", { status: 200 }));
+    const { ctx, events } = createMockContext();
+    captureFetch(ctx);
+
+    async function myFetchCaller() {
+      await globalThis.fetch("https://example.com/api");
+    }
+    await myFetchCaller();
+    await vi.waitFor(() => expect(events).toHaveLength(1));
+
+    const event = events[0] as NetworkEvent;
+    expect(typeof event.stack).toBe("string");
+    expect(event.stack).toContain("myFetchCaller");
+  });
+
+  it("captures a stack trace on failed fetches too", async () => {
+    mockFetch.mockRejectedValue(new Error("nope"));
+    const { ctx, events } = createMockContext();
+    captureFetch(ctx);
+
+    async function myFailingCaller() {
+      await globalThis.fetch("https://example.com/api").catch(() => {});
+    }
+    await myFailingCaller();
+    await vi.waitFor(() => expect(events).toHaveLength(1));
+
+    const event = events[0] as NetworkEvent;
+    expect(event.failed).toBe(true);
+    expect(event.stack).toContain("myFailingCaller");
   });
 });

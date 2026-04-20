@@ -87,4 +87,16 @@ describe("generateBrowserRuntime", () => {
     // (we cannot easily invoke the IIFE, so we verify the source).
     expect(script).toMatch(/function formatArg\([\s\S]*?JSON\.stringify/);
   });
+
+  it("captures a stack on every event type (console + fetch)", () => {
+    const script = generateBrowserRuntime();
+    // Common helper is defined and used in V8 via Error.captureStackTrace.
+    expect(script).toContain("function captureStack");
+    expect(script).toContain("Error.captureStackTrace");
+    // Console wrapper must pass itself as the "below" function so wrapper
+    // frames are hidden.
+    expect(script).toMatch(/captureStack\(wrapped\)/);
+    // Fetch wrapper must capture a stack at call time.
+    expect(script).toMatch(/captureStack\(wrappedFetch\)/);
+  });
 });

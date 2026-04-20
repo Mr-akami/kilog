@@ -1,6 +1,7 @@
 import type { NetworkEvent } from "@logit/core";
 import { createBaseFields } from "./context.js";
 import type { RuntimeContext } from "./context.js";
+import { captureStack } from "./capture-stack.js";
 
 function extractRequestInfo(
   input: RequestInfo | URL,
@@ -26,9 +27,10 @@ function extractRequestInfo(
 export function captureFetch(ctx: RuntimeContext): void {
   const original = globalThis.fetch;
 
-  globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+  const wrapped = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
     const { method, url, normalizedPath } = extractRequestInfo(input, init);
     const start = performance.now();
+    const stack = captureStack(wrapped);
 
     try {
       const response = await original(input, init);
@@ -43,6 +45,7 @@ export function captureFetch(ctx: RuntimeContext): void {
         status: response.status,
         duration,
         failed: false,
+        stack,
       };
       void ctx.writer.append(event);
       return response;
@@ -58,9 +61,12 @@ export function captureFetch(ctx: RuntimeContext): void {
         duration,
         failed: true,
         errorMessage: err instanceof Error ? err.message : String(err),
+        stack,
       };
       void ctx.writer.append(event);
       throw err;
     }
   };
+
+  globalThis.fetch = wrapped;
 }

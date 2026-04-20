@@ -89,6 +89,29 @@ describe("formatLogLine", () => {
     expect(line).toContain("Error: boom");
   });
 
+  it("indents stack contents under the message line", () => {
+    const event = makeErrorEvent({ stack: "Error: boom\n  at foo.js:10" });
+    const line = formatLogLine(event);
+
+    // Each stack line should be indented by 4 spaces after a newline.
+    expect(line).toMatch(/\n {4}Error: boom/);
+    expect(line).toMatch(/\n {4}at foo.js:10/);
+  });
+
+  it("shows stack for console events when present", () => {
+    const event = makeConsoleEvent({ stack: "at userFn:1\n  at main:2" });
+    const line = formatLogLine(event);
+    expect(line).toContain("hello world");
+    expect(line).toMatch(/\n {4}at userFn:1/);
+  });
+
+  it("shows stack for network events when present", () => {
+    const event = makeNetworkEvent({ stack: "at callSite:1" });
+    const line = formatLogLine(event);
+    expect(line).toContain("https://api.example.com/users");
+    expect(line).toMatch(/\n {4}at callSite:1/);
+  });
+
   // ── network events ──
 
   it("should include method, url, and status for network event", () => {

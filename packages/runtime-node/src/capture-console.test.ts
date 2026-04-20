@@ -107,4 +107,24 @@ describe("captureConsole", () => {
     expect((events[0] as ConsoleEvent).message).toContain("first");
     expect((events[1] as ConsoleEvent).message).toContain("second");
   });
+
+  it("should capture a stack trace that points at the caller, not the wrapper", async () => {
+    const { ctx, events } = createMockContext();
+    captureConsole(ctx);
+
+    function myCaller() {
+      console.log("from myCaller");
+    }
+    myCaller();
+    await vi.waitFor(() => expect(events).toHaveLength(1));
+
+    const event = events[0] as ConsoleEvent;
+    expect(typeof event.stack).toBe("string");
+    // The user's function name must appear in the stack.
+    expect(event.stack).toContain("myCaller");
+    // The internal wrapper must NOT be the top frame — that's what
+    // Error.captureStackTrace(obj, wrapped) is meant to hide.
+    const firstFrame = (event.stack ?? "").split("\n")[1] ?? "";
+    expect(firstFrame).not.toContain("wrapped");
+  });
 });

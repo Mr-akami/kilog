@@ -46,6 +46,7 @@ export interface NetworkEvent extends BaseEvent {
   size?: number;
   failed: boolean;
   errorMessage?: string;
+  stack?: string;
 }
 
 export type LogEvent = ConsoleEvent | ErrorEvent | UnhandledRejectionEvent | NetworkEvent;

@@ -32,6 +32,23 @@ export function generateBrowserRuntime(): string {
     return args.map(formatArg).join(" ");
   }
 
+  // Capture a stack trace stripping the wrapper frames. V8/Chromium supports
+  // Error.captureStackTrace which takes a "below" function; Firefox/Safari don't.
+  // As a portable fallback, we create an Error and slice off a fixed number of
+  // leading frames (the wrapper + captureStack itself).
+  function captureStack(below) {
+    var target = {};
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(target, below);
+      return target.stack;
+    }
+    var s = new Error().stack || "";
+    // Drop the first ~3 frames (Error, captureStack, the wrapper). Best-effort.
+    var lines = s.split("\\n");
+    // Keep lines that look like frame entries.
+    return lines.slice(3).join("\\n");
+  }
+
   function makeEvent(type, level, extra) {
     var event = {
       id: crypto.randomUUID(),
@@ -46,15 +63,17 @@ export function generateBrowserRuntime(): string {
   }
 
   function wrapConsole(original, level) {
-    return function() {
+    function wrapped() {
       var args = Array.prototype.slice.call(arguments);
       original.apply(console, args);
       var event = makeEvent("console", level, {
         message: formatArgs(args),
-        args: args
+        args: args,
+        stack: captureStack(wrapped)
       });
       sendEvents([event]);
-    };
+    }
+    return wrapped;
   }
   var origLog = console.log;
   var origInfo = console.info;
@@ -89,15 +108,16 @@ export function generateBrowserRuntime(): string {
 
   var originalFetch = window.fetch;
   window.__logitOriginalFetch = originalFetch;
-  window.fetch = function(input, init) {
+  function wrappedFetch(input, init) {
     var url = typeof input === "string" ? input : (input instanceof Request ? input.url : String(input));
-    if (url.includes("__logit")) {
+    if (url.indexOf("__logit") !== -1) {
       return originalFetch.apply(window, arguments);
     }
     var method = (init && init.method) || (input instanceof Request ? input.method : "GET");
     var pathname = "/";
     try { pathname = new URL(url, location.origin).pathname; } catch(e) { origError("[logit] URL parse failed:", e); }
     var start = performance.now();
+    var stack = captureStack(wrappedFetch);
     return originalFetch.apply(window, arguments).then(function(response) {
       var event = makeEvent("network", "info", {
         method: method,
@@ -105,7 +125,8 @@ export function generateBrowserRuntime(): string {
         normalizedPath: pathname,
         status: response.status,
         duration: performance.now() - start,
-        failed: false
+        failed: false,
+        stack: stack
       });
       sendEvents([event]);
       return response;
@@ -116,11 +137,13 @@ export function generateBrowserRuntime(): string {
         normalizedPath: pathname,
         duration: performance.now() - start,
         failed: true,
-        errorMessage: err instanceof Error ? err.message : String(err)
+        errorMessage: err instanceof Error ? err.message : String(err),
+        stack: stack
       });
       sendEvents([event]);
       throw err;
     });
-  };
+  }
+  window.fetch = wrappedFetch;
 })();`;
 }

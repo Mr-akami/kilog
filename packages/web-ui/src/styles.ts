@@ -25,6 +25,10 @@ header .status { font-size: 12px; opacity: 0.7; margin-left: auto; }
 #log-table { width: 100%; border-collapse: collapse; background: #fff; font-size: 13px; table-layout: fixed; }
 #log-table th { text-align: left; padding: 8px 12px; background: #eee; border-bottom: 2px solid #ddd; position: sticky; top: 0; }
 #log-table td { padding: 6px 12px; border-bottom: 1px solid #eee; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#log-table tr.expandable { cursor: pointer; }
+#log-table tr.expandable:hover td { background: #f7f7fb; }
+#log-table tr.stack-detail td { padding: 0; background: #fafafa; }
+#log-table pre.stack { margin: 0; padding: 10px 12px 10px 36px; font: 11px/1.5 ui-monospace, monospace; color: #555; white-space: pre-wrap; word-break: break-all; border-top: 1px dashed #e0e0e0; }
 .level-error { color: #d32f2f; font-weight: 600; }
 .level-warn { color: #f57c00; font-weight: 600; }
 .level-info { color: #1976d2; }
