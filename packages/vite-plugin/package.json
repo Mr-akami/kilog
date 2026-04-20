@@ -8,6 +8,13 @@
     ".": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@logit/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "vite": "^6"
   }
 }

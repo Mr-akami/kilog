@@ -49,4 +49,30 @@ describe("generateBrowserRuntime", () => {
     expect(script).toContain("/__logit");
     expect(script).toContain("POST");
   });
+
+  it("should log errors in sendEvents catch block via origError", () => {
+    const script = generateBrowserRuntime();
+    // sendEvents catch block must not be empty; it should log via origError
+    expect(script).toMatch(/\.catch\(function\(.*?\)\s*\{[^}]*origError/);
+  });
+
+  it("should not have empty catch in sendEvents", () => {
+    const script = generateBrowserRuntime();
+    // fetch catch inside sendEvents must not be empty
+    // disallow empty catches like `.catch(function() {})`
+    const sendEventsMatch = script.match(
+      /function sendEvents[\s\S]*?\.catch\(function\([^)]*\)\s*\{([^}]*)\}/,
+    );
+    expect(sendEventsMatch).not.toBeNull();
+    const catchBody = sendEventsMatch![1].trim();
+    expect(catchBody.length).toBeGreaterThan(0);
+  });
+
+  it("should not have any empty catch blocks", () => {
+    const script = generateBrowserRuntime();
+    // detect any empty catch like catch(e) {} or catch(e) { }
+    const emptyCatchPattern = /catch\s*\([^)]*\)\s*\{\s*\}/g;
+    const matches = script.match(emptyCatchPattern);
+    expect(matches).toBeNull();
+  });
 });
