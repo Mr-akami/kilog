@@ -153,7 +153,6 @@ describe("captureFetch", () => {
     });
     await globalThis.fetch(request);
 
-
     expect(mockFetch).toHaveBeenCalledOnce();
     const passedArgs = mockFetch.mock.calls[0];
     expect(passedArgs[0]).toBe(request);

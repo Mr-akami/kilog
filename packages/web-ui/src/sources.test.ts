@@ -28,7 +28,9 @@ describe("describeSources", () => {
     const [desc] = await describeSources(root);
 
     expect(desc.path).toBe(jsonl);
-    expect(desc.displayPath).toBe(path.join("apps", "api", ".logit", "raw", "2026-04-20.node.jsonl"));
+    expect(desc.displayPath).toBe(
+      path.join("apps", "api", ".logit", "raw", "2026-04-20.node.jsonl"),
+    );
     expect(desc.project).toBe(path.join("apps", "api"));
     expect(desc.size).toBeGreaterThan(0);
     expect(() => new Date(desc.mtime).toISOString()).not.toThrow();

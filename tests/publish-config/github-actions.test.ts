@@ -4,17 +4,12 @@ import { resolve } from "node:path";
 import { ROOT } from "./test-helpers.js";
 
 function readWorkflowText(filename: string): string {
-  return readFileSync(
-    resolve(ROOT, `.github/workflows/${filename}`),
-    "utf-8",
-  );
+  return readFileSync(resolve(ROOT, `.github/workflows/${filename}`), "utf-8");
 }
 
 describe(".github/workflows/ci.yml", () => {
   it("should exist", () => {
-    expect(
-      existsSync(resolve(ROOT, ".github/workflows/ci.yml")),
-    ).toBe(true);
+    expect(existsSync(resolve(ROOT, ".github/workflows/ci.yml"))).toBe(true);
   });
 
   it("should trigger on pull_request", () => {
@@ -46,9 +41,7 @@ describe(".github/workflows/ci.yml", () => {
 
 describe(".github/workflows/release.yml", () => {
   it("should exist", () => {
-    expect(
-      existsSync(resolve(ROOT, ".github/workflows/release.yml")),
-    ).toBe(true);
+    expect(existsSync(resolve(ROOT, ".github/workflows/release.yml"))).toBe(true);
   });
 
   it("should trigger on push to main", () => {
@@ -75,9 +68,7 @@ describe(".github/workflows/release.yml", () => {
 
     it("should use release-please-action v4", () => {
       const content = readWorkflowText("release.yml");
-      expect(content).toMatch(
-        /googleapis\/release-please-action@v4/,
-      );
+      expect(content).toMatch(/googleapis\/release-please-action@v4/);
     });
 
     it("should reference .release-please-config.json", () => {
@@ -141,18 +132,13 @@ describe(".github/workflows/release.yml", () => {
 });
 
 function extractJobSection(yaml: string, jobName: string): string {
-  const jobPattern = new RegExp(
-    `^  ${jobName}:\\n((?:    .+\\n|\\n)*)`,
-    "m",
-  );
+  const jobPattern = new RegExp(`^  ${jobName}:\\n((?:    .+\\n|\\n)*)`, "m");
   const match = yaml.match(jobPattern);
   if (match) return match[0];
 
   // Fallback: find the job key and take everything until next job
   const lines = yaml.split("\n");
-  const startIdx = lines.findIndex((l) =>
-    l.match(new RegExp(`^\\s{2}${jobName}:`)),
-  );
+  const startIdx = lines.findIndex((l) => l.match(new RegExp(`^\\s{2}${jobName}:`)));
   if (startIdx === -1) return "";
 
   let endIdx = lines.length;

@@ -14,9 +14,11 @@ type AnyFn = (...args: never[]) => unknown;
 
 export function captureStack(below: AnyFn): string | undefined {
   const target: { stack?: string } = {};
-  const capture = (Error as unknown as {
-    captureStackTrace?: (obj: object, below?: AnyFn) => void;
-  }).captureStackTrace;
+  const capture = (
+    Error as unknown as {
+      captureStackTrace?: (obj: object, below?: AnyFn) => void;
+    }
+  ).captureStackTrace;
   if (typeof capture === "function") {
     capture(target, below);
     return target.stack;

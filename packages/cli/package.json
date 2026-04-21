@@ -2,24 +2,30 @@
   "name": "@logit/cli",
   "version": "0.1.0",
   "description": "CLI for logit structured logging viewer",
-  "keywords": ["logit", "logging", "cli"],
+  "keywords": [
+    "cli",
+    "logging",
+    "logit"
+  ],
+  "homepage": "https://github.com/Mr-akami/logit/tree/main/packages/cli#readme",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/Mr-akami/logit.git",
     "directory": "packages/cli"
   },
-  "homepage": "https://github.com/Mr-akami/logit/tree/main/packages/cli#readme",
   "bin": {
     "logit": "./dist/index.js"
   },
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js"
   },
-  "files": ["dist"],
   "publishConfig": {
     "access": "public",
     "provenance": true

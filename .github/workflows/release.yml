@@ -1,20 +1,34 @@
 name: Release
 
+# Everything in this workflow is manual.
+#
+#   1. Actions → "Release" → Run workflow → action: "release-please"
+#      → release-please opens / updates a Release PR with CHANGELOG + bumps.
+#   2. Review and merge that PR — this creates tags + GitHub Releases.
+#   3. Actions → "Release" → Run workflow → action: "publish" + tag
+#      → builds from that tag and `pnpm -r publish` to npm.
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
-      tag:
-        description: Tag name to publish
+      action:
+        description: Which step to run
         required: true
+        type: choice
+        options:
+          - release-please
+          - publish
+      tag:
+        description: Tag to publish (only when action = publish, e.g. v0.1.0)
+        required: false
         type: string
 
 jobs:
   release-please:
-    if: github.event_name == 'push'
+    if: inputs.action == 'release-please'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: googleapis/release-please-action@v4
         with:
@@ -22,7 +36,7 @@ jobs:
           manifest-file: .release-please-manifest.json
 
   publish:
-    if: github.event_name == 'workflow_dispatch'
+    if: inputs.action == 'publish'
     runs-on: ubuntu-latest
     permissions:
       contents: read

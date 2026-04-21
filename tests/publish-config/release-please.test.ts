@@ -1,12 +1,7 @@
 import { describe, it, expect } from "vite-plus/test";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
-import {
-  ROOT,
-  readJson,
-  PUBLIC_PACKAGE_PATHS,
-  PACKAGE_NAMES,
-} from "./test-helpers.js";
+import { ROOT, readJson, PUBLIC_PACKAGE_PATHS, PACKAGE_NAMES } from "./test-helpers.js";
 
 describe(".release-please-config.json", () => {
   it("should exist", () => {
@@ -29,10 +24,7 @@ describe(".release-please-config.json", () => {
 
   it("should set correct component name for each package", () => {
     const config = readJson(".release-please-config.json");
-    const packages = config.packages as Record<
-      string,
-      Record<string, unknown>
-    >;
+    const packages = config.packages as Record<string, Record<string, unknown>>;
 
     for (const path of PUBLIC_PACKAGE_PATHS) {
       expect(packages[path].component).toBe(PACKAGE_NAMES[path]);
@@ -43,9 +35,7 @@ describe(".release-please-config.json", () => {
     const config = readJson(".release-please-config.json");
     const plugins = config.plugins as Array<Record<string, unknown>>;
 
-    const linkedVersions = plugins.find(
-      (p) => p.type === "linked-versions",
-    );
+    const linkedVersions = plugins.find((p) => p.type === "linked-versions");
     expect(linkedVersions).toBeDefined();
     expect(linkedVersions!.groupName).toBe("logit-core");
 
@@ -67,9 +57,7 @@ describe(".release-please-config.json", () => {
 
 describe(".release-please-manifest.json", () => {
   it("should exist", () => {
-    expect(
-      existsSync(resolve(ROOT, ".release-please-manifest.json")),
-    ).toBe(true);
+    expect(existsSync(resolve(ROOT, ".release-please-manifest.json"))).toBe(true);
   });
 
   it("should have version 0.1.0 for all public packages", () => {

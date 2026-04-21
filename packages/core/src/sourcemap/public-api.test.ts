@@ -8,9 +8,7 @@ describe("sourcemap package boundary", () => {
   });
 
   it("does not leak internal helpers (cache, resolver module internals)", () => {
-    const leaky = Object.keys(sourcemapExports).filter(
-      (k) => k !== "resolveStackFrames",
-    );
+    const leaky = Object.keys(sourcemapExports).filter((k) => k !== "resolveStackFrames");
     expect(leaky).toEqual([]);
   });
 });

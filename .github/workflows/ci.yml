@@ -18,8 +18,11 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      # Build first so generated artifacts (bundled client, dist/ for the CLI
+      # bin) are available to tests and to the type-check step.
       - run: pnpm build
 
-      - run: pnpm test
+      # Format + lint + type-check (via Vite+) — fails if anything is off.
+      - run: pnpm check
 
-      - run: pnpm lint
+      - run: pnpm test

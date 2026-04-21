@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "build": "tsc -b",
+    "typecheck": "tsc -b --noEmit",
     "test": "vp test run",
     "lint": "vp lint .",
-    "typecheck": "tsc -b --noEmit"
+    "fmt": "vp fmt",
+    "check": "vp check"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.14",

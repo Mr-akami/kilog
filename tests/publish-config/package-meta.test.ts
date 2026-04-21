@@ -1,12 +1,7 @@
 import { describe, it, expect } from "vite-plus/test";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import {
-  ROOT,
-  readJson,
-  PUBLIC_PACKAGE_PATHS,
-  PACKAGE_NAMES,
-} from "./test-helpers.js";
+import { ROOT, readJson, PUBLIC_PACKAGE_PATHS, PACKAGE_NAMES } from "./test-helpers.js";
 
 const REPO_URL = "https://github.com/Mr-akami/logit.git";
 
@@ -47,9 +42,7 @@ describe("public package metadata", () => {
 
       it("should have homepage pointing to package directory", () => {
         const homepage = json().homepage as string;
-        expect(homepage).toBe(
-          `https://github.com/Mr-akami/logit/tree/main/${pkg}#readme`,
-        );
+        expect(homepage).toBe(`https://github.com/Mr-akami/logit/tree/main/${pkg}#readme`);
       });
 
       it("should have description as non-empty string", () => {
