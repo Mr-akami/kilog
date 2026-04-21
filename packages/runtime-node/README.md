@@ -4,7 +4,17 @@ Automatically capture `console`, `fetch`, and uncaught errors in Node.js.
 
 ## Usage
 
-Just load the register entry with `--import`:
+Most apps should load the **[`@logit/register`](../register/README.md)** meta entry instead — it auto-dispatches to the right runtime for Node / Bun / Deno:
+
+```json
+{
+  "scripts": {
+    "dev": "node --import @logit/register ./src/index.ts"
+  }
+}
+```
+
+If you want to pin Node explicitly, load this package's register entry directly:
 
 ```json
 {

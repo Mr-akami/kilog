@@ -19,11 +19,13 @@
     "dist"
   ],
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/register.js",
   "exports": {
-    ".": "./dist/index.js",
-    "./register": "./dist/register.js"
+    ".": "./dist/register.js",
+    "./detect": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "publishConfig": {
     "access": "public",

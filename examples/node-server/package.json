@@ -5,12 +5,12 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "node --import @logit/runtime-node/register ./src/index.ts",
+    "dev": "node --import @logit/register ./src/index.ts",
     "logit": "logit"
   },
   "dependencies": {
     "@hono/node-server": "*",
-    "@logit/runtime-node": "workspace:*",
+    "@logit/register": "workspace:*",
     "hono": "*"
   },
   "devDependencies": {

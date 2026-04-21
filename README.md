@@ -17,12 +17,15 @@ Capture `console`, `fetch`, and uncaught errors from your app during development
 ```json
 {
   "scripts": {
-    "dev": "node --import @logit/runtime-node/register ./src/index.ts"
+    "dev": "node --import @logit/register ./src/index.ts"
   }
 }
 ```
 
-→ [`packages/runtime-node`](./packages/runtime-node/README.md)
+`@logit/register` auto-dispatches to the right runtime package based on
+where it's running (Node / Bun / Deno).
+
+→ [`packages/register`](./packages/register/README.md) · [`packages/runtime-node`](./packages/runtime-node/README.md)
 
 ### Browser (Vite)
 

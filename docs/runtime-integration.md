@@ -29,7 +29,7 @@ Goals:
 Example:
 
 ```bash
-NODE_OPTIONS="--import @logit/runtime-node/register" node server.js
+NODE_OPTIONS="--import @logit/register" node server.js
 ```
 
 Collected signals:
