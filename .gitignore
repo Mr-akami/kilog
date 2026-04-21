@@ -142,3 +142,6 @@ vite.config.ts.timestamp-*
 .pnpm-store/
 .logit/
 dist/
+
+# skill-creator eval workspace (generated per iteration)
+plugin/skills/*-workspace/

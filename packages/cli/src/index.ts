@@ -50,8 +50,13 @@ yargs(hideBin(process.argv))
         .option("level", { type: "string", describe: "Filter by log level" })
         .option("project", { type: "string", describe: "Filter by project label" })
         .option("search", { type: "string", describe: "Full-text search" })
-        .option("from", { type: "string", describe: "Start date (ISO)" })
-        .option("to", { type: "string", describe: "End date (ISO)" })
+        .option("from", { type: "string", describe: "Start time (ISO 8601)" })
+        .option("to", { type: "string", describe: "End time (ISO 8601)" })
+        .option("last", {
+          type: "string",
+          describe:
+            "Relative window ending at now: <N>(s|m|h|d|w), e.g. 10m, 2h, 1d. Overrides --from/--to.",
+        })
         .option("limit", { type: "number", describe: "Max results" })
         .option("offset", { type: "number", describe: "Skip N results" })
         .option("json", { type: "boolean", describe: "Output as JSON" })
@@ -69,6 +74,7 @@ yargs(hideBin(process.argv))
         search: argv.search,
         from: argv.from,
         to: argv.to,
+        last: argv.last,
         limit: argv.limit,
         offset: argv.offset,
         json: argv.json,

@@ -1,0 +1,7 @@
+{
+  "name": "logit",
+  "description": "Inspect and query dev-time logs captured by logit (.logit/ per-project JSONL + DuckDB). Wraps the `logit` CLI for log search, tail, browse, and maintenance.",
+  "author": {
+    "name": "logit contributors"
+  }
+}

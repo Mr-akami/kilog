@@ -20,6 +20,7 @@ import type {
 } from "@logit/core";
 import { formatLogLine } from "../format/log-line.js";
 import { formatTable } from "../format/table.js";
+import { durationAgoIso } from "../format/time.js";
 
 export interface QueryOptions {
   root: string;
@@ -30,6 +31,7 @@ export interface QueryOptions {
   search?: string;
   from?: string;
   to?: string;
+  last?: string;
   limit?: number;
   offset?: number;
   json?: boolean;
@@ -56,8 +58,12 @@ function buildFilter(opts: QueryOptions): QueryFilter {
   if (opts.level) filter.level = opts.level;
   if (opts.project) filter.project = opts.project;
   if (opts.search) filter.search = opts.search;
-  if (opts.from) filter.from = opts.from;
-  if (opts.to) filter.to = opts.to;
+  if (opts.last) {
+    filter.from = durationAgoIso(opts.last);
+  } else {
+    if (opts.from) filter.from = opts.from;
+    if (opts.to) filter.to = opts.to;
+  }
   return filter;
 }
 
