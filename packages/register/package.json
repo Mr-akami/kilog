@@ -2,14 +2,22 @@
   "name": "@logit/register",
   "version": "0.1.0",
   "description": "Auto-register hook for logit structured logging",
-  "keywords": ["logit", "logging", "register", "auto-import"],
+  "keywords": [
+    "auto-import",
+    "logging",
+    "logit",
+    "register"
+  ],
+  "homepage": "https://github.com/Mr-akami/logit/tree/main/packages/register#readme",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/Mr-akami/logit.git",
     "directory": "packages/register"
   },
-  "homepage": "https://github.com/Mr-akami/logit/tree/main/packages/register#readme",
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -17,7 +25,6 @@
     ".": "./dist/index.js",
     "./register": "./dist/register.js"
   },
-  "files": ["dist"],
   "publishConfig": {
     "access": "public",
     "provenance": true
