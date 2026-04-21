@@ -123,7 +123,7 @@ async function main(): Promise<void> {
       (document.getElementById("root-apply") as HTMLButtonElement).click();
   });
 
-  // Preset buttons
+  // Preset buttons (toggle on / off; at most one active at a time)
   const presetRow = document.querySelector(".presets");
   const setSelect = (id: string, value: string) => {
     const s = document.getElementById(id) as HTMLSelectElement | null;
@@ -133,9 +133,52 @@ async function main(): Promise<void> {
     const s = document.getElementById("filter-search") as HTMLInputElement | null;
     if (s) s.value = value;
   };
-  const markActive = (btn: HTMLElement | null) => {
-    presetRow?.querySelectorAll("button").forEach((b) => b.classList.remove("active"));
-    btn?.classList.add("active");
+
+  interface PresetAction {
+    apply: () => void;
+    revert: () => void;
+  }
+  const presetActions: Record<string, PresetAction> = {
+    "5min": { apply: () => setTimeWindow(5), revert: () => setTimeWindow(null) },
+    "1h": { apply: () => setTimeWindow(60), revert: () => setTimeWindow(null) },
+    "24h": { apply: () => setTimeWindow(24 * 60), revert: () => setTimeWindow(null) },
+    errors: {
+      apply: () => setSelect("filter-level", "error"),
+      revert: () => setSelect("filter-level", ""),
+    },
+    warns: {
+      apply: () => setExtraWhere("level IN ('warn', 'error')"),
+      revert: () => setExtraWhere(null),
+    },
+    "net-fail": {
+      apply: () => {
+        setSelect("filter-type", "network");
+        setExtraWhere("(failed = true OR status >= 400)");
+      },
+      revert: () => {
+        setSelect("filter-type", "");
+        setExtraWhere(null);
+      },
+    },
+    slow: {
+      apply: () => {
+        setSelect("filter-type", "network");
+        setExtraWhere("duration > 1000");
+      },
+      revert: () => {
+        setSelect("filter-type", "");
+        setExtraWhere(null);
+      },
+    },
+  };
+
+  let activePreset: string | null = null;
+
+  const revertActive = () => {
+    if (!activePreset) return;
+    presetActions[activePreset]?.revert();
+    presetRow?.querySelector(`[data-preset="${activePreset}"]`)?.classList.remove("active");
+    activePreset = null;
   };
 
   presetRow?.addEventListener("click", async (event) => {
@@ -143,50 +186,31 @@ async function main(): Promise<void> {
     const preset = target.getAttribute?.("data-preset");
     if (!preset) return;
 
-    switch (preset) {
-      case "5min":
-        setTimeWindow(5);
-        markActive(target);
-        break;
-      case "1h":
-        setTimeWindow(60);
-        markActive(target);
-        break;
-      case "24h":
-        setTimeWindow(24 * 60);
-        markActive(target);
-        break;
-      case "errors":
-        setSelect("filter-level", "error");
-        setExtraWhere(null);
-        markActive(target);
-        break;
-      case "warns":
-        setSelect("filter-level", "");
-        setExtraWhere("level IN ('warn', 'error')");
-        markActive(target);
-        break;
-      case "net-fail":
-        setSelect("filter-type", "network");
-        setExtraWhere("(failed = true OR status >= 400)");
-        markActive(target);
-        break;
-      case "slow":
-        setSelect("filter-type", "network");
-        setExtraWhere("duration > 1000");
-        markActive(target);
-        break;
-      case "reset":
-        setSelect("filter-project", "");
-        setSelect("filter-runtime", "");
-        setSelect("filter-type", "");
-        setSelect("filter-level", "");
-        setSearch("");
-        clearPresetState();
-        presetRow.querySelectorAll("button").forEach((b) => b.classList.remove("active"));
-        break;
-      default:
-        return;
+    if (preset === "reset") {
+      setSelect("filter-project", "");
+      setSelect("filter-runtime", "");
+      setSelect("filter-type", "");
+      setSelect("filter-level", "");
+      setSearch("");
+      clearPresetState();
+      activePreset = null;
+      presetRow.querySelectorAll("button").forEach((b) => b.classList.remove("active"));
+      await refreshFilterQuery(db);
+      return;
+    }
+
+    const action = presetActions[preset];
+    if (!action) return;
+
+    if (preset === activePreset) {
+      // Toggle off: revert its effect.
+      revertActive();
+    } else {
+      // Swap: revert any other active preset, then apply this one.
+      revertActive();
+      action.apply();
+      target.classList.add("active");
+      activePreset = preset;
     }
     await refreshFilterQuery(db);
   });
