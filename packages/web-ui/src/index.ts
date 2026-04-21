@@ -53,19 +53,26 @@ export async function startServer(options: ServerOptions): Promise<void> {
     console.log(`logit UI: port ${options.port} busy, using ${port} instead`);
   }
 
+  // `firstSeen` is null until the first browser request arrives. Before that,
+  // the idle watchdog is inactive so the user can take their time opening the
+  // page. After the first request, normal heartbeat timeouts apply.
+  let firstSeen: number | null = null;
   let lastActivity = Date.now();
   let shuttingDown = false;
 
   const app = createApp({
     root: options.root,
     onActivity: () => {
+      if (firstSeen === null) firstSeen = Date.now();
       lastActivity = Date.now();
     },
   });
 
   const server = serve({ fetch: app.fetch, port }, (info) => {
     console.log(`logit UI running on http://localhost:${info.port}`);
-    console.log(`(auto-shutdown after ${idleTimeoutMs / 1000}s with no browser heartbeat)`);
+    console.log(
+      `(auto-shutdown after ${idleTimeoutMs / 1000}s of no heartbeat — timer starts on first access)`,
+    );
   });
 
   const shutdown = () => {
@@ -77,6 +84,8 @@ export async function startServer(options: ServerOptions): Promise<void> {
   };
 
   const watchdog = setInterval(() => {
+    // Don't time out before anyone has opened the page.
+    if (firstSeen === null) return;
     if (Date.now() - lastActivity >= idleTimeoutMs) {
       console.log("logit UI: idle timeout reached, shutting down");
       shutdown();
