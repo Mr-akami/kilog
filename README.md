@@ -1,5 +1,6 @@
 # kilog
 
+kilog is vite based browser log.
 Capture `console`, `fetch`, and uncaught errors from your app during development, then search and browse them via CLI or a browser UI powered by DuckDB-wasm.
 
 ## Features
