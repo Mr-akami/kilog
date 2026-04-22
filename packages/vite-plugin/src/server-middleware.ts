@@ -1,11 +1,26 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { createWriter, createRedactor } from "@logit/core";
-import type { LogEvent } from "@logit/core";
+import { createWriter, createRedactor, formatLogLine } from "@logit/core";
+import type { LogEvent, LogLevel } from "@logit/core";
 
 type NextFunction = () => void;
 type Middleware = (req: IncomingMessage, res: ServerResponse, next: NextFunction) => void;
 
 import { ENDPOINT } from "./constants.js";
+
+const LEVEL_RANK: Record<LogLevel, number> = { debug: 0, info: 1, warn: 2, error: 3 };
+
+export interface LogitMiddlewareOptions {
+  terminal?: boolean | LogLevel;
+}
+
+function shouldPrint(event: LogEvent, terminal: boolean | LogLevel | undefined): boolean {
+  if (!terminal) return false;
+  if (terminal === true) return true;
+  const threshold = LEVEL_RANK[terminal];
+  const eventLevel = "level" in event ? event.level : undefined;
+  if (eventLevel == null) return false;
+  return LEVEL_RANK[eventLevel] >= threshold;
+}
 
 function readBody(req: IncomingMessage): Promise<string> {
   const chunks: string[] = [];
@@ -16,8 +31,12 @@ function readBody(req: IncomingMessage): Promise<string> {
   });
 }
 
-export function createLogitMiddleware(baseDir: string): Middleware {
+export function createLogitMiddleware(
+  baseDir: string,
+  options: LogitMiddlewareOptions = {},
+): Middleware {
   const writer = createWriter({ baseDir, redactor: createRedactor() });
+  const terminal = options.terminal;
 
   return (req, res, next) => {
     if (req.method !== "POST" || req.url !== ENDPOINT) {
@@ -30,6 +49,9 @@ export function createLogitMiddleware(baseDir: string): Middleware {
         const events = JSON.parse(body) as LogEvent[];
         for (const event of events) {
           await writer.append(event);
+          if (shouldPrint(event, terminal)) {
+            process.stdout.write(formatLogLine(event, { color: true }) + "\n");
+          }
         }
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");

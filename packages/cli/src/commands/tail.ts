@@ -1,9 +1,8 @@
 import { watch, type FSWatcher } from "node:fs";
 import { readdir, stat, open, mkdir } from "node:fs/promises";
 import path from "node:path";
-import { deserialize, findLogitDirs } from "@logit/core";
+import { deserialize, findLogitDirs, formatLogLine } from "@logit/core";
 import type { Runtime } from "@logit/core";
-import { formatLogLine } from "../format/log-line.js";
 
 export interface TailOptions {
   root: string;
