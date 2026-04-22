@@ -18,7 +18,7 @@ import type {
   LogEvent,
   AggregateRow,
 } from "@logit/core";
-import { formatLogLine } from "../format/log-line.js";
+import { formatLogLine } from "@logit/core";
 import { formatTable } from "../format/table.js";
 import { durationAgoIso } from "../format/time.js";
 

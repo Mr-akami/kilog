@@ -1,6 +1,11 @@
 import { describe, it, expect } from "vite-plus/test";
 import { formatLogLine } from "./log-line.js";
-import type { ConsoleEvent, ErrorEvent, NetworkEvent, UnhandledRejectionEvent } from "@logit/core";
+import type {
+  ConsoleEvent,
+  ErrorEvent,
+  NetworkEvent,
+  UnhandledRejectionEvent,
+} from "../schema/types.js";
 
 function makeConsoleEvent(overrides?: Partial<ConsoleEvent>): ConsoleEvent {
   return {
@@ -142,6 +147,39 @@ describe("formatLogLine", () => {
   });
 
   // ── unhandled rejection ──
+
+  // ── color ──
+
+  it("should not emit ANSI codes by default", () => {
+    const line = formatLogLine(makeConsoleEvent());
+    expect(line).not.toContain("\x1b[");
+  });
+
+  it("should emit ANSI codes when color: true", () => {
+    const line = formatLogLine(makeConsoleEvent({ level: "error" }), { color: true });
+    expect(line).toContain("\x1b[31m");
+    expect(line).toContain("\x1b[0m");
+  });
+
+  it("should color warn level yellow", () => {
+    const line = formatLogLine(makeConsoleEvent({ level: "warn" }), { color: true });
+    expect(line).toContain("\x1b[33m");
+  });
+
+  it("should color network 5xx red", () => {
+    const line = formatLogLine(makeNetworkEvent({ status: 500, failed: true }), { color: true });
+    expect(line).toContain("\x1b[31m");
+  });
+
+  it("should color network 2xx green", () => {
+    const line = formatLogLine(makeNetworkEvent({ status: 200 }), { color: true });
+    expect(line).toContain("\x1b[32m");
+  });
+
+  it("should color stack dim", () => {
+    const line = formatLogLine(makeErrorEvent({ stack: "at x" }), { color: true });
+    expect(line).toContain("\x1b[2m");
+  });
 
   it("should format unhandled rejection event", () => {
     const event: UnhandledRejectionEvent = {

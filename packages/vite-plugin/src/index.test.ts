@@ -20,6 +20,11 @@ describe("logitPlugin()", () => {
     expect(plugin.name).toBe("logit");
   });
 
+  it("accepts options and still returns a plugin", () => {
+    const plugin = logitPlugin({ terminal: "warn" }) as PluginWithHooks;
+    expect(plugin.name).toBe("logit");
+  });
+
   it("exposes transformIndexHtml and configureServer hooks as functions", () => {
     const plugin = logitPlugin() as PluginWithHooks;
     expect(typeof plugin.transformIndexHtml).toBe("function");

@@ -16,6 +16,17 @@ export default defineConfig({
 
 Running `vite` is enough to collect the browser's `console`, `fetch`, and uncaught errors.
 
+## Options
+
+```ts
+logit({ terminal: true }); // mirror every captured event to stdout (colored)
+logit({ terminal: "warn" }); // only warn/error (filter by level)
+logit({ terminal: "error" }); // errors only
+// default: no terminal output; events go to .logit/ only
+```
+
+The level threshold applies to events with a `level` (console, error, rejection). Network events print only when `terminal: true`.
+
 ## How it works
 
 - `transformIndexHtml`: injects the browser instrumentation script into `<head>`
