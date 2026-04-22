@@ -21,17 +21,17 @@ description: Use when the user wants to inspect, search, or stream dev-time logs
 
 Route user intent like so:
 
-| Intent                                 | Command                                              |
-| -------------------------------------- | ---------------------------------------------------- |
-| "logs from the last N min/hours/days"  | `query --last 10m` / `--last 2h` / `--last 3d`       |
-| "grep logs for X" / "find X in logs"   | `query --search X`                                   |
-| "all logs for project foo"             | `query --project foo`                                |
-| "errors only" / "level=error"          | `query --level error`                                |
+| Intent                                 | Command                                             |
+| -------------------------------------- | --------------------------------------------------- |
+| "logs from the last N min/hours/days"  | `query --last 10m` / `--last 2h` / `--last 3d`      |
+| "grep logs for X" / "find X in logs"   | `query --search X`                                  |
+| "all logs for project foo"             | `query --project foo`                               |
+| "errors only" / "level=error"          | `query --level error`                               |
 | "browser fetch failures"               | `query --runtime browser --type network`            |
-| "live stream" / "tail -f style"        | `tail`                                               |
-| "open UI" / "browser view" / "run SQL" | `ui`                                                 |
+| "live stream" / "tail -f style"        | `tail`                                              |
+| "open UI" / "browser view" / "run SQL" | `ui`                                                |
 | "delete logs before date"              | `prune --before YYYY-MM-DD` (destructive — confirm) |
-| "health check" / "is it set up"        | `doctor`                                             |
+| "health check" / "is it set up"        | `doctor`                                            |
 
 If the user shows a JSONL path directly (e.g. `.logit/raw/2026-04-21.node.jsonl`), still prefer `logit query` on the enclosing project — the CLI resolves sourcemaps, merges runtimes, and returns typed events. Cat + grep loses this.
 
@@ -138,12 +138,12 @@ pnpm logit ui --port 4000
 
 ## Troubleshooting quick-reference
 
-| Symptom                              | Likely cause                 | Next step                          |
-| ------------------------------------ | ---------------------------- | ---------------------------------- |
-| "no logs at all"                     | app not instrumented         | check `--import @logit/register` or vite plugin |
-| "logs from yesterday missing"        | `prune` ran / rotated        | check `.logit/raw/*.jsonl` dates   |
-| "too many projects in results"       | scope too wide               | add `--project` or narrow `--root` |
-| `doctor` reports drift (rare)        | schema corruption            | `logit reindex` (full rebuild — escape hatch)   |
+| Symptom                        | Likely cause          | Next step                                       |
+| ------------------------------ | --------------------- | ----------------------------------------------- |
+| "no logs at all"               | app not instrumented  | check `--import @logit/register` or vite plugin |
+| "logs from yesterday missing"  | `prune` ran / rotated | check `.logit/raw/*.jsonl` dates                |
+| "too many projects in results" | scope too wide        | add `--project` or narrow `--root`              |
+| `doctor` reports drift (rare)  | schema corruption     | `logit reindex` (full rebuild — escape hatch)   |
 
 ## Non-goals
 

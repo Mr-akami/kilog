@@ -33,6 +33,6 @@
     "test": "vp test run"
   },
   "dependencies": {
-    "@duckdb/node-api": "*"
+    "@duckdb/node-api": "1.5.2-r.1"
   }
 }

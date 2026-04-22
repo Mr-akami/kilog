@@ -43,7 +43,7 @@
     "hono-openapi": "*"
   },
   "devDependencies": {
-    "@duckdb/duckdb-wasm": "*",
+    "@duckdb/duckdb-wasm": "1.33.1-dev45.0",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   }
