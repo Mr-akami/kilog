@@ -15,6 +15,17 @@ function escapeSqlLiteral(v: string): string {
   return v.replace(/'/g, "''");
 }
 
+function toDisplayString(v: unknown): string {
+  if (v == null) return "";
+  if (typeof v === "string") return v;
+  if (typeof v === "number" || typeof v === "boolean" || typeof v === "bigint") return String(v);
+  try {
+    return JSON.stringify(v) ?? "";
+  } catch {
+    return Object.prototype.toString.call(v);
+  }
+}
+
 export function buildFilterSQL(filter: Filter): string {
   const conditions: string[] = [];
   if (filter.project) conditions.push(`project = '${escapeSqlLiteral(filter.project)}'`);
@@ -78,7 +89,7 @@ export function renderRows(rows: Record<string, unknown>[]): void {
   tbody.innerHTML = "";
   for (const row of rows) {
     const tr = document.createElement("tr");
-    const level = String(row.level ?? "");
+    const level = toDisplayString(row.level);
     const stack = typeof row.stack === "string" ? row.stack : "";
     const hasStack = stack.length > 0;
     const cols = ["timestamp", "project", "runtime", "type", "level", "message"];
@@ -88,10 +99,9 @@ export function renderRows(rows: Record<string, unknown>[]): void {
       const td = document.createElement("td");
       if (c === "message") {
         // Prefix the message with a chevron so it's obvious the row expands.
-        td.textContent = (hasStack ? "▸ " : "  ") + (row[c] == null ? "" : String(row[c]));
+        td.textContent = (hasStack ? "▸ " : "  ") + toDisplayString(row[c]);
       } else {
-        const v = row[c];
-        td.textContent = v == null ? "" : String(v);
+        td.textContent = toDisplayString(row[c]);
       }
       if (c === "level" && level) td.className = `level-${level}`;
       tr.appendChild(td);
@@ -113,8 +123,7 @@ export function renderRows(rows: Record<string, unknown>[]): void {
         const visible = detail.style.display !== "none";
         detail.style.display = visible ? "none" : "table-row";
         const msgCell = tr.children[cols.indexOf("message")] as HTMLTableCellElement;
-        msgCell.textContent =
-          (visible ? "▸ " : "▾ ") + (row.message == null ? "" : String(row.message));
+        msgCell.textContent = (visible ? "▸ " : "▾ ") + toDisplayString(row.message);
       });
 
       tbody.appendChild(tr);
@@ -140,7 +149,7 @@ export function renderGenericResult(rows: Record<string, unknown>[]): void {
     const tr = document.createElement("tr");
     for (const c of cols) {
       const td = document.createElement("td");
-      td.textContent = row[c] == null ? "" : String(row[c]);
+      td.textContent = toDisplayString(row[c]);
       tr.appendChild(td);
     }
     tbody.appendChild(tr);
@@ -185,7 +194,7 @@ export async function refreshProjectList(db: duckdb.AsyncDuckDB): Promise<void> 
     );
     const select = el<HTMLSelectElement>("filter-project");
     const current = select.value;
-    const projects = rows.map((r) => String(r.project));
+    const projects = rows.map((r) => toDisplayString(r.project));
     const options = ['<option value="">All projects</option>']
       .concat(projects.map((p) => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`))
       .join("");

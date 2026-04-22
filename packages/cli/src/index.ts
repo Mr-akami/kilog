@@ -14,7 +14,7 @@ function resolveRoot(argvRoot: string | undefined): string {
   return path.resolve(argvRoot ?? process.cwd());
 }
 
-yargs(hideBin(process.argv))
+void yargs(hideBin(process.argv))
   .scriptName("logit")
   .option("root", {
     type: "string",
