@@ -11,6 +11,8 @@ export { reindex, indexFile } from "./indexer.js";
 export type { ReindexOptions, ReindexResult } from "./indexer.js";
 export { queryLogs, aggregateLogs, listProjects } from "./query.js";
 export type { QueryFilter, AggregateRow } from "./query.js";
+export { parseSearch, escapeIlikePattern, SearchParseError } from "./search-parser.js";
+export type { SearchTerm, SearchExpr } from "./search-parser.js";
 export { catchUpIndex, catchUpFile } from "./catchup.js";
 export type { CatchUpResult } from "./catchup.js";
 export { insertEvents } from "./insert.js";

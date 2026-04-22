@@ -238,6 +238,49 @@ describe("queryLogs", () => {
     expect(result).toHaveLength(0);
   });
 
+  it("should AND two terms", async () => {
+    const result = await queryLogs(db, { search: "type AND error" });
+    expect(result).toHaveLength(1);
+    expect(result[0].message).toContain("type error");
+  });
+
+  it("should OR two terms", async () => {
+    const result = await queryLogs(db, { search: "debug msg OR warn msg" });
+    expect(result).toHaveLength(2);
+  });
+
+  it("should AND precede OR", async () => {
+    const result = await queryLogs(db, { search: "debug AND msg OR type AND error" });
+    expect(result).toHaveLength(2);
+  });
+
+  it("should NOT exclude term", async () => {
+    const result = await queryLogs(db, {
+      type: "console",
+      search: "NOT debug",
+    });
+    for (const e of result) {
+      expect(e.message).not.toContain("debug");
+    }
+    expect(result).toHaveLength(2);
+  });
+
+  it("should combine AND NOT", async () => {
+    const result = await queryLogs(db, { search: "msg AND NOT debug" });
+    for (const e of result) {
+      if (typeof e.message === "string") {
+        expect(e.message).not.toContain("debug");
+        expect(e.message).toContain("msg");
+      }
+    }
+    expect(result).toHaveLength(2);
+  });
+
+  it("should escape % as literal in search", async () => {
+    const result = await queryLogs(db, { search: "100%_impossible" });
+    expect(result).toHaveLength(0);
+  });
+
   // ── time range ──
 
   it("should filter by from timestamp", async () => {

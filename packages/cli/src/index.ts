@@ -49,7 +49,11 @@ yargs(hideBin(process.argv))
         .option("type", { type: "string", describe: "Filter by event type" })
         .option("level", { type: "string", describe: "Filter by log level" })
         .option("project", { type: "string", describe: "Filter by project label" })
-        .option("search", { type: "string", describe: "Full-text search" })
+        .option("search", {
+          type: "string",
+          describe:
+            "Message search. Supports AND, OR, NOT (uppercase). AND > OR in precedence. Escape with \\AND \\OR \\NOT \\\\. Example: 'db AND NOT timeout OR ECONNRESET'",
+        })
         .option("from", { type: "string", describe: "Start time (ISO 8601)" })
         .option("to", { type: "string", describe: "End time (ISO 8601)" })
         .option("last", {
