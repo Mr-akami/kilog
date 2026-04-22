@@ -1,8 +1,8 @@
 import { watch, type FSWatcher } from "node:fs";
 import { readdir, stat, open, mkdir } from "node:fs/promises";
 import path from "node:path";
-import { deserialize, findLogitDirs, formatLogLine } from "@logit/core";
-import type { Runtime } from "@logit/core";
+import { deserialize, findKilogDirs, formatLogLine } from "@kilog/core";
+import type { Runtime } from "@kilog/core";
 
 export interface TailOptions {
   root: string;
@@ -97,11 +97,11 @@ async function watchRawDir(
 }
 
 export async function handleTail(options: TailOptions): Promise<void> {
-  const dirs = await findLogitDirs(options.root);
+  const dirs = await findKilogDirs(options.root);
   const rawDirs =
     dirs.length > 0
       ? dirs.map((d) => path.join(d, "raw"))
-      : [path.join(options.root, ".logit", "raw")]; // watch even if not yet created
+      : [path.join(options.root, ".kilog", "raw")]; // watch even if not yet created
 
   const fileOffsets = new Map<string, number>();
   const watchers: FSWatcher[] = [];

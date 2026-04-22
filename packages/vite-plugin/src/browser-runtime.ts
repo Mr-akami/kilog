@@ -1,6 +1,6 @@
 import { ENDPOINT } from "./constants.js";
 
-const SESSION_KEY = "__logit_session";
+const SESSION_KEY = "__kilog_session";
 
 export function generateBrowserRuntime(): string {
   return `(function() {
@@ -14,12 +14,12 @@ export function generateBrowserRuntime(): string {
   }
 
   function sendEvents(events) {
-    var orig = window.__logitOriginalFetch || fetch;
+    var orig = window.__kilogOriginalFetch || fetch;
     orig(ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(events)
-    }).catch(function(e) { origError("[logit] sendEvents failed:", e); });
+    }).catch(function(e) { origError("[kilog] sendEvents failed:", e); });
   }
 
   function formatArg(v) {
@@ -107,15 +107,15 @@ export function generateBrowserRuntime(): string {
   };
 
   var originalFetch = window.fetch;
-  window.__logitOriginalFetch = originalFetch;
+  window.__kilogOriginalFetch = originalFetch;
   function wrappedFetch(input, init) {
     var url = typeof input === "string" ? input : (input instanceof Request ? input.url : String(input));
-    if (url.indexOf("__logit") !== -1) {
+    if (url.indexOf("__kilog") !== -1) {
       return originalFetch.apply(window, arguments);
     }
     var method = (init && init.method) || (input instanceof Request ? input.method : "GET");
     var pathname = "/";
-    try { pathname = new URL(url, location.origin).pathname; } catch(e) { origError("[logit] URL parse failed:", e); }
+    try { pathname = new URL(url, location.origin).pathname; } catch(e) { origError("[kilog] URL parse failed:", e); }
     var start = performance.now();
     var stack = captureStack(wrappedFetch);
     return originalFetch.apply(window, arguments).then(function(response) {

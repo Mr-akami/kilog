@@ -8,7 +8,7 @@ describe("resolveAssetJs", () => {
   let dir: string;
 
   beforeEach(async () => {
-    dir = await mkdtemp(path.join(tmpdir(), "logit-manifest-"));
+    dir = await mkdtemp(path.join(tmpdir(), "kilog-manifest-"));
   });
 
   afterEach(async () => {

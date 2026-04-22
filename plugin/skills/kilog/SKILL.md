@@ -1,15 +1,15 @@
 ---
-name: logit
-description: Use when the user wants to inspect, search, or stream dev-time logs captured by the logit tool — phrases like "check my logs", "logs from 10 minutes ago", "grep logs for X", "errors from today", "all logs in project foo", "why did that fetch fail", or any request that implies reading from a `.logit/` store. Maps natural-language intent to the right `logit` CLI invocation (tail, query, reindex, prune, doctor, ui) with correct flags, instead of cat-ing JSONL files or writing ad-hoc grep. Trigger even when the user doesn't say "logit" explicitly, whenever log inspection in a logit-instrumented project is the goal.
+name: kilog
+description: Use when the user wants to inspect, search, or stream dev-time logs captured by the kilog tool — phrases like "check my logs", "logs from 10 minutes ago", "grep logs for X", "errors from today", "all logs in project foo", "why did that fetch fail", or any request that implies reading from a `.kilog/` store. Maps natural-language intent to the right `kilog` CLI invocation (tail, query, reindex, prune, doctor, ui) with correct flags, instead of cat-ing JSONL files or writing ad-hoc grep. Trigger even when the user doesn't say "kilog" explicitly, whenever log inspection in a kilog-instrumented project is the goal.
 ---
 
-# logit CLI skill
+# kilog CLI skill
 
-`logit` is a dev-time log recorder: it captures `console.*`, `fetch`, and uncaught errors from Node and browser apps into per-project `.logit/` stores (JSONL source-of-truth + DuckDB index). This skill maps user intent → the right CLI invocation. Use it whenever the user wants to look at captured logs.
+`kilog` is a dev-time log recorder: it captures `console.*`, `fetch`, and uncaught errors from Node and browser apps into per-project `.kilog/` stores (JSONL source-of-truth + DuckDB index). This skill maps user intent → the right CLI invocation. Use it whenever the user wants to look at captured logs.
 
 ## Core concept: per-project discovery, auto catch-up
 
-`logit` walks down from cwd (or `--root <path>`) and finds **every** `.logit/` under it, treating each as an independent store. Results from a multi-project workspace are merged.
+`kilog` walks down from cwd (or `--root <path>`) and finds **every** `.kilog/` under it, treating each as an independent store. Results from a multi-project workspace are merged.
 
 - Running from the workspace root fans out across all sub-projects. Usually wanted.
 - Use `--project <name>` to scope to one.
@@ -33,17 +33,17 @@ Route user intent like so:
 | "delete logs before date"              | `prune --before YYYY-MM-DD` (destructive — confirm) |
 | "health check" / "is it set up"        | `doctor`                                            |
 
-If the user shows a JSONL path directly (e.g. `.logit/raw/2026-04-21.node.jsonl`), still prefer `logit query` on the enclosing project — the CLI resolves sourcemaps, merges runtimes, and returns typed events. Cat + grep loses this.
+If the user shows a JSONL path directly (e.g. `.kilog/raw/2026-04-21.node.jsonl`), still prefer `kilog query` on the enclosing project — the CLI resolves sourcemaps, merges runtimes, and returns typed events. Cat + grep loses this.
 
 ## Invocation
 
-Inside a workspace that depends on `@logit/cli`: `pnpm logit <cmd>`. If globally installed: `logit <cmd>`. Check the project's package.json to pick the right prefix.
+Inside a workspace that depends on `@kilog/cli`: `pnpm kilog <cmd>`. If globally installed: `kilog <cmd>`. Check the project's package.json to pick the right prefix.
 
 ## Command reference
 
 Every command accepts `--root <path>` (default: cwd).
 
-### `logit query` — primary search
+### `kilog query` — primary search
 
 Flags:
 
@@ -52,31 +52,31 @@ Flags:
 - `--runtime node|browser`
 - `--type console|network|error|unhandled-rejection`
 - `--level debug|info|warn|error`
-- `--project <name>` — project label (as labelled in the user's `.logit/` or package discovery)
+- `--project <name>` — project label (as labelled in the user's `.kilog/` or package discovery)
 - `--search <substring>` — matches message, url, error message
 - `--limit <n>` / `--offset <n>`
 - `--json` — emit structured events instead of formatted lines. Use when piping to jq or processing further.
 - `--aggregate` — per-project counts. Useful when the user asks "what got logged where?" or to discover project names before filtering.
 
-Results are merged across every `.logit/` under `--root` and sorted chronologically.
+Results are merged across every `.kilog/` under `--root` and sorted chronologically.
 
-### `logit tail`
+### `kilog tail`
 
-Live-stream new entries across every discovered `.logit/`.
+Live-stream new entries across every discovered `.kilog/`.
 
 - `--runtime node|browser` — filter
 
-### `logit ui [--port 3000]`
+### `kilog ui [--port 3000]`
 
 Start the Hono + DuckDB-wasm browser UI. Auto-shuts down when the tab closes. Use when the user wants an interactive view, ad-hoc SQL, or the richer browser display.
 
-### `logit prune --before YYYY-MM-DD`
+### `kilog prune --before YYYY-MM-DD`
 
 Delete raw files older than date. **Destructive, not reversible.** Always confirm intent with the user before running; never invoke unsolicited.
 
-### `logit doctor`
+### `kilog doctor`
 
-Health check: enumerates discovered `.logit/` directories, checks index consistency, reports drift. First stop when "logs look wrong".
+Health check: enumerates discovered `.kilog/` directories, checks index consistency, reports drift. First stop when "logs look wrong".
 
 ## Time-window arguments
 
@@ -94,61 +94,61 @@ Compound durations (`1h30m`) and named units (`10min`, `2hr`) are NOT supported 
 ### Logs from the last 10 minutes
 
 ```bash
-pnpm logit query --last 10m
+pnpm kilog query --last 10m
 ```
 
 ### Grep by keyword
 
 ```bash
-pnpm logit query --search "TypeError"
+pnpm kilog query --search "TypeError"
 # Narrow by level too:
-pnpm logit query --search "TypeError" --level error
+pnpm kilog query --search "TypeError" --level error
 ```
 
 ### All logs for a given project
 
 ```bash
 # Don't know the project name yet? list first:
-pnpm logit query --aggregate
+pnpm kilog query --aggregate
 # Then scope:
-pnpm logit query --project my-app --limit 200
+pnpm kilog query --project my-app --limit 200
 ```
 
 ### Pipe into another tool
 
 ```bash
-pnpm logit query --last 1h --json | jq '.[] | select(.level=="error") | .message'
+pnpm kilog query --last 1h --json | jq '.[] | select(.level=="error") | .message'
 ```
 
 ### Browse in the UI
 
 ```bash
-pnpm logit ui          # default port 3000
-pnpm logit ui --port 4000
+pnpm kilog ui          # default port 3000
+pnpm kilog ui --port 4000
 ```
 
 ## Rules
 
-- **Prefer `logit query` over cat/grep of `.logit/raw/*.jsonl`.** JSONL is raw source but the CLI resolves sourcemaps, merges runtimes/projects, and returns typed events. Dropping to cat loses these.
+- **Prefer `kilog query` over cat/grep of `.kilog/raw/*.jsonl`.** JSONL is raw source but the CLI resolves sourcemaps, merges runtimes/projects, and returns typed events. Dropping to cat loses these.
 - **Never invoke `prune` without explicit user confirmation.** It deletes files and is not reversible. Ask, even if the user's intent seems clear.
 - **Never invent flags.** For relative windows use `--last 10m` (or similar). Don't fabricate `--since`, `--minutes`, `--tail-n`, etc., and don't pass a duration to `--from` — `--from` is ISO-only.
 - **`--root` defaults to cwd** and fans out across every child project. If the user's request implicitly scopes to one project, add `--project` or `cd` / `--root` into it. Mention when the fan-out result is broader than likely wanted.
-- **Empty result? Run `doctor` before assuming "no logs exist".** Index drift is possible though rare, and missing instrumentation is more likely: verify the app registered `@logit/register` (Node) or `@logit/vite-plugin` (browser).
+- **Empty result? Run `doctor` before assuming "no logs exist".** Index drift is possible though rare, and missing instrumentation is more likely: verify the app registered `@kilog/register` (Node) or `@kilog/vite-plugin` (browser).
 - **Large result sets:** default to `--limit 100` (or similar) unless the user explicitly wants everything. Mention the limit in the response so they can paginate with `--offset` or widen.
 
 ## Troubleshooting quick-reference
 
 | Symptom                        | Likely cause          | Next step                                       |
 | ------------------------------ | --------------------- | ----------------------------------------------- |
-| "no logs at all"               | app not instrumented  | check `--import @logit/register` or vite plugin |
-| "logs from yesterday missing"  | `prune` ran / rotated | check `.logit/raw/*.jsonl` dates                |
+| "no logs at all"               | app not instrumented  | check `--import @kilog/register` or vite plugin |
+| "logs from yesterday missing"  | `prune` ran / rotated | check `.kilog/raw/*.jsonl` dates                |
 | "too many projects in results" | scope too wide        | add `--project` or narrow `--root`              |
-| `doctor` reports drift (rare)  | schema corruption     | `logit reindex` (full rebuild — escape hatch)   |
+| `doctor` reports drift (rare)  | schema corruption     | `kilog reindex` (full rebuild — escape hatch)   |
 
 ## Non-goals
 
 This skill does NOT:
 
 - Modify app source to add instrumentation — that's a separate setup task.
-- Parse raw JSONL outside the CLI — always delegate to `logit query`.
+- Parse raw JSONL outside the CLI — always delegate to `kilog query`.
 - Run `prune` or any destructive command without explicit user go-ahead.

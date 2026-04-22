@@ -18,10 +18,10 @@ export const PUBLIC_PACKAGE_PATHS = [
 ] as const;
 
 export const PACKAGE_NAMES: Record<string, string> = {
-  "packages/core": "@logit/core",
-  "packages/runtime-node": "@logit/runtime-node",
-  "packages/vite-plugin": "@logit/vite-plugin",
-  "packages/cli": "@logit/cli",
-  "packages/web-ui": "@logit/web-ui",
-  "packages/register": "@logit/register",
+  "packages/core": "@kilog/core",
+  "packages/runtime-node": "@kilog/runtime-node",
+  "packages/vite-plugin": "@kilog/vite-plugin",
+  "packages/cli": "@kilog/cli",
+  "packages/web-ui": "@kilog/web-ui",
+  "packages/register": "@kilog/register",
 };

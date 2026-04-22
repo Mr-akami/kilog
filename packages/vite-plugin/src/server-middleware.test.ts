@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { Readable } from "node:stream";
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { createLogitMiddleware } from "./server-middleware.js";
+import { createKilogMiddleware } from "./server-middleware.js";
 
 function createReq(method: string, url: string, body: string): IncomingMessage {
   const stream = Readable.from([body]);
@@ -28,11 +28,11 @@ function createRes(): { res: ServerResponse; endPromise: Promise<void> } {
   return { res, endPromise };
 }
 
-describe("createLogitMiddleware", () => {
+describe("createKilogMiddleware", () => {
   let baseDir: string;
 
   beforeEach(async () => {
-    baseDir = await mkdtemp(path.join(tmpdir(), "logit-mw-"));
+    baseDir = await mkdtemp(path.join(tmpdir(), "kilog-mw-"));
   });
 
   afterEach(async () => {
@@ -40,8 +40,8 @@ describe("createLogitMiddleware", () => {
   });
 
   it("should pass through non-POST requests", async () => {
-    const middleware = createLogitMiddleware(baseDir);
-    const req = createReq("GET", "/__logit", "");
+    const middleware = createKilogMiddleware(baseDir);
+    const req = createReq("GET", "/__kilog", "");
     const { res } = createRes();
     const next = vi.fn();
 
@@ -49,8 +49,8 @@ describe("createLogitMiddleware", () => {
     await vi.waitFor(() => expect(next).toHaveBeenCalled());
   });
 
-  it("should pass through requests to non-/__logit paths", async () => {
-    const middleware = createLogitMiddleware(baseDir);
+  it("should pass through requests to non-/__kilog paths", async () => {
+    const middleware = createKilogMiddleware(baseDir);
     const req = createReq("POST", "/api/data", "{}");
     const { res } = createRes();
     const next = vi.fn();
@@ -59,8 +59,8 @@ describe("createLogitMiddleware", () => {
     await vi.waitFor(() => expect(next).toHaveBeenCalled());
   });
 
-  it("should return 200 on valid POST /__logit", async () => {
-    const middleware = createLogitMiddleware(baseDir);
+  it("should return 200 on valid POST /__kilog", async () => {
+    const middleware = createKilogMiddleware(baseDir);
     const events = [
       {
         id: crypto.randomUUID(),
@@ -72,7 +72,7 @@ describe("createLogitMiddleware", () => {
         message: "hello from browser",
       },
     ];
-    const req = createReq("POST", "/__logit", JSON.stringify(events));
+    const req = createReq("POST", "/__kilog", JSON.stringify(events));
     const { res, endPromise } = createRes();
 
     middleware(req, res, vi.fn());
@@ -82,7 +82,7 @@ describe("createLogitMiddleware", () => {
   });
 
   it("should write received events to disk", async () => {
-    const middleware = createLogitMiddleware(baseDir);
+    const middleware = createKilogMiddleware(baseDir);
     const events = [
       {
         id: crypto.randomUUID(),
@@ -94,19 +94,19 @@ describe("createLogitMiddleware", () => {
         message: "browser log entry",
       },
     ];
-    const req = createReq("POST", "/__logit", JSON.stringify(events));
+    const req = createReq("POST", "/__kilog", JSON.stringify(events));
     const { res, endPromise } = createRes();
 
     middleware(req, res, vi.fn());
     await endPromise;
 
-    const filePath = path.join(baseDir, ".logit", "raw", "2026-04-18.browser.jsonl");
+    const filePath = path.join(baseDir, ".kilog", "raw", "2026-04-18.browser.jsonl");
     const content = await readFile(filePath, "utf-8");
     expect(content).toContain("browser log entry");
   });
 
   it("should write multiple events from single request", async () => {
-    const middleware = createLogitMiddleware(baseDir);
+    const middleware = createKilogMiddleware(baseDir);
     const events = [
       {
         id: crypto.randomUUID(),
@@ -127,13 +127,13 @@ describe("createLogitMiddleware", () => {
         message: "second",
       },
     ];
-    const req = createReq("POST", "/__logit", JSON.stringify(events));
+    const req = createReq("POST", "/__kilog", JSON.stringify(events));
     const { res, endPromise } = createRes();
 
     middleware(req, res, vi.fn());
     await endPromise;
 
-    const filePath = path.join(baseDir, ".logit", "raw", "2026-04-18.browser.jsonl");
+    const filePath = path.join(baseDir, ".kilog", "raw", "2026-04-18.browser.jsonl");
     const content = await readFile(filePath, "utf-8");
     const lines = content.trim().split("\n");
     expect(lines).toHaveLength(2);
@@ -142,8 +142,8 @@ describe("createLogitMiddleware", () => {
   });
 
   it("should return 400 on invalid JSON body", async () => {
-    const middleware = createLogitMiddleware(baseDir);
-    const req = createReq("POST", "/__logit", "not valid json{{{");
+    const middleware = createKilogMiddleware(baseDir);
+    const req = createReq("POST", "/__kilog", "not valid json{{{");
     const { res, endPromise } = createRes();
 
     middleware(req, res, vi.fn());
@@ -165,7 +165,7 @@ describe("createLogitMiddleware", () => {
   }
 
   it("should not print to stdout by default", async () => {
-    const middleware = createLogitMiddleware(baseDir);
+    const middleware = createKilogMiddleware(baseDir);
     const events = [
       {
         id: crypto.randomUUID(),
@@ -177,7 +177,7 @@ describe("createLogitMiddleware", () => {
         message: "silent",
       },
     ];
-    const req = createReq("POST", "/__logit", JSON.stringify(events));
+    const req = createReq("POST", "/__kilog", JSON.stringify(events));
     const { res, endPromise } = createRes();
     const capture = captureStdout();
     try {
@@ -190,7 +190,7 @@ describe("createLogitMiddleware", () => {
   });
 
   it("should print all events when terminal: true", async () => {
-    const middleware = createLogitMiddleware(baseDir, { terminal: true });
+    const middleware = createKilogMiddleware(baseDir, { terminal: true });
     const events = [
       {
         id: crypto.randomUUID(),
@@ -211,7 +211,7 @@ describe("createLogitMiddleware", () => {
         message: "hello-debug",
       },
     ];
-    const req = createReq("POST", "/__logit", JSON.stringify(events));
+    const req = createReq("POST", "/__kilog", JSON.stringify(events));
     const { res, endPromise } = createRes();
     const capture = captureStdout();
     try {
@@ -227,7 +227,7 @@ describe("createLogitMiddleware", () => {
   });
 
   it("should only print at or above threshold when terminal: 'warn'", async () => {
-    const middleware = createLogitMiddleware(baseDir, { terminal: "warn" });
+    const middleware = createKilogMiddleware(baseDir, { terminal: "warn" });
     const events = [
       {
         id: crypto.randomUUID(),
@@ -257,7 +257,7 @@ describe("createLogitMiddleware", () => {
         message: "above-threshold",
       },
     ];
-    const req = createReq("POST", "/__logit", JSON.stringify(events));
+    const req = createReq("POST", "/__kilog", JSON.stringify(events));
     const { res, endPromise } = createRes();
     const capture = captureStdout();
     try {

@@ -7,20 +7,20 @@ import { captureConsole } from "./capture-console.js";
 
 describe("runtime-node integration", () => {
   let baseDir: string;
-  const savedLogitDir = process.env.LOGIT_DIR;
+  const savedKilogDir = process.env.KILOG_DIR;
   const savedConsoleLog = console.log;
 
   beforeEach(async () => {
-    baseDir = await mkdtemp(path.join(tmpdir(), "logit-int-"));
-    process.env.LOGIT_DIR = baseDir;
+    baseDir = await mkdtemp(path.join(tmpdir(), "kilog-int-"));
+    process.env.KILOG_DIR = baseDir;
   });
 
   afterEach(async () => {
     console.log = savedConsoleLog;
-    if (savedLogitDir === undefined) {
-      delete process.env.LOGIT_DIR;
+    if (savedKilogDir === undefined) {
+      delete process.env.KILOG_DIR;
     } else {
-      process.env.LOGIT_DIR = savedLogitDir;
+      process.env.KILOG_DIR = savedKilogDir;
     }
     await rm(baseDir, { recursive: true, force: true });
   });
@@ -31,7 +31,7 @@ describe("runtime-node integration", () => {
 
     console.log("integration test message");
 
-    const rawDir = path.join(baseDir, ".logit", "raw");
+    const rawDir = path.join(baseDir, ".kilog", "raw");
     await vi.waitFor(
       async () => {
         const files = await readdir(rawDir);
@@ -56,7 +56,7 @@ describe("runtime-node integration", () => {
     console.log("first");
     console.log("second");
 
-    const rawDir = path.join(baseDir, ".logit", "raw");
+    const rawDir = path.join(baseDir, ".kilog", "raw");
     await vi.waitFor(
       async () => {
         const files = await readdir(rawDir);

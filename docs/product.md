@@ -2,7 +2,7 @@
 
 ## Summary
 
-`logit` is an OSS logging tool for local development.
+`kilog` is an OSS logging tool for local development.
 
 Goals:
 
@@ -24,7 +24,7 @@ Initial target scope:
 
 ## Positioning
 
-`logit` is not a centralized production logging platform. It is a tool for local development observability and query workflows.
+`kilog` is not a centralized production logging platform. It is a tool for local development observability and query workflows.
 
 Priorities:
 

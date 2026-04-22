@@ -8,18 +8,18 @@ import { handleReindex } from "./commands/reindex.js";
 import { handlePrune } from "./commands/prune.js";
 import { handleDoctor } from "./commands/doctor.js";
 import { handleUi } from "./commands/ui.js";
-import type { Runtime, EventType, LogLevel } from "@logit/core";
+import type { Runtime, EventType, LogLevel } from "@kilog/core";
 
 function resolveRoot(argvRoot: string | undefined): string {
   return path.resolve(argvRoot ?? process.cwd());
 }
 
 void yargs(hideBin(process.argv))
-  .scriptName("logit")
+  .scriptName("kilog")
   .option("root", {
     type: "string",
     describe:
-      "Scan scope for .logit/ discovery (default: cwd). Each .logit/ keeps its own independent index.",
+      "Scan scope for .kilog/ discovery (default: cwd). Each .kilog/ keeps its own independent index.",
   })
   .command(
     "tail",
@@ -88,7 +88,7 @@ void yargs(hideBin(process.argv))
   )
   .command(
     "reindex",
-    "Rebuild the DuckDB index for every discovered .logit/",
+    "Rebuild the DuckDB index for every discovered .kilog/",
     () => {},
     async (argv) => {
       await handleReindex({ root: resolveRoot(argv.root) });
@@ -109,7 +109,7 @@ void yargs(hideBin(process.argv))
   )
   .command(
     "doctor",
-    "Check .logit health and per-project index consistency",
+    "Check .kilog health and per-project index consistency",
     () => {},
     async (argv) => {
       await handleDoctor({ root: resolveRoot(argv.root) });

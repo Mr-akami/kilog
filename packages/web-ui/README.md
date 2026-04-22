@@ -1,17 +1,17 @@
-# @logit/web-ui
+# @kilog/web-ui
 
-Browser UI for `.logit/` backed by DuckDB-wasm. The server is a thin Hono app that does SSR of the initial HTML and serves JSONL files on demand — all queries run in the browser.
+Browser UI for `.kilog/` backed by DuckDB-wasm. The server is a thin Hono app that does SSR of the initial HTML and serves JSONL files on demand — all queries run in the browser.
 
 ## Usage
 
-Start it via [`@logit/cli`](../cli/README.md):
+Start it via [`@kilog/cli`](../cli/README.md):
 
 ```bash
-pnpm logit ui                 # http://localhost:3000
-pnpm logit ui --port 4000
+pnpm kilog ui                 # http://localhost:3000
+pnpm kilog ui --port 4000
 ```
 
-Use `--port` if it collides with your app's dev server. The server scans from cwd (or `--root <path>`) to discover every `.logit/` under it.
+Use `--port` if it collides with your app's dev server. The server scans from cwd (or `--root <path>`) to discover every `.kilog/` under it.
 
 ## Runtime behavior
 
@@ -29,7 +29,7 @@ Use `--port` if it collides with your app's dev server. The server scans from cw
 - **Filter bar**: project / runtime / type / level dropdowns + free-text search.
 - **Raw SQL input**: run any SELECT against the wasm DB (`logs` table). Results render as a generic table.
 - **Clear DuckDB**: drop rows from the in-browser DB, then re-ingest from disk (non-destructive).
-- **Clear logs on disk**: delete every `.logit/raw/*.jsonl` and `.logit/index/` under the current root, then clear the wasm DB (destructive, requires confirmation).
+- **Clear logs on disk**: delete every `.kilog/raw/*.jsonl` and `.kilog/index/` under the current root, then clear the wasm DB (destructive, requires confirmation).
 
 ## HTTP API
 
@@ -42,7 +42,7 @@ The browser UI depends on these routes:
 
 | Route                                 | Purpose                                                        |
 | ------------------------------------- | -------------------------------------------------------------- |
-| `GET /`                               | SSR HTML with initial state embedded as `window.__LOGIT_SSR__` |
+| `GET /`                               | SSR HTML with initial state embedded as `window.__KILOG_SSR__` |
 | `GET /api/sources?root=<path>`        | Discovered JSONL files                                         |
 | `GET /api/read?path=<abs>&offset=<n>` | Byte-range streaming; `X-File-Size` header                     |
 | `GET /api/heartbeat`                  | Resets the idle-shutdown timer                                 |
@@ -58,7 +58,7 @@ open http://localhost:3000/docs      # interactive reference
 ## Programmatic API
 
 ```ts
-import { startServer } from "@logit/web-ui";
+import { startServer } from "@kilog/web-ui";
 
 await startServer({
   port: 3000, // auto-incremented if busy
@@ -89,10 +89,10 @@ await startServer({
 ### Build
 
 ```bash
-pnpm --filter @logit/web-ui build        # vite build + tsc
-pnpm --filter @logit/web-ui build:client # vite only
-pnpm --filter @logit/web-ui build:server # tsc only
-pnpm --filter @logit/web-ui dev:client   # Vite dev server for the browser bundle
+pnpm --filter @kilog/web-ui build        # vite build + tsc
+pnpm --filter @kilog/web-ui build:client # vite only
+pnpm --filter @kilog/web-ui build:server # tsc only
+pnpm --filter @kilog/web-ui dev:client   # Vite dev server for the browser bundle
 ```
 
 The client build emits to `dist/public/` (hashed assets + `.vite/manifest.json`). The server resolves the JS URL from the manifest at request time.
@@ -103,12 +103,12 @@ Rebuild with `pnpm tsc -b --watch` from the repo root.
 
 ### Editing browser client
 
-Run `pnpm --filter @logit/web-ui dev:client` for Vite's HMR, or `pnpm --filter @logit/web-ui build:client` for one-off builds.
+Run `pnpm --filter @kilog/web-ui dev:client` for Vite's HMR, or `pnpm --filter @kilog/web-ui build:client` for one-off builds.
 
 ### Tests
 
 ```bash
-pnpm --filter @logit/web-ui test
+pnpm --filter @kilog/web-ui test
 ```
 
 Covers SSR output, `/api/sources`, `/api/read` (including offset + security), `/api/clear`, `/api/heartbeat`, `/openapi.json`, and `/docs`.

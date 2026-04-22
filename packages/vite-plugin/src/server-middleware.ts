@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { createWriter, createRedactor, formatLogLine } from "@logit/core";
-import type { LogEvent, LogLevel } from "@logit/core";
+import { createWriter, createRedactor, formatLogLine } from "@kilog/core";
+import type { LogEvent, LogLevel } from "@kilog/core";
 
 type NextFunction = () => void;
 type Middleware = (req: IncomingMessage, res: ServerResponse, next: NextFunction) => void;
@@ -9,7 +9,7 @@ import { ENDPOINT } from "./constants.js";
 
 const LEVEL_RANK: Record<LogLevel, number> = { debug: 0, info: 1, warn: 2, error: 3 };
 
-export interface LogitMiddlewareOptions {
+export interface KilogMiddlewareOptions {
   terminal?: boolean | LogLevel;
 }
 
@@ -31,9 +31,9 @@ function readBody(req: IncomingMessage): Promise<string> {
   });
 }
 
-export function createLogitMiddleware(
+export function createKilogMiddleware(
   baseDir: string,
-  options: LogitMiddlewareOptions = {},
+  options: KilogMiddlewareOptions = {},
 ): Middleware {
   const writer = createWriter({ baseDir, redactor: createRedactor() });
   const terminal = options.terminal;
@@ -58,7 +58,7 @@ export function createLogitMiddleware(
         res.end('{"ok":true}');
       })
       .catch((err) => {
-        console.error("[logit] middleware error:", err);
+        console.error("[kilog] middleware error:", err);
         res.statusCode = 400;
         res.setHeader("Content-Type", "application/json");
         res.end('{"error":"invalid body"}');

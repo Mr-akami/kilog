@@ -1,6 +1,6 @@
 import { stat } from "node:fs/promises";
 import path from "node:path";
-import { discoverSourceFiles } from "@logit/core";
+import { discoverSourceFiles } from "@kilog/core";
 
 export interface SourceDescriptor {
   /** Absolute filesystem path to the JSONL file. */

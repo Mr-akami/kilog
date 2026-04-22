@@ -2,8 +2,8 @@ import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
 import { mkdtemp, rm, writeFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { reindex, serialize } from "@logit/core";
-import type { ConsoleEvent, ErrorEvent, NetworkEvent } from "@logit/core";
+import { reindex, serialize } from "@kilog/core";
+import type { ConsoleEvent, ErrorEvent, NetworkEvent } from "@kilog/core";
 import { handleQuery } from "./query.js";
 
 // ── helpers ──
@@ -72,9 +72,9 @@ describe("handleQuery", () => {
   let dbPath: string;
 
   beforeEach(async () => {
-    baseDir = await mkdtemp(path.join(tmpdir(), "logit-cli-query-"));
-    const rawDir = path.join(baseDir, ".logit", "raw");
-    const indexDir = path.join(baseDir, ".logit", "index");
+    baseDir = await mkdtemp(path.join(tmpdir(), "kilog-cli-query-"));
+    const rawDir = path.join(baseDir, ".kilog", "raw");
+    const indexDir = path.join(baseDir, ".kilog", "index");
     await mkdir(rawDir, { recursive: true });
     await mkdir(indexDir, { recursive: true });
 
@@ -223,9 +223,9 @@ describe("handleQuery --last", () => {
     recentIso = new Date(now - 5 * 60_000).toISOString();
     oldIso = new Date(now - 60 * 60_000).toISOString();
 
-    baseDir = await mkdtemp(path.join(tmpdir(), "logit-cli-last-"));
-    const rawDir = path.join(baseDir, ".logit", "raw");
-    const indexDir = path.join(baseDir, ".logit", "index");
+    baseDir = await mkdtemp(path.join(tmpdir(), "kilog-cli-last-"));
+    const rawDir = path.join(baseDir, ".kilog", "raw");
+    const indexDir = path.join(baseDir, ".kilog", "index");
     await mkdir(rawDir, { recursive: true });
     await mkdir(indexDir, { recursive: true });
 

@@ -1,1 +1,1 @@
-export const ENDPOINT = "/__logit";
+export const ENDPOINT = "/__kilog";

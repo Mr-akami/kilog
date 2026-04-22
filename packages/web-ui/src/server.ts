@@ -82,7 +82,7 @@ export function createApp(options: AppOptions): Hono {
     "/api/sources",
     describeRoute({
       tags: ["discovery"],
-      summary: "List all .logit/raw/*.jsonl files under the root",
+      summary: "List all .kilog/raw/*.jsonl files under the root",
       parameters: [
         {
           name: "root",
@@ -222,7 +222,7 @@ export function createApp(options: AppOptions): Hono {
       tags: ["maintenance"],
       summary: "Delete all raw JSONL files and per-project index directories",
       description:
-        "Destructive. Removes every `*.jsonl` under `<root>/**/.logit/raw/` and every `.logit/index/` directory. The browser UI confirms before calling this.",
+        "Destructive. Removes every `*.jsonl` under `<root>/**/.kilog/raw/` and every `.kilog/index/` directory. The browser UI confirms before calling this.",
       requestBody: {
         content: {
           "application/json": {
@@ -271,9 +271,9 @@ export function createApp(options: AppOptions): Hono {
       documentation: {
         info: {
           version: "0.0.0",
-          title: "@logit/web-ui server API",
+          title: "@kilog/web-ui server API",
           description:
-            "Backing API for the logit browser UI. The browser uses these endpoints to enumerate JSONL sources, stream their contents into DuckDB-wasm, keep the server alive, and clear logs on disk.",
+            "Backing API for the kilog browser UI. The browser uses these endpoints to enumerate JSONL sources, stream their contents into DuckDB-wasm, keep the server alive, and clear logs on disk.",
         },
         openapi: "3.1.0",
       },

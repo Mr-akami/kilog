@@ -1,5 +1,5 @@
-import { createWriter, createRedactor } from "@logit/core";
-import type { Writer, Runtime } from "@logit/core";
+import { createWriter, createRedactor } from "@kilog/core";
+import type { Writer, Runtime } from "@kilog/core";
 
 export interface RuntimeContext {
   session: string;
@@ -24,7 +24,7 @@ export function createBaseFields(ctx: RuntimeContext): BaseFields {
 
 export function createRuntimeContext(): RuntimeContext {
   const session = crypto.randomUUID();
-  const baseDir = process.env.LOGIT_DIR ?? process.cwd();
+  const baseDir = process.env.KILOG_DIR ?? process.cwd();
   const writer = createWriter({ baseDir, redactor: createRedactor() });
   return { session, writer };
 }

@@ -31,7 +31,7 @@ describe("readLogFile", () => {
   let baseDir: string;
 
   beforeEach(async () => {
-    baseDir = await mkdtemp(path.join(tmpdir(), "logit-reader-"));
+    baseDir = await mkdtemp(path.join(tmpdir(), "kilog-reader-"));
   });
 
   afterEach(async () => {
@@ -129,8 +129,8 @@ describe("listRawFiles", () => {
   let baseDir: string;
 
   beforeEach(async () => {
-    baseDir = await mkdtemp(path.join(tmpdir(), "logit-list-"));
-    await mkdir(path.join(baseDir, ".logit", "raw"), { recursive: true });
+    baseDir = await mkdtemp(path.join(tmpdir(), "kilog-list-"));
+    await mkdir(path.join(baseDir, ".kilog", "raw"), { recursive: true });
   });
 
   afterEach(async () => {
@@ -143,7 +143,7 @@ describe("listRawFiles", () => {
   });
 
   it("should return jsonl files in raw directory", async () => {
-    const rawDir = path.join(baseDir, ".logit", "raw");
+    const rawDir = path.join(baseDir, ".kilog", "raw");
     await writeFile(path.join(rawDir, "2026-04-18.node.jsonl"), "");
     await writeFile(path.join(rawDir, "2026-04-18.browser.jsonl"), "");
 
@@ -154,7 +154,7 @@ describe("listRawFiles", () => {
   });
 
   it("should not include non-jsonl files", async () => {
-    const rawDir = path.join(baseDir, ".logit", "raw");
+    const rawDir = path.join(baseDir, ".kilog", "raw");
     await writeFile(path.join(rawDir, "2026-04-18.node.jsonl"), "");
     await writeFile(path.join(rawDir, "notes.txt"), "");
 
@@ -164,7 +164,7 @@ describe("listRawFiles", () => {
   });
 
   it("should handle missing raw directory gracefully", async () => {
-    const emptyBase = await mkdtemp(path.join(tmpdir(), "logit-empty-"));
+    const emptyBase = await mkdtemp(path.join(tmpdir(), "kilog-empty-"));
     try {
       const result = await listRawFiles(emptyBase);
       expect(result).toEqual([]);

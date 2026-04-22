@@ -22,12 +22,12 @@ Make the CLI the primary query interface.
 
 Initial commands:
 
-- `logit tail`
-- `logit query`
-- `logit reindex`
-- `logit prune`
-- `logit doctor`
-- `logit ui`
+- `kilog tail`
+- `kilog query`
+- `kilog reindex`
+- `kilog prune`
+- `kilog doctor`
+- `kilog ui`
 
 ## Source Map Policy
 

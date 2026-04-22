@@ -2,8 +2,8 @@ import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
 import { mkdtemp, rm, writeFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { reindex, serialize } from "@logit/core";
-import type { ConsoleEvent } from "@logit/core";
+import { reindex, serialize } from "@kilog/core";
+import type { ConsoleEvent } from "@kilog/core";
 import { handleDoctor } from "./doctor.js";
 
 function makeConsoleEvent(overrides?: Partial<ConsoleEvent>): ConsoleEvent {
@@ -38,40 +38,40 @@ describe("handleDoctor", () => {
   let dbPath: string;
 
   beforeEach(async () => {
-    baseDir = await mkdtemp(path.join(tmpdir(), "logit-cli-doctor-"));
-    dbPath = path.join(baseDir, ".logit", "index", "logs.duckdb");
+    baseDir = await mkdtemp(path.join(tmpdir(), "kilog-cli-doctor-"));
+    dbPath = path.join(baseDir, ".kilog", "index", "logs.duckdb");
   });
 
   afterEach(async () => {
     await rm(baseDir, { recursive: true, force: true });
   });
 
-  // ── .logit directory check ──
+  // ── .kilog directory check ──
 
-  it("should report when .logit directory is missing", async () => {
+  it("should report when .kilog directory is missing", async () => {
     const output = await captureStdout(() => handleDoctor({ root: baseDir }));
 
-    expect(output).toContain(".logit");
+    expect(output).toContain(".kilog");
   });
 
-  it("should report .logit directory as present when it exists", async () => {
-    await mkdir(path.join(baseDir, ".logit", "raw"), { recursive: true });
-    await mkdir(path.join(baseDir, ".logit", "index"), { recursive: true });
+  it("should report .kilog directory as present when it exists", async () => {
+    await mkdir(path.join(baseDir, ".kilog", "raw"), { recursive: true });
+    await mkdir(path.join(baseDir, ".kilog", "index"), { recursive: true });
 
     const output = await captureStdout(() => handleDoctor({ root: baseDir }));
 
-    expect(output).toContain(".logit");
+    expect(output).toContain(".kilog");
   });
 
   // ── count consistency ──
 
   it("should report matching counts when raw and index are in sync", async () => {
-    await mkdir(path.join(baseDir, ".logit", "raw"), { recursive: true });
-    await mkdir(path.join(baseDir, ".logit", "index"), { recursive: true });
+    await mkdir(path.join(baseDir, ".kilog", "raw"), { recursive: true });
+    await mkdir(path.join(baseDir, ".kilog", "index"), { recursive: true });
 
     const events = [makeConsoleEvent(), makeConsoleEvent()];
     await writeFile(
-      path.join(baseDir, ".logit", "raw", "2026-04-18.node.jsonl"),
+      path.join(baseDir, ".kilog", "raw", "2026-04-18.node.jsonl"),
       events.map(serialize).join("\n") + "\n",
     );
     await reindex({ baseDir, dbPath });
@@ -83,13 +83,13 @@ describe("handleDoctor", () => {
   });
 
   it("should report mismatch when raw has more events than index", async () => {
-    await mkdir(path.join(baseDir, ".logit", "raw"), { recursive: true });
-    await mkdir(path.join(baseDir, ".logit", "index"), { recursive: true });
+    await mkdir(path.join(baseDir, ".kilog", "raw"), { recursive: true });
+    await mkdir(path.join(baseDir, ".kilog", "index"), { recursive: true });
 
     // index with 1 event
     const event1 = makeConsoleEvent({ message: "first" });
     await writeFile(
-      path.join(baseDir, ".logit", "raw", "2026-04-18.node.jsonl"),
+      path.join(baseDir, ".kilog", "raw", "2026-04-18.node.jsonl"),
       serialize(event1) + "\n",
     );
     await reindex({ baseDir, dbPath });
@@ -97,7 +97,7 @@ describe("handleDoctor", () => {
     // add another event to raw (without reindexing)
     const event2 = makeConsoleEvent({ message: "second" });
     await writeFile(
-      path.join(baseDir, ".logit", "raw", "2026-04-18.node.jsonl"),
+      path.join(baseDir, ".kilog", "raw", "2026-04-18.node.jsonl"),
       [serialize(event1), serialize(event2)].join("\n") + "\n",
     );
 
@@ -109,9 +109,9 @@ describe("handleDoctor", () => {
   // ── no index file ──
 
   it("should handle missing DuckDB index file", async () => {
-    await mkdir(path.join(baseDir, ".logit", "raw"), { recursive: true });
+    await mkdir(path.join(baseDir, ".kilog", "raw"), { recursive: true });
     await writeFile(
-      path.join(baseDir, ".logit", "raw", "2026-04-18.node.jsonl"),
+      path.join(baseDir, ".kilog", "raw", "2026-04-18.node.jsonl"),
       serialize(makeConsoleEvent()) + "\n",
     );
 
@@ -123,8 +123,8 @@ describe("handleDoctor", () => {
   // ── empty project ──
 
   it("should report clean state for empty project with no logs", async () => {
-    await mkdir(path.join(baseDir, ".logit", "raw"), { recursive: true });
-    await mkdir(path.join(baseDir, ".logit", "index"), { recursive: true });
+    await mkdir(path.join(baseDir, ".kilog", "raw"), { recursive: true });
+    await mkdir(path.join(baseDir, ".kilog", "index"), { recursive: true });
     await reindex({ baseDir, dbPath });
 
     const output = await captureStdout(() => handleDoctor({ root: baseDir }));

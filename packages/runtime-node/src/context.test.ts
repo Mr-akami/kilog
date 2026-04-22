@@ -3,25 +3,25 @@ import { mkdtemp, rm, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { createRuntimeContext, createBaseFields } from "./context.js";
-import type { ConsoleEvent } from "@logit/core";
+import type { ConsoleEvent } from "@kilog/core";
 import { createMockContext } from "./testing.js";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 describe("createRuntimeContext", () => {
   let dir: string;
-  const savedLogitDir = process.env.LOGIT_DIR;
+  const savedKilogDir = process.env.KILOG_DIR;
 
   beforeEach(async () => {
-    dir = await mkdtemp(path.join(tmpdir(), "logit-ctx-"));
-    process.env.LOGIT_DIR = dir;
+    dir = await mkdtemp(path.join(tmpdir(), "kilog-ctx-"));
+    process.env.KILOG_DIR = dir;
   });
 
   afterEach(async () => {
-    if (savedLogitDir === undefined) {
-      delete process.env.LOGIT_DIR;
+    if (savedKilogDir === undefined) {
+      delete process.env.KILOG_DIR;
     } else {
-      process.env.LOGIT_DIR = savedLogitDir;
+      process.env.KILOG_DIR = savedKilogDir;
     }
     await rm(dir, { recursive: true, force: true });
   });
@@ -43,7 +43,7 @@ describe("createRuntimeContext", () => {
     expect(typeof ctx.writer.close).toBe("function");
   });
 
-  it("should write events to LOGIT_DIR base directory", async () => {
+  it("should write events to KILOG_DIR base directory", async () => {
     const ctx = createRuntimeContext();
     const event: ConsoleEvent = {
       id: crypto.randomUUID(),
@@ -57,7 +57,7 @@ describe("createRuntimeContext", () => {
     await ctx.writer.append(event);
     await ctx.writer.close();
 
-    const rawDir = path.join(dir, ".logit", "raw");
+    const rawDir = path.join(dir, ".kilog", "raw");
     const files = await readdir(rawDir);
     expect(files).toContain("2026-04-18.node.jsonl");
   });

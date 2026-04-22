@@ -2,8 +2,8 @@ import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
 import { mkdtemp, rm, writeFile, appendFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { serialize } from "@logit/core";
-import type { ConsoleEvent } from "@logit/core";
+import { serialize } from "@kilog/core";
+import type { ConsoleEvent } from "@kilog/core";
 import { handleTail } from "./tail.js";
 
 function makeConsoleEvent(overrides?: Partial<ConsoleEvent>): ConsoleEvent {
@@ -24,8 +24,8 @@ describe("handleTail", () => {
   let rawDir: string;
 
   beforeEach(async () => {
-    baseDir = await mkdtemp(path.join(tmpdir(), "logit-cli-tail-"));
-    rawDir = path.join(baseDir, ".logit", "raw");
+    baseDir = await mkdtemp(path.join(tmpdir(), "kilog-cli-tail-"));
+    rawDir = path.join(baseDir, ".kilog", "raw");
     await mkdir(rawDir, { recursive: true });
   });
 
@@ -98,8 +98,8 @@ describe("handleTail", () => {
     expect(lines.some((l) => l.includes("browser event"))).toBe(false);
   });
 
-  it("should handle missing .logit/raw directory gracefully", async () => {
-    const emptyBase = await mkdtemp(path.join(tmpdir(), "logit-cli-tail-empty-"));
+  it("should handle missing .kilog/raw directory gracefully", async () => {
+    const emptyBase = await mkdtemp(path.join(tmpdir(), "kilog-cli-tail-empty-"));
     const controller = new AbortController();
 
     // should not throw

@@ -9,7 +9,7 @@ describe("resolveStackFrames", () => {
   let sourceDir: string;
 
   beforeEach(async () => {
-    const tmpBase = await mkdtemp(path.join(tmpdir(), "logit-sourcemap-"));
+    const tmpBase = await mkdtemp(path.join(tmpdir(), "kilog-sourcemap-"));
     cacheDir = path.join(tmpBase, "cache", "sourcemaps");
     sourceDir = path.join(tmpBase, "sources");
     await mkdir(cacheDir, { recursive: true });

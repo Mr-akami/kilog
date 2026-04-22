@@ -1,5 +1,5 @@
 export {
-  findLogitDirs,
+  findKilogDirs,
   discoverSources,
   discoverSourceFiles,
   listRawFilesIn,

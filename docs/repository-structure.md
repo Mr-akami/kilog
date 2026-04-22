@@ -5,7 +5,7 @@
 The repository uses a pnpm workspace monorepo with shared configuration files at the root.
 
 ```text
-logit/
+kilog/
   pnpm-workspace.yaml
   package.json
   tsconfig.base.json
@@ -63,12 +63,12 @@ The main user-facing CLI package.
 
 Responsibilities:
 
-- `logit tail`
-- `logit query`
-- `logit reindex`
-- `logit prune`
-- `logit doctor`
-- `logit ui`
+- `kilog tail`
+- `kilog query`
+- `kilog reindex`
+- `kilog prune`
+- `kilog doctor`
+- `kilog ui`
 
 Suggested internal layout:
 

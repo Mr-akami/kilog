@@ -1,19 +1,19 @@
 {
-  "name": "@logit/example-node-server",
+  "name": "@kilog/example-node-server",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "node --import @logit/register ./src/index.ts",
-    "logit": "logit"
+    "dev": "node --import @kilog/register ./src/index.ts",
+    "kilog": "kilog"
   },
   "dependencies": {
     "@hono/node-server": "*",
-    "@logit/register": "workspace:*",
+    "@kilog/register": "workspace:*",
     "hono": "*"
   },
   "devDependencies": {
-    "@logit/cli": "workspace:*"
+    "@kilog/cli": "workspace:*"
   }
 }

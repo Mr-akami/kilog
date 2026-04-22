@@ -23,21 +23,21 @@ describe("createWriter", () => {
   let baseDir: string;
 
   beforeEach(async () => {
-    baseDir = await mkdtemp(path.join(tmpdir(), "logit-writer-"));
+    baseDir = await mkdtemp(path.join(tmpdir(), "kilog-writer-"));
   });
 
   afterEach(async () => {
     await rm(baseDir, { recursive: true, force: true });
   });
 
-  it("should create .logit/raw directory automatically", async () => {
+  it("should create .kilog/raw directory automatically", async () => {
     const writer = createWriter({ baseDir });
     const event = makeConsoleEvent();
     await writer.append(event);
     await writer.close();
 
     const { readdir } = await import("node:fs/promises");
-    const rawDir = path.join(baseDir, ".logit", "raw");
+    const rawDir = path.join(baseDir, ".kilog", "raw");
     const files = await readdir(rawDir);
     expect(files.length).toBeGreaterThan(0);
   });
@@ -48,7 +48,7 @@ describe("createWriter", () => {
     await writer.append(event);
     await writer.close();
 
-    const filePath = path.join(baseDir, ".logit", "raw", "2026-04-18.node.jsonl");
+    const filePath = path.join(baseDir, ".kilog", "raw", "2026-04-18.node.jsonl");
     const content = await readFile(filePath, "utf-8");
     const lines = content.trim().split("\n");
     expect(lines).toHaveLength(1);
@@ -63,7 +63,7 @@ describe("createWriter", () => {
     await writer.append(e2);
     await writer.close();
 
-    const filePath = path.join(baseDir, ".logit", "raw", "2026-04-18.node.jsonl");
+    const filePath = path.join(baseDir, ".kilog", "raw", "2026-04-18.node.jsonl");
     const content = await readFile(filePath, "utf-8");
     const lines = content.trim().split("\n");
     expect(lines).toHaveLength(2);
@@ -83,7 +83,7 @@ describe("createWriter", () => {
     await writer.close();
 
     const { readdir } = await import("node:fs/promises");
-    const rawDir = path.join(baseDir, ".logit", "raw");
+    const rawDir = path.join(baseDir, ".kilog", "raw");
     const files = await readdir(rawDir);
     expect(files).toContain("2026-04-18.node.jsonl");
     expect(files).toContain("2026-04-18.browser.jsonl");
@@ -98,7 +98,7 @@ describe("createWriter", () => {
     await writer.close();
 
     const { readdir } = await import("node:fs/promises");
-    const rawDir = path.join(baseDir, ".logit", "raw");
+    const rawDir = path.join(baseDir, ".kilog", "raw");
     const files = await readdir(rawDir);
     expect(files).toContain("2026-04-18.node.jsonl");
     expect(files).toContain("2026-04-19.node.jsonl");
@@ -116,7 +116,7 @@ describe("createWriter", () => {
     await writer.append(event);
     await writer.close();
 
-    const filePath = path.join(baseDir, ".logit", "raw", "2026-04-18.node.jsonl");
+    const filePath = path.join(baseDir, ".kilog", "raw", "2026-04-18.node.jsonl");
     const content = await readFile(filePath, "utf-8");
     const restored = deserialize(content.trim());
     expect(restored.message).toBe("[REDACTED]");
@@ -128,7 +128,7 @@ describe("createWriter", () => {
     await writer.append(event);
     await writer.close();
 
-    const filePath = path.join(baseDir, ".logit", "raw", "2026-04-18.node.jsonl");
+    const filePath = path.join(baseDir, ".kilog", "raw", "2026-04-18.node.jsonl");
     const content = await readFile(filePath, "utf-8");
     const restored = deserialize(content.trim());
     expect(restored.message).toBe("no redaction");

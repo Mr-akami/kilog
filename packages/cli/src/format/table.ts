@@ -1,4 +1,4 @@
-import type { AggregateRow } from "@logit/core";
+import type { AggregateRow } from "@kilog/core";
 
 const HEADERS: (keyof AggregateRow)[] = ["project", "runtime", "type", "level", "count"];
 

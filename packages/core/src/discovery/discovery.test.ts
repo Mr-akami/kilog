@@ -3,58 +3,58 @@ import { mkdtemp, rm, mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import {
-  findLogitDirs,
+  findKilogDirs,
   discoverSources,
   discoverSourceFiles,
   listRawFilesIn,
 } from "./discovery.js";
 
 async function mkDevlogs(dir: string, jsonlContent?: string): Promise<void> {
-  const raw = path.join(dir, ".logit", "raw");
+  const raw = path.join(dir, ".kilog", "raw");
   await mkdir(raw, { recursive: true });
   if (jsonlContent != null) {
     await writeFile(path.join(raw, "2026-04-20.node.jsonl"), jsonlContent);
   }
 }
 
-describe("findLogitDirs", () => {
+describe("findKilogDirs", () => {
   let root: string;
 
   beforeEach(async () => {
-    root = await mkdtemp(path.join(tmpdir(), "logit-discover-"));
+    root = await mkdtemp(path.join(tmpdir(), "kilog-discover-"));
   });
 
   afterEach(async () => {
     await rm(root, { recursive: true, force: true });
   });
 
-  it("returns empty when no .logit exists", async () => {
-    const dirs = await findLogitDirs(root);
+  it("returns empty when no .kilog exists", async () => {
+    const dirs = await findKilogDirs(root);
     expect(dirs).toEqual([]);
   });
 
-  it("finds a .logit at the root itself", async () => {
+  it("finds a .kilog at the root itself", async () => {
     await mkDevlogs(root);
-    const dirs = await findLogitDirs(root);
-    expect(dirs).toEqual([path.join(root, ".logit")]);
+    const dirs = await findKilogDirs(root);
+    expect(dirs).toEqual([path.join(root, ".kilog")]);
   });
 
-  it("finds nested .logit under children", async () => {
+  it("finds nested .kilog under children", async () => {
     await mkDevlogs(path.join(root, "apps", "a"));
     await mkDevlogs(path.join(root, "apps", "b"));
-    const dirs = await findLogitDirs(root);
+    const dirs = await findKilogDirs(root);
     expect(dirs).toEqual([
-      path.join(root, "apps", "a", ".logit"),
-      path.join(root, "apps", "b", ".logit"),
+      path.join(root, "apps", "a", ".kilog"),
+      path.join(root, "apps", "b", ".kilog"),
     ]);
   });
 
-  it("does not descend into a .logit subtree", async () => {
+  it("does not descend into a .kilog subtree", async () => {
     await mkDevlogs(root);
-    // nothing else should be found even if more dirs exist under .logit
-    await mkdir(path.join(root, ".logit", "raw", "junk"), { recursive: true });
-    const dirs = await findLogitDirs(root);
-    expect(dirs).toEqual([path.join(root, ".logit")]);
+    // nothing else should be found even if more dirs exist under .kilog
+    await mkdir(path.join(root, ".kilog", "raw", "junk"), { recursive: true });
+    const dirs = await findKilogDirs(root);
+    expect(dirs).toEqual([path.join(root, ".kilog")]);
   });
 
   it("excludes node_modules / .git / dist by default", async () => {
@@ -62,8 +62,8 @@ describe("findLogitDirs", () => {
     await mkDevlogs(path.join(root, ".git", "hooks"));
     await mkDevlogs(path.join(root, "dist"));
     await mkDevlogs(path.join(root, "apps", "a"));
-    const dirs = await findLogitDirs(root);
-    expect(dirs).toEqual([path.join(root, "apps", "a", ".logit")]);
+    const dirs = await findKilogDirs(root);
+    expect(dirs).toEqual([path.join(root, "apps", "a", ".kilog")]);
   });
 });
 
@@ -71,21 +71,21 @@ describe("discoverSources", () => {
   let root: string;
 
   beforeEach(async () => {
-    root = await mkdtemp(path.join(tmpdir(), "logit-discover-"));
+    root = await mkdtemp(path.join(tmpdir(), "kilog-discover-"));
   });
 
   afterEach(async () => {
     await rm(root, { recursive: true, force: true });
   });
 
-  it("assigns project = basename(target) for root-level .logit in single-target mode", async () => {
+  it("assigns project = basename(target) for root-level .kilog in single-target mode", async () => {
     await mkDevlogs(root);
     const sources = await discoverSources([root]);
     expect(sources).toHaveLength(1);
     expect(sources[0].project).toBe(path.basename(root));
   });
 
-  it("assigns project = rel path for nested .logit in single-target mode", async () => {
+  it("assigns project = rel path for nested .kilog in single-target mode", async () => {
     await mkDevlogs(path.join(root, "apps", "a"));
     const sources = await discoverSources([root]);
     expect(sources).toHaveLength(1);
@@ -93,8 +93,8 @@ describe("discoverSources", () => {
   });
 
   it("prefixes project with target basename in multi-target mode", async () => {
-    const t1 = await mkdtemp(path.join(tmpdir(), "logit-target1-"));
-    const t2 = await mkdtemp(path.join(tmpdir(), "logit-target2-"));
+    const t1 = await mkdtemp(path.join(tmpdir(), "kilog-target1-"));
+    const t2 = await mkdtemp(path.join(tmpdir(), "kilog-target2-"));
     try {
       await mkDevlogs(path.join(t1, "apps", "api"));
       await mkDevlogs(t2);
@@ -114,7 +114,7 @@ describe("listRawFilesIn", () => {
   let root: string;
 
   beforeEach(async () => {
-    root = await mkdtemp(path.join(tmpdir(), "logit-rawfiles-"));
+    root = await mkdtemp(path.join(tmpdir(), "kilog-rawfiles-"));
   });
 
   afterEach(async () => {
@@ -123,12 +123,12 @@ describe("listRawFilesIn", () => {
 
   it("returns absolute paths of jsonl files under raw/", async () => {
     await mkDevlogs(root, "{}\n");
-    const files = await listRawFilesIn(path.join(root, ".logit"));
-    expect(files).toEqual([path.join(root, ".logit", "raw", "2026-04-20.node.jsonl")]);
+    const files = await listRawFilesIn(path.join(root, ".kilog"));
+    expect(files).toEqual([path.join(root, ".kilog", "raw", "2026-04-20.node.jsonl")]);
   });
 
   it("returns [] when raw/ does not exist", async () => {
-    const files = await listRawFilesIn(path.join(root, "missing", ".logit"));
+    const files = await listRawFilesIn(path.join(root, "missing", ".kilog"));
     expect(files).toEqual([]);
   });
 });
@@ -137,7 +137,7 @@ describe("discoverSourceFiles", () => {
   let root: string;
 
   beforeEach(async () => {
-    root = await mkdtemp(path.join(tmpdir(), "logit-srcfiles-"));
+    root = await mkdtemp(path.join(tmpdir(), "kilog-srcfiles-"));
   });
 
   afterEach(async () => {

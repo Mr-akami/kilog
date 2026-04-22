@@ -37,11 +37,11 @@ describe(".release-please-config.json", () => {
 
     const linkedVersions = plugins.find((p) => p.type === "linked-versions");
     expect(linkedVersions).toBeDefined();
-    expect(linkedVersions!.groupName).toBe("logit-core");
+    expect(linkedVersions!.groupName).toBe("kilog-core");
 
     const components = linkedVersions!.components as string[];
-    expect(components).toContain("@logit/core");
-    expect(components).toContain("@logit/runtime-node");
+    expect(components).toContain("@kilog/core");
+    expect(components).toContain("@kilog/runtime-node");
     expect(components).toHaveLength(2);
   });
 

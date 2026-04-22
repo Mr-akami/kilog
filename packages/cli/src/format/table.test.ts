@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vite-plus/test";
 import { formatTable } from "./table.js";
-import type { AggregateRow } from "@logit/core";
+import type { AggregateRow } from "@kilog/core";
 
 describe("formatTable", () => {
   // ── normal cases ──

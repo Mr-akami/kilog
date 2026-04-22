@@ -7,8 +7,8 @@ import {
   openIndex,
   closeIndex,
   queryLogs,
-  dbFilePathFromLogitDir,
-} from "@logit/core";
+  dbFilePathFromKilogDir,
+} from "@kilog/core";
 
 export interface DoctorOptions {
   root: string;
@@ -43,27 +43,27 @@ export async function handleDoctor(options: DoctorOptions): Promise<void> {
   const sources = await discoverSources([options.root]);
 
   if (sources.length === 0) {
-    process.stdout.write(`.logit directories: none found under ${options.root}\n`);
-    process.stdout.write("Run your app with logit to create .logit\n");
+    process.stdout.write(`.kilog directories: none found under ${options.root}\n`);
+    process.stdout.write("Run your app with kilog to create .kilog\n");
     return;
   }
 
-  process.stdout.write(`.logit directories: ${sources.length} found\n`);
+  process.stdout.write(`.kilog directories: ${sources.length} found\n`);
 
   for (const src of sources) {
-    const display = path.relative(options.root, src.logitDir) || src.logitDir;
+    const display = path.relative(options.root, src.kilogDir) || src.kilogDir;
     process.stdout.write(`\n  [${src.project}] ${display}\n`);
-    const rawFiles = await listRawFilesIn(src.logitDir);
+    const rawFiles = await listRawFilesIn(src.kilogDir);
     const rawCount = await countEventsIn(rawFiles);
-    const dbPath = dbFilePathFromLogitDir(src.logitDir);
+    const dbPath = dbFilePathFromKilogDir(src.kilogDir);
     const indexedCount = await countIndexedEvents(dbPath);
 
     if (indexedCount === -1) {
-      process.stdout.write(`    raw=${rawCount}, index=missing (run \`logit reindex\`)\n`);
+      process.stdout.write(`    raw=${rawCount}, index=missing (run \`kilog reindex\`)\n`);
     } else {
       process.stdout.write(`    raw=${rawCount}, indexed=${indexedCount}`);
       if (rawCount !== indexedCount) {
-        process.stdout.write("  [mismatch — run `logit reindex`]");
+        process.stdout.write("  [mismatch — run `kilog reindex`]");
       }
       process.stdout.write("\n");
     }

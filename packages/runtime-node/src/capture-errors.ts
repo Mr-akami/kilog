@@ -1,4 +1,4 @@
-import type { ErrorEvent, UnhandledRejectionEvent } from "@logit/core";
+import type { ErrorEvent, UnhandledRejectionEvent } from "@kilog/core";
 import { createBaseFields } from "./context.js";
 import type { RuntimeContext } from "./context.js";
 

@@ -8,7 +8,7 @@ describe("sourcemap cache", () => {
   let cacheDir: string;
 
   beforeEach(async () => {
-    cacheDir = await mkdtemp(path.join(tmpdir(), "logit-smcache-"));
+    cacheDir = await mkdtemp(path.join(tmpdir(), "kilog-smcache-"));
   });
 
   afterEach(async () => {

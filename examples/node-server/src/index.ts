@@ -7,7 +7,7 @@ export const app = new Hono();
 
 app.get("/", (c) => {
   console.log("incoming request: GET /");
-  return c.text("Hello from logit example");
+  return c.text("Hello from kilog example");
 });
 
 app.get("/warn", (c) => {
@@ -34,6 +34,6 @@ app.get("/throw", () => {
 const isDirectRun = process.argv[1]?.endsWith("index.ts");
 if (isDirectRun) {
   serve({ fetch: app.fetch, port: PORT }, (info) => {
-    console.log(`logit example server running on http://localhost:${info.port}`);
+    console.log(`kilog example server running on http://localhost:${info.port}`);
   });
 }

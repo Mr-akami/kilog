@@ -1,4 +1,4 @@
-import type { NetworkEvent } from "@logit/core";
+import type { NetworkEvent } from "@kilog/core";
 import { createBaseFields } from "./context.js";
 import type { RuntimeContext } from "./context.js";
 import { captureStack } from "./capture-stack.js";

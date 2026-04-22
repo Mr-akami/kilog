@@ -5,7 +5,7 @@ import path from "node:path";
 
 describe("register", () => {
   let baseDir: string;
-  const savedLogitDir = process.env.LOGIT_DIR;
+  const savedKilogDir = process.env.KILOG_DIR;
   const origConsole = {
     log: console.log,
     info: console.info,
@@ -19,8 +19,8 @@ describe("register", () => {
   let rejectionCountBefore: number;
 
   beforeAll(async () => {
-    baseDir = await mkdtemp(path.join(tmpdir(), "logit-reg-"));
-    process.env.LOGIT_DIR = baseDir;
+    baseDir = await mkdtemp(path.join(tmpdir(), "kilog-reg-"));
+    process.env.KILOG_DIR = baseDir;
     exitCountBefore = process.listenerCount("exit");
     errorCountBefore = process.listenerCount("uncaughtException");
     rejectionCountBefore = process.listenerCount("unhandledRejection");
@@ -35,10 +35,10 @@ describe("register", () => {
     console.error = origConsole.error;
     console.debug = origConsole.debug;
     globalThis.fetch = origFetch;
-    if (savedLogitDir === undefined) {
-      delete process.env.LOGIT_DIR;
+    if (savedKilogDir === undefined) {
+      delete process.env.KILOG_DIR;
     } else {
-      process.env.LOGIT_DIR = savedLogitDir;
+      process.env.KILOG_DIR = savedKilogDir;
     }
     await rm(baseDir, { recursive: true, force: true });
   });
