@@ -233,7 +233,10 @@ describe("handleQuery --last", () => {
       makeConsoleEvent({ message: "OLD_LOG", timestamp: oldIso }),
       makeConsoleEvent({ message: "RECENT_LOG", timestamp: recentIso }),
     ];
-    await writeFile(path.join(rawDir, "recent.node.jsonl"), events.map(serialize).join("\n") + "\n");
+    await writeFile(
+      path.join(rawDir, "recent.node.jsonl"),
+      events.map(serialize).join("\n") + "\n",
+    );
     await reindex({ baseDir, dbPath: path.join(indexDir, "logs.duckdb") });
   });
 
