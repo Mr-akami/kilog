@@ -64,7 +64,7 @@ function formatArg(v: unknown): string {
   try {
     return JSON.stringify(v);
   } catch {
-    return String(v);
+    return Object.prototype.toString.call(v);
   }
 }
 

@@ -2,7 +2,7 @@ import type { AggregateRow } from "@logit/core";
 
 const HEADERS: (keyof AggregateRow)[] = ["project", "runtime", "type", "level", "count"];
 
-function cell(value: unknown): string {
+function cell(value: string | number | null | undefined): string {
   return value == null ? "-" : String(value);
 }
 

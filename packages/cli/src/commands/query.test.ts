@@ -53,7 +53,7 @@ function makeNetworkEvent(overrides?: Partial<NetworkEvent>): NetworkEvent {
 
 function captureStdout(fn: () => Promise<void>): Promise<string> {
   const chunks: string[] = [];
-  const originalWrite = process.stdout.write;
+  const originalWrite = process.stdout.write.bind(process.stdout);
   process.stdout.write = (chunk: string | Uint8Array) => {
     chunks.push(typeof chunk === "string" ? chunk : new TextDecoder().decode(chunk));
     return true;
