@@ -1,5 +1,6 @@
 import type { DuckDBInstance } from "@duckdb/node-api";
 import type { LogEvent, Runtime, EventType, LogLevel } from "../schema/types.js";
+import { parseSearch, escapeIlikePattern } from "./search-parser.js";
 
 export interface QueryFilter {
   runtime?: Runtime;
@@ -39,8 +40,24 @@ function buildWhere(filter: QueryFilter): { clause: string; params: (string | nu
     params.push(filter.level);
   }
   if (filter.search) {
-    conditions.push(`message ILIKE $${idx++}`);
-    params.push(`%${filter.search}%`);
+    const expr = parseSearch(filter.search);
+    if (expr.length > 0) {
+      const orParts: string[] = [];
+      for (const andGroup of expr) {
+        const andParts: string[] = [];
+        for (const term of andGroup) {
+          const pattern = `%${escapeIlikePattern(term.text)}%`;
+          if (term.negate) {
+            andParts.push(`(message IS NULL OR message NOT ILIKE $${idx++} ESCAPE '\\')`);
+          } else {
+            andParts.push(`message ILIKE $${idx++} ESCAPE '\\'`);
+          }
+          params.push(pattern);
+        }
+        orParts.push(andParts.length > 1 ? `(${andParts.join(" AND ")})` : andParts[0]);
+      }
+      conditions.push(orParts.length > 1 ? `(${orParts.join(" OR ")})` : orParts[0]);
+    }
   }
   if (filter.from) {
     conditions.push(`timestamp >= $${idx++}`);

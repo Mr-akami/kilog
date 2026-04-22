@@ -48,7 +48,13 @@ pnpm logit query                          # all
 pnpm logit query --level error            # only error level
 pnpm logit query --type network           # only fetch events
 pnpm logit query --project web-ui         # only one project
-pnpm logit query --search "httpbin"       # full-text search
+pnpm logit query --search "httpbin"                 # single term
+pnpm logit query --search "db AND timeout"          # AND
+pnpm logit query --search "ENOENT OR EACCES"        # OR
+pnpm logit query --search "error AND NOT timeout"   # NOT
+pnpm logit query --last 10m                          # last 10 minutes
+pnpm logit query --last 2h                           # last 2 hours
+pnpm logit query --last 3d                           # last 3 days
 pnpm logit query --from 2026-04-20 --to 2026-04-21
 pnpm logit query --limit 50 --offset 100
 pnpm logit query --json                   # JSON output
@@ -57,20 +63,39 @@ pnpm logit query --aggregate              # per-project counts
 
 Filters:
 
-| Option                 | Value                                                   | Description                                |
-| ---------------------- | ------------------------------------------------------- | ------------------------------------------ |
-| `--runtime`            | `node` / `browser` / `bun` / `deno`                     | Runtime                                    |
-| `--type`               | `console` / `error` / `network` / `unhandled-rejection` | Event type                                 |
-| `--level`              | `debug` / `info` / `warn` / `error`                     | Log level                                  |
-| `--project`            | string                                                  | Project label (see the `doctor` output)    |
-| `--search`             | string                                                  | Full-text search over messages             |
-| `--from` / `--to`      | ISO datetime                                            | Date range                                 |
-| `--limit` / `--offset` | number                                                  | Paging (applied after merge)               |
-| `--json`               | flag                                                    | JSON output                                |
-| `--aggregate`          | flag                                                    | Per-project count aggregation              |
-| `--root`               | path                                                    | Override the discovery root (default: cwd) |
+| Option                 | Value                                                   | Description                                               |
+| ---------------------- | ------------------------------------------------------- | --------------------------------------------------------- |
+| `--runtime`            | `node` / `browser` / `bun` / `deno`                     | Runtime                                                   |
+| `--type`               | `console` / `error` / `network` / `unhandled-rejection` | Event type                                                |
+| `--level`              | `debug` / `info` / `warn` / `error`                     | Log level                                                 |
+| `--project`            | string                                                  | Project label (see the `doctor` output)                   |
+| `--search`             | string                                                  | Message search (see syntax below)                         |
+| `--last`               | `<N>(s\|m\|h\|d\|w)` e.g. `10m`, `2h`, `3d`             | Relative window ending at now. Overrides `--from`/`--to`. |
+| `--from` / `--to`      | ISO datetime                                            | Date range                                                |
+| `--limit` / `--offset` | number                                                  | Paging (applied after merge)                              |
+| `--json`               | flag                                                    | JSON output                                               |
+| `--aggregate`          | flag                                                    | Per-project count aggregation                             |
+| `--root`               | path                                                    | Override the discovery root (default: cwd)                |
 
 Under the hood, `query` opens each project's DuckDB, does a differential catch-up from the raw JSONL (only new bytes since last run), runs the filter, and merges results sorted by timestamp.
+
+#### `--search` syntax
+
+- Case-insensitive substring match against message.
+- Operators (uppercase only): `AND`, `OR`, `NOT`. AND binds tighter than OR. No parentheses.
+- Escape operators / backslash as `\AND` `\OR` `\NOT` `\\`.
+- `%` / `_` in the term are treated as literal.
+
+```
+foo                         single term
+connection refused          phrase (spaces are literal)
+a AND b                     both
+a OR b                      either
+a AND NOT b                 a but not b
+NOT timeout                 exclude
+a AND b OR c                (a AND b) OR c
+foo \AND bar                literal "foo AND bar"
+```
 
 ### `ui` — start the Web UI
 

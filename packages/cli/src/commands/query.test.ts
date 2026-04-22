@@ -184,4 +184,89 @@ describe("handleQuery", () => {
 
     expect(typeof output).toBe("string");
   });
+
+  // ── search AND/OR/NOT ──
+
+  it("should support OR operator in search", async () => {
+    const output = await captureStdout(() =>
+      handleQuery({ root: baseDir, search: "hello OR warning" }),
+    );
+    expect(output).toContain("hello");
+    expect(output).toContain("warning");
+    expect(output).not.toContain("crash");
+  });
+
+  it("should support AND operator in search", async () => {
+    const output = await captureStdout(() =>
+      handleQuery({ root: baseDir, search: "warning AND hello" }),
+    );
+    expect(output).not.toContain("hello");
+    expect(output).not.toContain("warning");
+  });
+
+  it("should support NOT operator in search", async () => {
+    const output = await captureStdout(() =>
+      handleQuery({ root: baseDir, type: "console", search: "NOT warning" }),
+    );
+    expect(output).toContain("hello");
+    expect(output).not.toContain("warning");
+  });
+});
+
+describe("handleQuery --last", () => {
+  let baseDir: string;
+  let recentIso: string;
+  let oldIso: string;
+
+  beforeEach(async () => {
+    const now = Date.now();
+    recentIso = new Date(now - 5 * 60_000).toISOString();
+    oldIso = new Date(now - 60 * 60_000).toISOString();
+
+    baseDir = await mkdtemp(path.join(tmpdir(), "logit-cli-last-"));
+    const rawDir = path.join(baseDir, ".logit", "raw");
+    const indexDir = path.join(baseDir, ".logit", "index");
+    await mkdir(rawDir, { recursive: true });
+    await mkdir(indexDir, { recursive: true });
+
+    const events = [
+      makeConsoleEvent({ message: "OLD_LOG", timestamp: oldIso }),
+      makeConsoleEvent({ message: "RECENT_LOG", timestamp: recentIso }),
+    ];
+    await writeFile(
+      path.join(rawDir, "recent.node.jsonl"),
+      events.map(serialize).join("\n") + "\n",
+    );
+    await reindex({ baseDir, dbPath: path.join(indexDir, "logs.duckdb") });
+  });
+
+  afterEach(async () => {
+    await rm(baseDir, { recursive: true, force: true });
+  });
+
+  it("should include only events within --last window", async () => {
+    const output = await captureStdout(() => handleQuery({ root: baseDir, last: "10m" }));
+    expect(output).toContain("RECENT_LOG");
+    expect(output).not.toContain("OLD_LOG");
+  });
+
+  it("should include both events with wider window", async () => {
+    const output = await captureStdout(() => handleQuery({ root: baseDir, last: "2h" }));
+    expect(output).toContain("RECENT_LOG");
+    expect(output).toContain("OLD_LOG");
+  });
+
+  it("should override --from/--to when --last is set", async () => {
+    const output = await captureStdout(() =>
+      handleQuery({ root: baseDir, last: "10m", from: "1970-01-01T00:00:00.000Z" }),
+    );
+    expect(output).toContain("RECENT_LOG");
+    expect(output).not.toContain("OLD_LOG");
+  });
+
+  it("should throw on invalid duration", async () => {
+    await expect(handleQuery({ root: baseDir, last: "garbage" })).rejects.toThrow(
+      /invalid duration/,
+    );
+  });
 });
