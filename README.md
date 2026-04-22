@@ -12,15 +12,20 @@ Capture `console`, `fetch`, and uncaught errors from your app during development
 
 ## Install
 
-Everything (CLI + libraries, includes web UI):
+Install only what you need:
 
 ```bash
-npm i -D kilog
+npm i -D @kilog/cli @kilog/register       # Node app
+npm i -D @kilog/cli @kilog/vite-plugin    # Browser / Vite app
 ```
 
-Or install individual packages: `@kilog/cli`, `@kilog/core`, `@kilog/register`, `@kilog/runtime-node`, `@kilog/vite-plugin`, `@kilog/web-ui`.
+Or install everything in one go (CLI + all libraries, includes web UI):
 
-The `kilog` package re-exports all libraries under subpaths: `kilog`, `kilog/core`, `kilog/register`, `kilog/runtime-node`, `kilog/vite-plugin`, `kilog/web-ui`.
+```bash
+npm i -D @kilog/kilog
+```
+
+Available packages: `@kilog/cli`, `@kilog/core`, `@kilog/register`, `@kilog/runtime-node`, `@kilog/vite-plugin`, `@kilog/web-ui`. `@kilog/kilog` is a meta-package that depends on all of them — convenient for single-install, but imports are shorter via the individual packages.
 
 ## Quick start
 
@@ -29,12 +34,12 @@ The `kilog` package re-exports all libraries under subpaths: `kilog`, `kilog/cor
 ```json
 {
   "scripts": {
-    "dev": "node --import kilog/register ./src/index.ts"
+    "dev": "node --import @kilog/register ./src/index.ts"
   }
 }
 ```
 
-`kilog/register` auto-dispatches to the right runtime package based on
+`@kilog/register` auto-dispatches to the right runtime package based on
 where it's running (Node / Bun / Deno).
 
 → [`packages/register`](./packages/register/README.md) · [`packages/runtime-node`](./packages/runtime-node/README.md)
@@ -43,7 +48,7 @@ where it's running (Node / Bun / Deno).
 
 ```ts
 // vite.config.ts
-import kilog from "kilog/vite-plugin";
+import kilog from "@kilog/vite-plugin";
 export default { plugins: [kilog()] };
 ```
 
@@ -75,7 +80,7 @@ The CLI and UI walk down from the **invocation directory** (or `--root <path>`) 
 
 | Package                                                    | Role                                                        |
 | ---------------------------------------------------------- | ----------------------------------------------------------- |
-| [`kilog`](./packages/kilog)                                | Meta-package: CLI + all libraries bundled                   |
+| [`@kilog/kilog`](./packages/kilog)                         | Meta-package: CLI + all libraries bundled                   |
 | [`@kilog/runtime-node`](./packages/runtime-node/README.md) | Node runtime instrumentation                                |
 | [`@kilog/vite-plugin`](./packages/vite-plugin/README.md)   | Vite plugin (browser instrumentation + dev-server receiver) |
 | [`@kilog/cli`](./packages/cli/README.md)                   | `kilog` CLI                                                 |
@@ -134,13 +139,13 @@ pnpm --filter @kilog/register publish --access public --no-git-checks
 pnpm --filter @kilog/vite-plugin publish --access public --no-git-checks
 pnpm --filter @kilog/web-ui publish --access public --no-git-checks
 pnpm --filter @kilog/cli publish --access public --no-git-checks
-pnpm --filter kilog publish --access public --no-git-checks
+pnpm --filter @kilog/kilog publish --access public --no-git-checks
 
 # 4. Restore provenance: true and commit
 #    From here on, CI handles publishing.
 
 # 5. Verify
-npm view kilog version
+npm view @kilog/kilog version
 npm view @kilog/cli version
 ```
 
