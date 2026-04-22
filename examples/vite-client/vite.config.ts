@@ -1,6 +1,6 @@
 import { defineConfig } from "vite-plus";
-import logitPlugin from "@logit/vite-plugin";
+import kilogPlugin from "@kilog/vite-plugin";
 
 export default defineConfig({
-  plugins: [logitPlugin()],
+  plugins: [kilogPlugin()],
 });

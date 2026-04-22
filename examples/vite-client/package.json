@@ -1,18 +1,18 @@
 {
-  "name": "@logit/example-vite-client",
+  "name": "@kilog/example-vite-client",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vp dev",
     "build": "vp build",
-    "logit": "logit"
+    "kilog": "kilog"
   },
   "dependencies": {
-    "@logit/vite-plugin": "workspace:*"
+    "@kilog/vite-plugin": "workspace:*"
   },
   "devDependencies": {
-    "@logit/cli": "workspace:*",
+    "@kilog/cli": "workspace:*",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   }

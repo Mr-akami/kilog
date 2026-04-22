@@ -12,7 +12,7 @@
 
 ## Product Decisions
 
-- The product name is `logit`
+- The product name is `kilog`
 - Start with a CLI-first product
 - Include a sample web UI
 - Use `pnpm` as the package manager

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vite-plus/test";
-import type { ConsoleEvent } from "@logit/core";
+import type { ConsoleEvent } from "@kilog/core";
 import { captureConsole } from "./capture-console.js";
 import { createMockContext } from "./testing.js";
 

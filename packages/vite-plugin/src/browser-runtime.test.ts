@@ -39,14 +39,14 @@ describe("generateBrowserRuntime", () => {
     expect(script).toContain('"browser"');
   });
 
-  it("should exclude __logit URL from fetch capture", () => {
+  it("should exclude __kilog URL from fetch capture", () => {
     const script = generateBrowserRuntime();
-    expect(script).toContain("__logit");
+    expect(script).toContain("__kilog");
   });
 
-  it("should send events via POST to /__logit endpoint", () => {
+  it("should send events via POST to /__kilog endpoint", () => {
     const script = generateBrowserRuntime();
-    expect(script).toContain("/__logit");
+    expect(script).toContain("/__kilog");
     expect(script).toContain("POST");
   });
 

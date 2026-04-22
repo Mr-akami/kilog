@@ -26,7 +26,7 @@ describe("GET /", () => {
 
     expect(res.status).toBe(200);
     const text = await res.text();
-    expect(text).toContain("Hello from logit example");
+    expect(text).toContain("Hello from kilog example");
   });
 });
 

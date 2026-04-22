@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vite-plus/test";
-import logitPlugin from "./index.js";
+import kilogPlugin from "./index.js";
 import { ENDPOINT } from "./constants.js";
 
 interface HtmlTag {
@@ -14,25 +14,25 @@ interface PluginWithHooks {
   configureServer?: unknown;
 }
 
-describe("logitPlugin()", () => {
+describe("kilogPlugin()", () => {
   it("uses a stable identifier as the plugin name", () => {
-    const plugin = logitPlugin() as PluginWithHooks;
-    expect(plugin.name).toBe("logit");
+    const plugin = kilogPlugin() as PluginWithHooks;
+    expect(plugin.name).toBe("kilog");
   });
 
   it("accepts options and still returns a plugin", () => {
-    const plugin = logitPlugin({ terminal: "warn" }) as PluginWithHooks;
-    expect(plugin.name).toBe("logit");
+    const plugin = kilogPlugin({ terminal: "warn" }) as PluginWithHooks;
+    expect(plugin.name).toBe("kilog");
   });
 
   it("exposes transformIndexHtml and configureServer hooks as functions", () => {
-    const plugin = logitPlugin() as PluginWithHooks;
+    const plugin = kilogPlugin() as PluginWithHooks;
     expect(typeof plugin.transformIndexHtml).toBe("function");
     expect(typeof plugin.configureServer).toBe("function");
   });
 
   it("injects exactly one script tag into <head> that contains the browser runtime", () => {
-    const plugin = logitPlugin() as PluginWithHooks;
+    const plugin = kilogPlugin() as PluginWithHooks;
     const hook = plugin.transformIndexHtml as (html: string, ctx: never) => HtmlTag[];
     const result = hook("<html></html>", {} as never);
 

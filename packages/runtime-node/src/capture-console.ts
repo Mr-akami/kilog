@@ -1,5 +1,5 @@
-import type { ConsoleEvent, LogLevel } from "@logit/core";
-import { formatArgs } from "@logit/core";
+import type { ConsoleEvent, LogLevel } from "@kilog/core";
+import { formatArgs } from "@kilog/core";
 import { createBaseFields } from "./context.js";
 import type { RuntimeContext } from "./context.js";
 import { captureStack } from "./capture-stack.js";

@@ -49,24 +49,24 @@ importers:
       '@hono/node-server':
         specifier: '*'
         version: 1.19.14(hono@4.12.14)
-      '@logit/register':
+      '@kilog/register':
         specifier: workspace:*
         version: link:../../packages/register
       hono:
         specifier: '*'
         version: 4.12.14
     devDependencies:
-      '@logit/cli':
+      '@kilog/cli':
         specifier: workspace:*
         version: link:../../packages/cli
 
   examples/vite-client:
     dependencies:
-      '@logit/vite-plugin':
+      '@kilog/vite-plugin':
         specifier: workspace:*
         version: link:../../packages/vite-plugin
     devDependencies:
-      '@logit/cli':
+      '@kilog/cli':
         specifier: workspace:*
         version: link:../../packages/cli
       vite:
@@ -78,10 +78,10 @@ importers:
 
   packages/cli:
     dependencies:
-      '@logit/core':
+      '@kilog/core':
         specifier: workspace:*
         version: link:../core
-      '@logit/web-ui':
+      '@kilog/web-ui':
         specifier: workspace:*
         version: link:../web-ui
       yargs:
@@ -100,22 +100,22 @@ importers:
 
   packages/register:
     dependencies:
-      '@logit/core':
+      '@kilog/core':
         specifier: workspace:*
         version: link:../core
-      '@logit/runtime-node':
+      '@kilog/runtime-node':
         specifier: workspace:*
         version: link:../runtime-node
 
   packages/runtime-node:
     dependencies:
-      '@logit/core':
+      '@kilog/core':
         specifier: workspace:*
         version: link:../core
 
   packages/vite-plugin:
     dependencies:
-      '@logit/core':
+      '@kilog/core':
         specifier: workspace:*
         version: link:../core
       vite:
@@ -130,7 +130,7 @@ importers:
       '@hono/standard-validator':
         specifier: '*'
         version: 0.2.2(@standard-schema/spec@1.1.0)(hono@4.12.14)
-      '@logit/core':
+      '@kilog/core':
         specifier: workspace:*
         version: link:../core
       '@scalar/hono-api-reference':

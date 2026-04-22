@@ -1,18 +1,18 @@
 {
-  "name": "@logit/vite-plugin",
+  "name": "@kilog/vite-plugin",
   "version": "0.1.0",
-  "description": "Vite plugin for logit structured logging",
+  "description": "Vite plugin for kilog structured logging",
   "keywords": [
+    "kilog",
     "logging",
-    "logit",
     "vite",
     "vite-plugin"
   ],
-  "homepage": "https://github.com/Mr-akami/logit/tree/main/packages/vite-plugin#readme",
+  "homepage": "https://github.com/Mr-akami/kilog/tree/main/packages/vite-plugin#readme",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Mr-akami/logit.git",
+    "url": "https://github.com/Mr-akami/kilog.git",
     "directory": "packages/vite-plugin"
   },
   "files": [
@@ -33,7 +33,7 @@
     "test": "vp test run"
   },
   "dependencies": {
-    "@logit/core": "workspace:*"
+    "@kilog/core": "workspace:*"
   },
   "peerDependencies": {
     "vite": "^8"

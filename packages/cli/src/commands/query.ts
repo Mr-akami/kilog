@@ -8,8 +8,8 @@ import {
   catchUpFile,
   discoverSources,
   listRawFilesIn,
-  dbFilePathFromLogitDir,
-} from "@logit/core";
+  dbFilePathFromKilogDir,
+} from "@kilog/core";
 import type {
   QueryFilter,
   Runtime,
@@ -17,8 +17,8 @@ import type {
   LogLevel,
   LogEvent,
   AggregateRow,
-} from "@logit/core";
-import { formatLogLine } from "@logit/core";
+} from "@kilog/core";
+import { formatLogLine } from "@kilog/core";
 import { formatTable } from "../format/table.js";
 import { durationAgoIso } from "../format/time.js";
 
@@ -74,10 +74,10 @@ export async function handleQuery(options: QueryOptions): Promise<void> {
   if (options.aggregate) {
     const merged: AggregateRow[] = [];
     for (const src of sources) {
-      const dbPath = dbFilePathFromLogitDir(src.logitDir);
+      const dbPath = dbFilePathFromKilogDir(src.kilogDir);
       const db = await openIndex(dbPath);
       try {
-        for (const raw of await listRawFilesIn(src.logitDir)) {
+        for (const raw of await listRawFilesIn(src.kilogDir)) {
           await catchUpFile(db, raw, src.project);
         }
         const rows = await aggregateLogs(db, filter);
@@ -92,11 +92,11 @@ export async function handleQuery(options: QueryOptions): Promise<void> {
 
   const perSource: LogEvent[] = [];
   for (const src of sources) {
-    const dbPath = dbFilePathFromLogitDir(src.logitDir);
-    const cacheDir = path.join(src.logitDir, "cache", "sourcemaps");
+    const dbPath = dbFilePathFromKilogDir(src.kilogDir);
+    const cacheDir = path.join(src.kilogDir, "cache", "sourcemaps");
     const db = await openIndex(dbPath);
     try {
-      for (const raw of await listRawFilesIn(src.logitDir)) {
+      for (const raw of await listRawFilesIn(src.kilogDir)) {
         await catchUpFile(db, raw, src.project);
       }
       const raw = await queryLogs(db, filter);

@@ -29,7 +29,7 @@ Goals:
 Example:
 
 ```bash
-NODE_OPTIONS="--import @logit/register" node server.js
+NODE_OPTIONS="--import @kilog/register" node server.js
 ```
 
 Collected signals:
@@ -46,13 +46,13 @@ Bun should use `--preload` as the first choice.
 Example:
 
 ```bash
-bun --preload @logit/runtime-bun/register app.ts
+bun --preload @kilog/runtime-bun/register app.ts
 ```
 
 Or:
 
 ```bash
-BUN_INSPECT_PRELOAD=@logit/runtime-bun/register bun app.ts
+BUN_INSPECT_PRELOAD=@kilog/runtime-bun/register bun app.ts
 ```
 
 The collected signal set should match Node.js by default.
@@ -70,7 +70,7 @@ Integration approach:
 Example:
 
 ```ts
-import "@logit/runtime-deno/register";
+import "@kilog/runtime-deno/register";
 import "./main.ts";
 ```
 

@@ -31,7 +31,7 @@ export async function renderPage(props: PageProps): Promise<string> {
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>logit</title>
+        <title>kilog</title>
         <style>{raw(STYLES)}</style>
       </head>
       <body>
@@ -41,7 +41,7 @@ export async function renderPage(props: PageProps): Promise<string> {
         <SqlBar />
         <div id="status"></div>
         <LogTable />
-        <script>{raw(`window.__LOGIT_SSR__ = ${ssrJson};`)}</script>
+        <script>{raw(`window.__KILOG_SSR__ = ${ssrJson};`)}</script>
         <script type="module" src={props.assetJs}></script>
       </body>
     </html>

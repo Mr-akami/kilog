@@ -1,15 +1,15 @@
-# @logit/runtime-node
+# @kilog/runtime-node
 
 Automatically capture `console`, `fetch`, and uncaught errors in Node.js.
 
 ## Usage
 
-Most apps should load the **[`@logit/register`](../register/README.md)** meta entry instead — it auto-dispatches to the right runtime for Node / Bun / Deno:
+Most apps should load the **[`@kilog/register`](../register/README.md)** meta entry instead — it auto-dispatches to the right runtime for Node / Bun / Deno:
 
 ```json
 {
   "scripts": {
-    "dev": "node --import @logit/register ./src/index.ts"
+    "dev": "node --import @kilog/register ./src/index.ts"
   }
 }
 ```
@@ -19,12 +19,12 @@ If you want to pin Node explicitly, load this package's register entry directly:
 ```json
 {
   "scripts": {
-    "dev": "node --import @logit/runtime-node/register ./src/index.ts"
+    "dev": "node --import @kilog/runtime-node/register ./src/index.ts"
   }
 }
 ```
 
-No code changes required. Instrumentation is enabled on startup, and events are written to `.logit/`.
+No code changes required. Instrumentation is enabled on startup, and events are written to `.kilog/`.
 
 ## What is captured
 
@@ -34,7 +34,7 @@ No code changes required. Instrumentation is enabled on startup, and events are 
 
 ## Storage
 
-Written to `.logit/raw/{date}.node.jsonl` under the cwd. Override with the `LOGIT_DIR` environment variable.
+Written to `.kilog/raw/{date}.node.jsonl` under the cwd. Override with the `KILOG_DIR` environment variable.
 
 ## Programmatic API
 
@@ -46,7 +46,7 @@ import {
   captureConsole,
   captureFetch,
   captureErrors,
-} from "@logit/runtime-node";
+} from "@kilog/runtime-node";
 
 const ctx = createRuntimeContext();
 captureConsole(ctx);
@@ -56,4 +56,4 @@ captureErrors(ctx);
 
 ## Viewing logs
 
-Use [`@logit/cli`](../cli/README.md) or the [Web UI](../web-ui/README.md).
+Use [`@kilog/cli`](../cli/README.md) or the [Web UI](../web-ui/README.md).

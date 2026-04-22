@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vite-plus/test";
-import type { NetworkEvent } from "@logit/core";
+import type { NetworkEvent } from "@kilog/core";
 import { captureFetch } from "./capture-fetch.js";
 import { createMockContext } from "./testing.js";
 

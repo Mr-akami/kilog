@@ -21,7 +21,7 @@ describe("openIndex", () => {
   let dbPath: string;
 
   beforeEach(async () => {
-    dir = await mkdtemp(path.join(tmpdir(), "logit-connection-"));
+    dir = await mkdtemp(path.join(tmpdir(), "kilog-connection-"));
     dbPath = path.join(dir, "nested", "db", "logs.duckdb");
   });
 

@@ -1,18 +1,18 @@
 {
-  "name": "@logit/register",
+  "name": "@kilog/register",
   "version": "0.1.0",
-  "description": "Auto-register hook for logit structured logging",
+  "description": "Auto-register hook for kilog structured logging",
   "keywords": [
     "auto-import",
+    "kilog",
     "logging",
-    "logit",
     "register"
   ],
-  "homepage": "https://github.com/Mr-akami/logit/tree/main/packages/register#readme",
+  "homepage": "https://github.com/Mr-akami/kilog/tree/main/packages/register#readme",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Mr-akami/logit.git",
+    "url": "https://github.com/Mr-akami/kilog.git",
     "directory": "packages/register"
   },
   "files": [
@@ -36,7 +36,7 @@
     "test": "vp test run"
   },
   "dependencies": {
-    "@logit/core": "workspace:*",
-    "@logit/runtime-node": "workspace:*"
+    "@kilog/core": "workspace:*",
+    "@kilog/runtime-node": "workspace:*"
   }
 }

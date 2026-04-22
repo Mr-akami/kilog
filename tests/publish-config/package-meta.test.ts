@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { ROOT, readJson, PUBLIC_PACKAGE_PATHS, PACKAGE_NAMES } from "./test-helpers.js";
 
-const REPO_URL = "https://github.com/Mr-akami/logit.git";
+const REPO_URL = "https://github.com/Mr-akami/kilog.git";
 
 describe("public package metadata", () => {
   for (const pkg of PUBLIC_PACKAGE_PATHS) {
@@ -42,7 +42,7 @@ describe("public package metadata", () => {
 
       it("should have homepage pointing to package directory", () => {
         const homepage = json().homepage as string;
-        expect(homepage).toBe(`https://github.com/Mr-akami/logit/tree/main/${pkg}#readme`);
+        expect(homepage).toBe(`https://github.com/Mr-akami/kilog/tree/main/${pkg}#readme`);
       });
 
       it("should have description as non-empty string", () => {
@@ -104,7 +104,7 @@ describe("workspace dependencies are preserved", () => {
   it("should not modify workspace:* references in dependencies", () => {
     const cli = readJson("packages/cli/package.json");
     const deps = cli.dependencies as Record<string, string>;
-    expect(deps["@logit/core"]).toBe("workspace:*");
-    expect(deps["@logit/web-ui"]).toBe("workspace:*");
+    expect(deps["@kilog/core"]).toBe("workspace:*");
+    expect(deps["@kilog/web-ui"]).toBe("workspace:*");
   });
 });

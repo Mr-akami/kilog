@@ -1,6 +1,6 @@
 import { readdir, rm, unlink } from "node:fs/promises";
 import path from "node:path";
-import { discoverSources } from "@logit/core";
+import { discoverSources } from "@kilog/core";
 
 export interface ClearResult {
   rawFilesDeleted: number;
@@ -13,7 +13,7 @@ export async function clearAllLogs(root: string): Promise<ClearResult> {
   let indexDbsDeleted = 0;
 
   for (const src of sources) {
-    const rawDir = path.join(src.logitDir, "raw");
+    const rawDir = path.join(src.kilogDir, "raw");
     try {
       const entries = await readdir(rawDir);
       for (const e of entries) {
@@ -25,7 +25,7 @@ export async function clearAllLogs(root: string): Promise<ClearResult> {
       // raw dir missing
     }
 
-    const indexDir = path.join(src.logitDir, "index");
+    const indexDir = path.join(src.kilogDir, "index");
     try {
       await rm(indexDir, { recursive: true, force: true });
       indexDbsDeleted++;

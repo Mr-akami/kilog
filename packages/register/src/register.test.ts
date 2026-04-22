@@ -13,15 +13,15 @@ describe("register", () => {
     mocks.bunLoaded.mockClear();
     mocks.denoLoaded.mockClear();
 
-    vi.doMock("@logit/runtime-node/register", () => {
+    vi.doMock("@kilog/runtime-node/register", () => {
       mocks.nodeLoaded();
       return {};
     });
-    vi.doMock("@logit/runtime-bun/register", () => {
+    vi.doMock("@kilog/runtime-bun/register", () => {
       mocks.bunLoaded();
       return {};
     });
-    vi.doMock("@logit/runtime-deno/register", () => {
+    vi.doMock("@kilog/runtime-deno/register", () => {
       mocks.denoLoaded();
       return {};
     });
@@ -32,7 +32,7 @@ describe("register", () => {
     delete (globalThis as Record<string, unknown>).Deno;
   });
 
-  it("imports @logit/runtime-node/register when no runtime globals exist", async () => {
+  it("imports @kilog/runtime-node/register when no runtime globals exist", async () => {
     await import("./register.js");
 
     expect(mocks.nodeLoaded).toHaveBeenCalledOnce();
@@ -40,7 +40,7 @@ describe("register", () => {
     expect(mocks.denoLoaded).not.toHaveBeenCalled();
   });
 
-  it("imports @logit/runtime-bun/register when globalThis.Bun exists", async () => {
+  it("imports @kilog/runtime-bun/register when globalThis.Bun exists", async () => {
     (globalThis as Record<string, unknown>).Bun = {};
 
     await import("./register.js");
@@ -50,7 +50,7 @@ describe("register", () => {
     expect(mocks.denoLoaded).not.toHaveBeenCalled();
   });
 
-  it("imports @logit/runtime-deno/register when globalThis.Deno exists", async () => {
+  it("imports @kilog/runtime-deno/register when globalThis.Deno exists", async () => {
     (globalThis as Record<string, unknown>).Deno = {};
 
     await import("./register.js");

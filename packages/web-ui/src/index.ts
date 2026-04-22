@@ -50,7 +50,7 @@ export async function startServer(options: ServerOptions): Promise<void> {
 
   const port = await findFreePort(options.port, portRetry);
   if (port !== options.port) {
-    console.log(`logit UI: port ${options.port} busy, using ${port} instead`);
+    console.log(`kilog UI: port ${options.port} busy, using ${port} instead`);
   }
 
   // `firstSeen` is null until the first browser request arrives. Before that,
@@ -69,7 +69,7 @@ export async function startServer(options: ServerOptions): Promise<void> {
   });
 
   const server = serve({ fetch: app.fetch, port }, (info) => {
-    console.log(`logit UI running on http://localhost:${info.port}`);
+    console.log(`kilog UI running on http://localhost:${info.port}`);
     console.log(
       `(auto-shutdown after ${idleTimeoutMs / 1000}s of no heartbeat — timer starts on first access)`,
     );
@@ -87,7 +87,7 @@ export async function startServer(options: ServerOptions): Promise<void> {
     // Don't time out before anyone has opened the page.
     if (firstSeen === null) return;
     if (Date.now() - lastActivity >= idleTimeoutMs) {
-      console.log("logit UI: idle timeout reached, shutting down");
+      console.log("kilog UI: idle timeout reached, shutting down");
       shutdown();
     }
   }, watchdogIntervalMs);

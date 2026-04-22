@@ -1,4 +1,4 @@
-import { startServer } from "@logit/web-ui";
+import { startServer } from "@kilog/web-ui";
 
 export interface UiOptions {
   root: string;

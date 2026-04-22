@@ -1,4 +1,4 @@
-import type { LogEvent } from "@logit/core";
+import type { LogEvent } from "@kilog/core";
 import type { RuntimeContext } from "./context.js";
 
 export function createMockContext(): { ctx: RuntimeContext; events: LogEvent[] } {

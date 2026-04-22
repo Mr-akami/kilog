@@ -26,7 +26,7 @@ describe("catchUpIndex", () => {
   let jsonlPath: string;
 
   beforeEach(async () => {
-    baseDir = await mkdtemp(path.join(tmpdir(), "logit-catchup-"));
+    baseDir = await mkdtemp(path.join(tmpdir(), "kilog-catchup-"));
     dbPath = path.join(baseDir, "logs.duckdb");
     jsonlPath = path.join(baseDir, "events.jsonl");
   });

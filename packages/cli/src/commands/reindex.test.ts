@@ -2,8 +2,8 @@ import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
 import { mkdtemp, rm, writeFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { serialize } from "@logit/core";
-import type { ConsoleEvent } from "@logit/core";
+import { serialize } from "@kilog/core";
+import type { ConsoleEvent } from "@kilog/core";
 import { handleReindex } from "./reindex.js";
 
 function makeConsoleEvent(overrides?: Partial<ConsoleEvent>): ConsoleEvent {
@@ -37,9 +37,9 @@ describe("handleReindex", () => {
   let baseDir: string;
 
   beforeEach(async () => {
-    baseDir = await mkdtemp(path.join(tmpdir(), "logit-cli-reindex-"));
-    await mkdir(path.join(baseDir, ".logit", "raw"), { recursive: true });
-    await mkdir(path.join(baseDir, ".logit", "index"), { recursive: true });
+    baseDir = await mkdtemp(path.join(tmpdir(), "kilog-cli-reindex-"));
+    await mkdir(path.join(baseDir, ".kilog", "raw"), { recursive: true });
+    await mkdir(path.join(baseDir, ".kilog", "index"), { recursive: true });
   });
 
   afterEach(async () => {
@@ -53,7 +53,7 @@ describe("handleReindex", () => {
       makeConsoleEvent({ message: "three" }),
     ];
     await writeFile(
-      path.join(baseDir, ".logit", "raw", "2026-04-18.node.jsonl"),
+      path.join(baseDir, ".kilog", "raw", "2026-04-18.node.jsonl"),
       events.map(serialize).join("\n") + "\n",
     );
 
@@ -69,7 +69,7 @@ describe("handleReindex", () => {
   });
 
   it("should handle multiple files", async () => {
-    const rawDir = path.join(baseDir, ".logit", "raw");
+    const rawDir = path.join(baseDir, ".kilog", "raw");
     await writeFile(
       path.join(rawDir, "2026-04-18.node.jsonl"),
       [makeConsoleEvent(), makeConsoleEvent()].map(serialize).join("\n") + "\n",

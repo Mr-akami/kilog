@@ -1,6 +1,6 @@
 # Overview
 
-`logit` is a logging tool for local development environments.
+`kilog` is a logging tool for local development environments.
 
 This repository builds an OSS product that stores browser and runtime logs locally and makes them easy to query through a CLI-first workflow.
 

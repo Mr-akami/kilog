@@ -1,9 +1,9 @@
 import type { Plugin } from "vite";
-import type { LogLevel } from "@logit/core";
+import type { LogLevel } from "@kilog/core";
 import { generateBrowserRuntime } from "./browser-runtime.js";
-import { createLogitMiddleware } from "./server-middleware.js";
+import { createKilogMiddleware } from "./server-middleware.js";
 
-export interface LogitPluginOptions {
+export interface KilogPluginOptions {
   /**
    * Also print captured events to stdout.
    * - `true`: print every event.
@@ -13,11 +13,11 @@ export interface LogitPluginOptions {
   terminal?: boolean | LogLevel;
 }
 
-export default function logitPlugin(options: LogitPluginOptions = {}): Plugin {
-  const baseDir = process.env.LOGIT_DIR ?? process.cwd();
+export default function kilogPlugin(options: KilogPluginOptions = {}): Plugin {
+  const baseDir = process.env.KILOG_DIR ?? process.cwd();
 
   return {
-    name: "logit",
+    name: "kilog",
 
     transformIndexHtml() {
       const script = generateBrowserRuntime();
@@ -25,7 +25,7 @@ export default function logitPlugin(options: LogitPluginOptions = {}): Plugin {
     },
 
     configureServer(server) {
-      server.middlewares.use(createLogitMiddleware(baseDir, { terminal: options.terminal }));
+      server.middlewares.use(createKilogMiddleware(baseDir, { terminal: options.terminal }));
     },
   };
 }

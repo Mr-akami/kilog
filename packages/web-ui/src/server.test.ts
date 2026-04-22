@@ -3,8 +3,8 @@ import { mkdtemp, rm, mkdir, writeFile, appendFile, stat } from "node:fs/promise
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { createApp } from "./server.js";
-import { serialize } from "@logit/core";
-import type { ConsoleEvent } from "@logit/core";
+import { serialize } from "@kilog/core";
+import type { ConsoleEvent } from "@kilog/core";
 
 function makeEvent(message: string): ConsoleEvent {
   return {
@@ -21,13 +21,13 @@ function makeEvent(message: string): ConsoleEvent {
 describe("web-ui server", () => {
   let root: string;
   let jsonlPath: string;
-  let logitDir: string;
+  let kilogDir: string;
 
   beforeEach(async () => {
-    root = await mkdtemp(path.join(tmpdir(), "logit-web-ui-"));
-    logitDir = path.join(root, "apps", "sample", ".logit");
-    const rawDir = path.join(logitDir, "raw");
-    const indexDir = path.join(logitDir, "index");
+    root = await mkdtemp(path.join(tmpdir(), "kilog-web-ui-"));
+    kilogDir = path.join(root, "apps", "sample", ".kilog");
+    const rawDir = path.join(kilogDir, "raw");
+    const indexDir = path.join(kilogDir, "index");
     await mkdir(rawDir, { recursive: true });
     await mkdir(indexDir, { recursive: true });
     jsonlPath = path.join(rawDir, "2026-04-20.browser.jsonl");
@@ -47,7 +47,7 @@ describe("web-ui server", () => {
     const body = await res.text();
     expect(body).toContain("<!DOCTYPE html>");
     expect(body).toContain(`<input id="root" type="text" value="${root}"`);
-    expect(body).toContain("window.__LOGIT_SSR__");
+    expect(body).toContain("window.__KILOG_SSR__");
     expect(body).toContain('"apps');
   });
 
@@ -108,7 +108,7 @@ describe("web-ui server", () => {
 
   it("GET /api/read rejects non-jsonl paths", async () => {
     const app = createApp({ root });
-    const otherFile = path.join(root, "apps", "sample", ".logit", "raw", "readme.txt");
+    const otherFile = path.join(root, "apps", "sample", ".kilog", "raw", "readme.txt");
     await writeFile(otherFile, "");
     const res = await app.request(`/api/read?path=${encodeURIComponent(otherFile)}`);
     expect(res.status).toBe(403);
@@ -132,7 +132,7 @@ describe("web-ui server", () => {
       paths: Record<string, unknown>;
     };
     expect(spec.openapi).toMatch(/^3\./);
-    expect(spec.info.title).toContain("logit");
+    expect(spec.info.title).toContain("kilog");
     expect(spec.paths["/api/sources"]).toBeTruthy();
     expect(spec.paths["/api/read"]).toBeTruthy();
     expect(spec.paths["/api/heartbeat"]).toBeTruthy();
@@ -161,6 +161,6 @@ describe("web-ui server", () => {
     expect(body.indexDbsDeleted).toBe(1);
 
     await expect(stat(jsonlPath)).rejects.toThrow();
-    await expect(stat(path.join(logitDir, "index"))).rejects.toThrow();
+    await expect(stat(path.join(kilogDir, "index"))).rejects.toThrow();
   });
 });

@@ -24,7 +24,7 @@ interface SsrData {
 async function main(): Promise<void> {
   setStatus("initializing DuckDB-wasm...");
 
-  const ssr: SsrData = (window as unknown as { __LOGIT_SSR__?: SsrData }).__LOGIT_SSR__ ?? {
+  const ssr: SsrData = (window as unknown as { __KILOG_SSR__?: SsrData }).__KILOG_SSR__ ?? {
     root: "",
     sources: [],
   };
@@ -79,7 +79,7 @@ async function main(): Promise<void> {
       if (heartbeatFailures >= 3) {
         clearInterval(heartbeatTimer);
         clearInterval(pollTimer);
-        setHeaderStatus("server stopped — restart `logit ui` and reload");
+        setHeaderStatus("server stopped — restart `kilog ui` and reload");
       }
     }
   }, HEARTBEAT_MS);

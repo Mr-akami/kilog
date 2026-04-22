@@ -1,16 +1,16 @@
-# @logit/vite-plugin
+# @kilog/vite-plugin
 
-Vite plugin. Injects the browser-side instrumentation script into `index.html` and registers a dev-server middleware that receives events and writes them to `.logit/`.
+Vite plugin. Injects the browser-side instrumentation script into `index.html` and registers a dev-server middleware that receives events and writes them to `.kilog/`.
 
 ## Usage
 
 ```ts
 // vite.config.ts
 import { defineConfig } from "vite";
-import logit from "@logit/vite-plugin";
+import kilog from "@kilog/vite-plugin";
 
 export default defineConfig({
-  plugins: [logit()],
+  plugins: [kilog()],
 });
 ```
 
@@ -19,10 +19,10 @@ Running `vite` is enough to collect the browser's `console`, `fetch`, and uncaug
 ## Options
 
 ```ts
-logit({ terminal: true }); // mirror every captured event to stdout (colored)
-logit({ terminal: "warn" }); // only warn/error (filter by level)
-logit({ terminal: "error" }); // errors only
-// default: no terminal output; events go to .logit/ only
+kilog({ terminal: true }); // mirror every captured event to stdout (colored)
+kilog({ terminal: "warn" }); // only warn/error (filter by level)
+kilog({ terminal: "error" }); // errors only
+// default: no terminal output; events go to .kilog/ only
 ```
 
 The level threshold applies to events with a `level` (console, error, rejection). Network events print only when `terminal: true`.
@@ -30,11 +30,11 @@ The level threshold applies to events with a `level` (console, error, rejection)
 ## How it works
 
 - `transformIndexHtml`: injects the browser instrumentation script into `<head>`
-- `configureServer`: adds a POST-receiver middleware to the dev server (browser → dev server → `.logit/raw/`)
+- `configureServer`: adds a POST-receiver middleware to the dev server (browser → dev server → `.kilog/raw/`)
 
 ## Storage
 
-Written to `.logit/raw/{date}.browser.jsonl` under the cwd. Override with the `LOGIT_DIR` environment variable.
+Written to `.kilog/raw/{date}.browser.jsonl` under the cwd. Override with the `KILOG_DIR` environment variable.
 
 ## Requirements
 
@@ -43,4 +43,4 @@ Written to `.logit/raw/{date}.browser.jsonl` under the cwd. Override with the `L
 
 ## Viewing logs
 
-Use [`@logit/cli`](../cli/README.md) or the [Web UI](../web-ui/README.md).
+Use [`@kilog/cli`](../cli/README.md) or the [Web UI](../web-ui/README.md).

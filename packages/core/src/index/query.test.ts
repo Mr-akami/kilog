@@ -83,9 +83,9 @@ describe("queryLogs", () => {
   let allEvents: LogEvent[];
 
   beforeAll(async () => {
-    baseDir = await mkdtemp(path.join(tmpdir(), "logit-query-"));
-    await mkdir(path.join(baseDir, ".logit", "raw"), { recursive: true });
-    await mkdir(path.join(baseDir, ".logit", "index"), { recursive: true });
+    baseDir = await mkdtemp(path.join(tmpdir(), "kilog-query-"));
+    await mkdir(path.join(baseDir, ".kilog", "raw"), { recursive: true });
+    await mkdir(path.join(baseDir, ".kilog", "index"), { recursive: true });
 
     allEvents = [
       makeConsoleEvent({
@@ -114,7 +114,7 @@ describe("queryLogs", () => {
       makeUnhandledRejectionEvent({ timestamp: "2026-04-18T13:00:00.000Z" }),
     ];
 
-    const rawDir = path.join(baseDir, ".logit", "raw");
+    const rawDir = path.join(baseDir, ".kilog", "raw");
     await writeFile(
       path.join(rawDir, "2026-04-18.node.jsonl"),
       allEvents
@@ -137,7 +137,7 @@ describe("queryLogs", () => {
         .join("\n") + "\n",
     );
 
-    const dbPath = path.join(baseDir, ".logit", "index", "logs.duckdb");
+    const dbPath = path.join(baseDir, ".kilog", "index", "logs.duckdb");
     await reindex({ baseDir, dbPath });
     db = await openIndex(dbPath);
   });
@@ -374,9 +374,9 @@ describe("aggregateLogs", () => {
   let db: DuckDBInstance;
 
   beforeAll(async () => {
-    baseDir = await mkdtemp(path.join(tmpdir(), "logit-aggregate-"));
-    await mkdir(path.join(baseDir, ".logit", "raw"), { recursive: true });
-    await mkdir(path.join(baseDir, ".logit", "index"), { recursive: true });
+    baseDir = await mkdtemp(path.join(tmpdir(), "kilog-aggregate-"));
+    await mkdir(path.join(baseDir, ".kilog", "raw"), { recursive: true });
+    await mkdir(path.join(baseDir, ".kilog", "index"), { recursive: true });
 
     const events = [
       makeConsoleEvent({ level: "info" }),
@@ -386,7 +386,7 @@ describe("aggregateLogs", () => {
       makeNetworkEvent(),
     ];
 
-    const rawDir = path.join(baseDir, ".logit", "raw");
+    const rawDir = path.join(baseDir, ".kilog", "raw");
     await writeFile(
       path.join(rawDir, "2026-04-18.node.jsonl"),
       events
@@ -402,7 +402,7 @@ describe("aggregateLogs", () => {
         .join("\n") + "\n",
     );
 
-    const dbPath = path.join(baseDir, ".logit", "index", "logs.duckdb");
+    const dbPath = path.join(baseDir, ".kilog", "index", "logs.duckdb");
     await reindex({ baseDir, dbPath });
     db = await openIndex(dbPath);
   });

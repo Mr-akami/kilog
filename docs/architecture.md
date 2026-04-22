@@ -2,7 +2,7 @@
 
 ## High Level
 
-`logit` consists of runtime-specific agents plus shared storage and query infrastructure.
+`kilog` consists of runtime-specific agents plus shared storage and query infrastructure.
 
 The implementation uses a pnpm workspace monorepo. Instead of creating large domain folders, split the repository by package-level responsibility.
 
@@ -73,7 +73,7 @@ Search:
 ## Storage Layout
 
 ```text
-.logit/
+.kilog/
   raw/
     2026-04-18.browser.jsonl
     2026-04-18.node.jsonl

@@ -140,7 +140,7 @@ vite.config.ts.timestamp-*
 
 .serena/
 .pnpm-store/
-.logit/
+.kilog/
 dist/
 
 # skill-creator eval workspace (generated per iteration)

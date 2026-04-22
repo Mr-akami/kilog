@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vite-plus/test";
-import type { ErrorEvent, LogEvent, UnhandledRejectionEvent } from "@logit/core";
+import type { ErrorEvent, LogEvent, UnhandledRejectionEvent } from "@kilog/core";
 import { captureErrors } from "./capture-errors.js";
 import { createMockContext } from "./testing.js";
 

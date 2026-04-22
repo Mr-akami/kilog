@@ -1,6 +1,6 @@
 import { readdir, unlink } from "node:fs/promises";
 import path from "node:path";
-import { findLogitDirs } from "@logit/core";
+import { findKilogDirs } from "@kilog/core";
 
 export interface PruneOptions {
   root: string;
@@ -12,8 +12,8 @@ function extractDate(filename: string): string | null {
   return match ? match[1] : null;
 }
 
-async function pruneLogitDir(logitDir: string, before: string): Promise<number> {
-  const rawDir = path.join(logitDir, "raw");
+async function pruneKilogDir(kilogDir: string, before: string): Promise<number> {
+  const rawDir = path.join(kilogDir, "raw");
   let files: string[];
   try {
     files = await readdir(rawDir);
@@ -34,13 +34,13 @@ async function pruneLogitDir(logitDir: string, before: string): Promise<number> 
 }
 
 export async function handlePrune(options: PruneOptions): Promise<void> {
-  const dirs = await findLogitDirs(options.root);
+  const dirs = await findKilogDirs(options.root);
   let total = 0;
   for (const dir of dirs) {
-    total += await pruneLogitDir(dir, options.before);
+    total += await pruneKilogDir(dir, options.before);
   }
   process.stdout.write(`Pruned ${total} files\n`);
   if (total > 0) {
-    process.stdout.write("Run `logit reindex` to update the index\n");
+    process.stdout.write("Run `kilog reindex` to update the index\n");
   }
 }

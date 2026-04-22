@@ -1,5 +1,5 @@
 import path from "node:path";
-import { reindex, discoverSources, dbFilePathFromLogitDir } from "@logit/core";
+import { reindex, discoverSources, dbFilePathFromKilogDir } from "@kilog/core";
 
 export interface ReindexHandlerOptions {
   root: string;
@@ -10,8 +10,8 @@ export async function handleReindex(options: ReindexHandlerOptions): Promise<voi
   let total = 0;
   for (const src of sources) {
     const result = await reindex({
-      baseDir: path.dirname(src.logitDir),
-      dbPath: dbFilePathFromLogitDir(src.logitDir),
+      baseDir: path.dirname(src.kilogDir),
+      dbPath: dbFilePathFromKilogDir(src.kilogDir),
     });
     total += result.count;
   }

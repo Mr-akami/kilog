@@ -1,64 +1,64 @@
-# @logit/cli
+# @kilog/cli
 
-The `logit` command. Search, browse, and manage `.logit/` across every project under your invocation directory.
+The `kilog` command. Search, browse, and manage `.kilog/` across every project under your invocation directory.
 
 ## Usage
 
-Not published to npm yet, so `npx logit` does not work. To use it from an app inside the workspace, add `@logit/cli` as a devDependency:
+Not published to npm yet, so `npx kilog` does not work. To use it from an app inside the workspace, add `@kilog/cli` as a devDependency:
 
 ```json
 {
-  "scripts": { "logit": "logit" },
-  "devDependencies": { "@logit/cli": "workspace:*" }
+  "scripts": { "kilog": "kilog" },
+  "devDependencies": { "@kilog/cli": "workspace:*" }
 }
 ```
 
 Then:
 
 ```bash
-pnpm logit <command>
+pnpm kilog <command>
 # or
-pnpm exec logit <command>
+pnpm exec kilog <command>
 ```
 
-Once published, `npx logit <command>` will also work.
+Once published, `npx kilog <command>` will also work.
 
 ## How scope is resolved
 
-- By default, the CLI walks **down** from the current working directory and finds every `.logit/` under it.
+- By default, the CLI walks **down** from the current working directory and finds every `.kilog/` under it.
 - `--root <path>` overrides the starting point.
-- Each discovered `.logit/` keeps its own independent `index/logs.duckdb` — there is no unified database. Results from multiple projects are merged in memory at query time.
+- Each discovered `.kilog/` keeps its own independent `index/logs.duckdb` — there is no unified database. Results from multiple projects are merged in memory at query time.
 
 ## Commands
 
 ### `tail` — stream new entries in real time
 
 ```bash
-pnpm logit tail
-pnpm logit tail --runtime node
-pnpm logit tail --root ../other-project
+pnpm kilog tail
+pnpm kilog tail --runtime node
+pnpm kilog tail --root ../other-project
 ```
 
-Streams like `tail -f` across every `.logit/raw/` under the root. Exit with Ctrl+C.
+Streams like `tail -f` across every `.kilog/raw/` under the root. Exit with Ctrl+C.
 
 ### `query` — search / filter
 
 ```bash
-pnpm logit query                          # all
-pnpm logit query --level error            # only error level
-pnpm logit query --type network           # only fetch events
-pnpm logit query --project web-ui         # only one project
-pnpm logit query --search "httpbin"                 # single term
-pnpm logit query --search "db AND timeout"          # AND
-pnpm logit query --search "ENOENT OR EACCES"        # OR
-pnpm logit query --search "error AND NOT timeout"   # NOT
-pnpm logit query --last 10m                          # last 10 minutes
-pnpm logit query --last 2h                           # last 2 hours
-pnpm logit query --last 3d                           # last 3 days
-pnpm logit query --from 2026-04-20 --to 2026-04-21
-pnpm logit query --limit 50 --offset 100
-pnpm logit query --json                   # JSON output
-pnpm logit query --aggregate              # per-project counts
+pnpm kilog query                          # all
+pnpm kilog query --level error            # only error level
+pnpm kilog query --type network           # only fetch events
+pnpm kilog query --project web-ui         # only one project
+pnpm kilog query --search "httpbin"                 # single term
+pnpm kilog query --search "db AND timeout"          # AND
+pnpm kilog query --search "ENOENT OR EACCES"        # OR
+pnpm kilog query --search "error AND NOT timeout"   # NOT
+pnpm kilog query --last 10m                          # last 10 minutes
+pnpm kilog query --last 2h                           # last 2 hours
+pnpm kilog query --last 3d                           # last 3 days
+pnpm kilog query --from 2026-04-20 --to 2026-04-21
+pnpm kilog query --limit 50 --offset 100
+pnpm kilog query --json                   # JSON output
+pnpm kilog query --aggregate              # per-project counts
 ```
 
 Filters:
@@ -100,33 +100,33 @@ foo \AND bar                literal "foo AND bar"
 ### `ui` — start the Web UI
 
 ```bash
-pnpm logit ui                 # http://localhost:3000
-pnpm logit ui --port 4000
-pnpm logit ui --root ../other
+pnpm kilog ui                 # http://localhost:3000
+pnpm kilog ui --port 4000
+pnpm kilog ui --root ../other
 ```
 
-The server auto-shuts down when you close the browser tab (via a heartbeat / beacon). See [`@logit/web-ui`](../web-ui/README.md) for details.
+The server auto-shuts down when you close the browser tab (via a heartbeat / beacon). See [`@kilog/web-ui`](../web-ui/README.md) for details.
 
 ### `reindex` — rebuild every index
 
 ```bash
-pnpm logit reindex
+pnpm kilog reindex
 ```
 
-Discovers every `.logit/` under the root and rebuilds each `index/logs.duckdb` from scratch. Useful after editing JSONL by hand or when a DB is corrupted.
+Discovers every `.kilog/` under the root and rebuilds each `index/logs.duckdb` from scratch. Useful after editing JSONL by hand or when a DB is corrupted.
 
 ### `prune` — delete old logs
 
 ```bash
-pnpm logit prune --before 2026-04-01
+pnpm kilog prune --before 2026-04-01
 ```
 
-Deletes JSONL files older than the given date in every discovered `.logit/raw/`.
+Deletes JSONL files older than the given date in every discovered `.kilog/raw/`.
 
 ### `doctor` — health check
 
 ```bash
-pnpm logit doctor
+pnpm kilog doctor
 ```
 
-Lists every discovered `.logit/`, the project label, raw event count, and index count. Flags any mismatches with a suggested `logit reindex`.
+Lists every discovered `.kilog/`, the project label, raw event count, and index count. Flags any mismatches with a suggested `kilog reindex`.

@@ -1,21 +1,21 @@
 {
-  "name": "@logit/cli",
+  "name": "@kilog/cli",
   "version": "0.1.0",
-  "description": "CLI for logit structured logging viewer",
+  "description": "CLI for kilog structured logging viewer",
   "keywords": [
     "cli",
-    "logging",
-    "logit"
+    "kilog",
+    "logging"
   ],
-  "homepage": "https://github.com/Mr-akami/logit/tree/main/packages/cli#readme",
+  "homepage": "https://github.com/Mr-akami/kilog/tree/main/packages/cli#readme",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Mr-akami/logit.git",
+    "url": "https://github.com/Mr-akami/kilog.git",
     "directory": "packages/cli"
   },
   "bin": {
-    "logit": "./dist/index.js"
+    "kilog": "./dist/index.js"
   },
   "files": [
     "dist"
@@ -34,8 +34,8 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@logit/core": "workspace:*",
-    "@logit/web-ui": "workspace:*",
+    "@kilog/core": "workspace:*",
+    "@kilog/web-ui": "workspace:*",
     "yargs": "*"
   },
   "devDependencies": {

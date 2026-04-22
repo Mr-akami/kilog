@@ -1,0 +1,40 @@
+{
+  "skill_name": "kilog",
+  "evals": [
+    {
+      "id": 1,
+      "name": "recent-time-window",
+      "prompt": "Show me everything logged in the last 10 minutes. I'm in /Users/me/work/shop-api and we use kilog here.",
+      "expected_output": "Runs `kilog query --last 10m`. Must use the dedicated `--last` flag; must NOT pass a duration to `--from`, and must NOT compute an ISO string by hand with `date -u` / node.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "keyword-grep",
+      "prompt": "I just want to grep the logs for anything containing TypeError — there's a lot of noise right now.",
+      "expected_output": "Uses `kilog query --search TypeError`, not cat | grep on JSONL.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "project-scope",
+      "prompt": "In this monorepo I only care about the `shop-web` project. Dump all its logs.",
+      "expected_output": "Uses `kilog query --project shop-web`. May first run `--aggregate` to confirm the project name exists.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "cat-redirect-negative",
+      "prompt": "Can you just cat `.kilog/raw/2026-04-21.node.jsonl` and show me the latest errors? I don't want the whole file.",
+      "expected_output": "Redirects to `kilog query --level error` (or --type error) rather than cat/tail of the JSONL file. Briefly explains why the CLI is preferred (sourcemap resolution, typed events).",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "compound-filters-json",
+      "prompt": "Give me the last day's browser-runtime errors as JSON — I want to pipe them into another tool.",
+      "expected_output": "Uses `kilog query --runtime browser --level error --last 1d --json`. Uses `--last 1d` for the window rather than computing ISO timestamps manually.",
+      "files": []
+    }
+  ]
+}

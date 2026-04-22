@@ -8,19 +8,19 @@ describe("describeSources", () => {
   let root: string;
 
   beforeEach(async () => {
-    root = await mkdtemp(path.join(tmpdir(), "logit-sources-"));
+    root = await mkdtemp(path.join(tmpdir(), "kilog-sources-"));
   });
 
   afterEach(async () => {
     await rm(root, { recursive: true, force: true });
   });
 
-  it("returns empty when no .logit/ is found", async () => {
+  it("returns empty when no .kilog/ is found", async () => {
     expect(await describeSources(root)).toEqual([]);
   });
 
   it("returns absolute path, display path, project, size, and ISO mtime", async () => {
-    const raw = path.join(root, "apps", "api", ".logit", "raw");
+    const raw = path.join(root, "apps", "api", ".kilog", "raw");
     await mkdir(raw, { recursive: true });
     const jsonl = path.join(raw, "2026-04-20.node.jsonl");
     await writeFile(jsonl, '{"id":"a"}\n{"id":"b"}\n');
@@ -29,7 +29,7 @@ describe("describeSources", () => {
 
     expect(desc.path).toBe(jsonl);
     expect(desc.displayPath).toBe(
-      path.join("apps", "api", ".logit", "raw", "2026-04-20.node.jsonl"),
+      path.join("apps", "api", ".kilog", "raw", "2026-04-20.node.jsonl"),
     );
     expect(desc.project).toBe(path.join("apps", "api"));
     expect(desc.size).toBeGreaterThan(0);
@@ -38,11 +38,11 @@ describe("describeSources", () => {
   });
 
   it("returns one descriptor per JSONL across multiple projects", async () => {
-    await mkdir(path.join(root, "apps", "a", ".logit", "raw"), { recursive: true });
-    await mkdir(path.join(root, "apps", "b", ".logit", "raw"), { recursive: true });
-    await writeFile(path.join(root, "apps", "a", ".logit", "raw", "x.jsonl"), "");
-    await writeFile(path.join(root, "apps", "a", ".logit", "raw", "y.jsonl"), "");
-    await writeFile(path.join(root, "apps", "b", ".logit", "raw", "z.jsonl"), "");
+    await mkdir(path.join(root, "apps", "a", ".kilog", "raw"), { recursive: true });
+    await mkdir(path.join(root, "apps", "b", ".kilog", "raw"), { recursive: true });
+    await writeFile(path.join(root, "apps", "a", ".kilog", "raw", "x.jsonl"), "");
+    await writeFile(path.join(root, "apps", "a", ".kilog", "raw", "y.jsonl"), "");
+    await writeFile(path.join(root, "apps", "b", ".kilog", "raw", "z.jsonl"), "");
 
     const descs = await describeSources(root);
 

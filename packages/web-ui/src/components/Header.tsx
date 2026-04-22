@@ -6,7 +6,7 @@ interface Props {
 export function Header({ root, sourceCount }: Props) {
   return (
     <header>
-      <h1>logit</h1>
+      <h1>kilog</h1>
       <label class="root-input">
         Root:
         <input id="root" type="text" value={root} placeholder="(absolute or relative path)" />

@@ -3,29 +3,29 @@
   "release-type": "node",
   "packages": {
     "packages/core": {
-      "component": "@logit/core"
+      "component": "@kilog/core"
     },
     "packages/runtime-node": {
-      "component": "@logit/runtime-node"
+      "component": "@kilog/runtime-node"
     },
     "packages/vite-plugin": {
-      "component": "@logit/vite-plugin"
+      "component": "@kilog/vite-plugin"
     },
     "packages/cli": {
-      "component": "@logit/cli"
+      "component": "@kilog/cli"
     },
     "packages/web-ui": {
-      "component": "@logit/web-ui"
+      "component": "@kilog/web-ui"
     },
     "packages/register": {
-      "component": "@logit/register"
+      "component": "@kilog/register"
     }
   },
   "plugins": [
     {
       "type": "linked-versions",
-      "groupName": "logit-core",
-      "components": ["@logit/core", "@logit/runtime-node"]
+      "groupName": "kilog-core",
+      "components": ["@kilog/core", "@kilog/runtime-node"]
     }
   ]
 }

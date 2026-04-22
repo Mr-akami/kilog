@@ -12,7 +12,7 @@ describe("insertEvents", () => {
   let dbPath: string;
 
   beforeEach(async () => {
-    baseDir = await mkdtemp(path.join(tmpdir(), "logit-insert-"));
+    baseDir = await mkdtemp(path.join(tmpdir(), "kilog-insert-"));
     dbPath = path.join(baseDir, "logs.duckdb");
   });
 
