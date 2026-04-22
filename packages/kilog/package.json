@@ -1,0 +1,78 @@
+{
+  "name": "kilog",
+  "version": "0.1.0",
+  "description": "kilog — structured logging toolkit (CLI + libraries bundled)",
+  "keywords": [
+    "cli",
+    "duckdb",
+    "kilog",
+    "logging",
+    "structured-logging"
+  ],
+  "homepage": "https://github.com/Mr-akami/kilog#readme",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mr-akami/kilog.git",
+    "directory": "packages/kilog"
+  },
+  "bin": {
+    "kilog": "./bin/kilog.js"
+  },
+  "files": [
+    "bin",
+    "dist"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./core": {
+      "types": "./dist/core.d.ts",
+      "import": "./dist/core.js"
+    },
+    "./register": {
+      "types": "./dist/register.d.ts",
+      "import": "./dist/register.js"
+    },
+    "./runtime-node": {
+      "types": "./dist/runtime-node.d.ts",
+      "import": "./dist/runtime-node.js"
+    },
+    "./vite-plugin": {
+      "types": "./dist/vite-plugin.d.ts",
+      "import": "./dist/vite-plugin.js"
+    },
+    "./web-ui": {
+      "types": "./dist/web-ui.d.ts",
+      "import": "./dist/web-ui.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@kilog/cli": "workspace:*",
+    "@kilog/core": "workspace:*",
+    "@kilog/register": "workspace:*",
+    "@kilog/runtime-node": "workspace:*",
+    "@kilog/vite-plugin": "workspace:*",
+    "@kilog/web-ui": "workspace:*"
+  },
+  "peerDependencies": {
+    "vite": "^8"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": true
+    }
+  }
+}

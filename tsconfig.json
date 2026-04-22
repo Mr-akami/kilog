@@ -20,6 +20,9 @@
       "path": "packages/web-ui"
     },
     {
+      "path": "packages/kilog"
+    },
+    {
       "path": "examples/node-server"
     }
   ]

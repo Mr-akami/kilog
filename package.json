@@ -1,5 +1,5 @@
 {
-  "name": "kilog",
+  "name": "kilog-monorepo",
   "private": true,
   "license": "MIT",
   "type": "module",
@@ -9,13 +9,18 @@
     "test": "vp test run",
     "lint": "vp lint .",
     "fmt": "vp fmt",
-    "check": "vp check"
+    "check": "vp check",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm -r build && changeset publish"
   },
   "dependencies": {
     "@hono/node-server": "^2",
     "hono": "^4.12.14"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.6.0",
+    "@changesets/cli": "^2.31.0",
     "@eslint/js": "^9.39.4",
     "@types/node": "^25.6.0",
     "typescript": "^5.9.3",

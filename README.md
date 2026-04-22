@@ -10,6 +10,18 @@ Capture `console`, `fetch`, and uncaught errors from your app during development
 - CLI (`kilog tail / query / ui / ...`) with filters, aggregation, and raw SQL
 - Web UI: Hono SSR shell + in-browser DuckDB-wasm, 2 s live updates, raw SQL input, editable root, "Clear DuckDB" and "Clear logs on disk" buttons, auto-shutdown when the tab closes
 
+## Install
+
+Everything (CLI + libraries, includes web UI):
+
+```bash
+npm i -D kilog
+```
+
+Or install individual packages: `@kilog/cli`, `@kilog/core`, `@kilog/register`, `@kilog/runtime-node`, `@kilog/vite-plugin`, `@kilog/web-ui`.
+
+The `kilog` package re-exports all libraries under subpaths: `kilog`, `kilog/core`, `kilog/register`, `kilog/runtime-node`, `kilog/vite-plugin`, `kilog/web-ui`.
+
 ## Quick start
 
 ### Node (Hono / Express / etc.)
@@ -17,12 +29,12 @@ Capture `console`, `fetch`, and uncaught errors from your app during development
 ```json
 {
   "scripts": {
-    "dev": "node --import @kilog/register ./src/index.ts"
+    "dev": "node --import kilog/register ./src/index.ts"
   }
 }
 ```
 
-`@kilog/register` auto-dispatches to the right runtime package based on
+`kilog/register` auto-dispatches to the right runtime package based on
 where it's running (Node / Bun / Deno).
 
 → [`packages/register`](./packages/register/README.md) · [`packages/runtime-node`](./packages/runtime-node/README.md)
@@ -31,7 +43,7 @@ where it's running (Node / Bun / Deno).
 
 ```ts
 // vite.config.ts
-import kilog from "@kilog/vite-plugin";
+import kilog from "kilog/vite-plugin";
 export default { plugins: [kilog()] };
 ```
 
@@ -40,12 +52,10 @@ export default { plugins: [kilog()] };
 ### View logs
 
 ```bash
-pnpm kilog tail     # live stream across every .kilog/ under cwd
-pnpm kilog query    # search / filter
-pnpm kilog ui       # browser UI (auto-shuts down when you close the tab)
+npx kilog tail     # live stream across every .kilog/ under cwd
+npx kilog query    # search / filter
+npx kilog ui       # browser UI (auto-shuts down when you close the tab)
 ```
-
-Not published to npm yet. Inside the workspace, add `@kilog/cli` as a devDependency and invoke via `pnpm kilog`.
 
 → [`packages/cli`](./packages/cli/README.md) / [`packages/web-ui`](./packages/web-ui/README.md)
 
@@ -65,10 +75,12 @@ The CLI and UI walk down from the **invocation directory** (or `--root <path>`) 
 
 | Package                                                    | Role                                                        |
 | ---------------------------------------------------------- | ----------------------------------------------------------- |
+| [`kilog`](./packages/kilog)                                | Meta-package: CLI + all libraries bundled                   |
 | [`@kilog/runtime-node`](./packages/runtime-node/README.md) | Node runtime instrumentation                                |
 | [`@kilog/vite-plugin`](./packages/vite-plugin/README.md)   | Vite plugin (browser instrumentation + dev-server receiver) |
 | [`@kilog/cli`](./packages/cli/README.md)                   | `kilog` CLI                                                 |
 | [`@kilog/web-ui`](./packages/web-ui/README.md)             | Hono server + DuckDB-wasm browser UI                        |
+| [`@kilog/register`](./packages/register/README.md)         | Auto-register hook (runtime dispatch)                       |
 | [`@kilog/core`](./packages/core/README.md)                 | Internal: storage / discovery / index / query               |
 
 ## Examples
@@ -76,9 +88,67 @@ The CLI and UI walk down from the **invocation directory** (or `--root <path>`) 
 - [`examples/node-server`](./examples/node-server) — Hono + runtime-node
 - [`examples/vite-client`](./examples/vite-client) — Vite + vite-plugin
 
+## Release
+
+Releases are driven by [changesets](https://github.com/changesets/changesets) and published via GitHub Actions (`.github/workflows/release.yml`).
+
+### Author workflow
+
+```bash
+pnpm changeset              # record a change (bump kind + summary)
+# commit the generated .changeset/*.md with your PR
+```
+
+When the PR lands on `main`, the workflow opens (or updates) a "chore: version packages" PR. Merging that PR bumps versions, writes CHANGELOG, and publishes to npm with provenance via OIDC.
+
+### Required GitHub setup
+
+- Secret: `NPM_TOKEN` — npm **Automation** access token (supports provenance, bypasses 2FA on publish)
+- Settings → Actions → General → Workflow permissions → "Read and write" + "Allow GitHub Actions to create and approve pull requests"
+- npm org `@kilog` must exist and the token owner must be a member with publish rights
+
+### First publish (manual)
+
+The CI flow assumes packages already exist on npm. For the very first release, publish manually once:
+
+```bash
+# 1. Prerequisites
+#    - Create npm org: https://www.npmjs.com/org/create (name: kilog)
+#    - npm login (2FA enabled)
+#    - Ensure local is clean: git status
+pnpm install --frozen-lockfile
+pnpm build
+pnpm test
+
+# 2. Temporarily disable provenance (no OIDC in local env)
+#    Edit each packages/*/package.json and remove:
+#      "publishConfig": { "access": "public", "provenance": true }
+#    Replace with:
+#      "publishConfig": { "access": "public" }
+#    (6 packages under packages/, plus packages/kilog)
+
+# 3. Publish in dependency order — workspace:* is auto-rewritten to the version
+pnpm --filter @kilog/core publish --access public --no-git-checks
+pnpm --filter @kilog/runtime-node publish --access public --no-git-checks
+pnpm --filter @kilog/register publish --access public --no-git-checks
+pnpm --filter @kilog/vite-plugin publish --access public --no-git-checks
+pnpm --filter @kilog/web-ui publish --access public --no-git-checks
+pnpm --filter @kilog/cli publish --access public --no-git-checks
+pnpm --filter kilog publish --access public --no-git-checks
+
+# 4. Restore provenance: true and commit
+#    From here on, CI handles publishing.
+
+# 5. Verify
+npm view kilog version
+npm view @kilog/cli version
+```
+
+Tip: use `pnpm --filter <name> publish --dry-run` first to inspect what would be sent.
+
 ## Development (monorepo)
 
-Requires Node >= 24 and pnpm. Not published to npm yet, so it only works inside the workspace.
+Requires Node >= 24 and pnpm.
 
 ### Setup
 
