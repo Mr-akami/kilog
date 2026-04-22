@@ -1,5 +1,0 @@
----
-"@kilog/cli": minor
----
-
-test
