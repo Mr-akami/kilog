@@ -95,7 +95,7 @@ importers:
   packages/core:
     dependencies:
       '@duckdb/node-api':
-        specifier: '*'
+        specifier: 1.5.2-r.1
         version: 1.5.2-r.1
 
   packages/register:
@@ -144,7 +144,7 @@ importers:
         version: 1.3.0(@hono/standard-validator@0.2.2(@standard-schema/spec@1.1.0)(hono@4.12.14))(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(quansync@0.2.11)(zod@4.3.6))(@standard-community/standard-openapi@0.2.9(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(quansync@0.2.11)(zod@4.3.6))(@standard-schema/spec@1.1.0)(openapi-types@12.1.3)(zod@4.3.6))(@types/json-schema@7.0.15)(hono@4.12.14)(openapi-types@12.1.3)
     devDependencies:
       '@duckdb/duckdb-wasm':
-        specifier: '*'
+        specifier: 1.33.1-dev45.0
         version: 1.33.1-dev45.0
       vite:
         specifier: npm:@voidzero-dev/vite-plus-core@latest
