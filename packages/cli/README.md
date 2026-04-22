@@ -1,5 +1,6 @@
 # @kilog/cli
 
+TEST
 The `kilog` command. Search, browse, and manage `.kilog/` across every project under your invocation directory.
 
 ## Usage
