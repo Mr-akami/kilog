@@ -61,8 +61,12 @@ where it's running (Node / Bun / Deno).
 
 ```ts
 // vite.config.ts
-import kilog from "@kilog/vite-plugin";
-export default { plugins: [kilog()] };
+import { defineConfig } from "vite";
+import kilogPlugin from "@kilog/vite-plugin";
+
+export default defineConfig({
+  plugins: [kilogPlugin()],
+});
 ```
 
 → [`packages/vite-plugin`](./packages/vite-plugin/README.md)
