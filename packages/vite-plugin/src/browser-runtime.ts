@@ -37,16 +37,20 @@ export function generateBrowserRuntime(): string {
   // As a portable fallback, we create an Error and slice off a fixed number of
   // leading frames (the wrapper + captureStack itself).
   function captureStack(below) {
-    var target = {};
+    var raw;
     if (Error.captureStackTrace) {
+      var target = {};
       Error.captureStackTrace(target, below);
-      return target.stack;
+      raw = target.stack || "";
+    } else {
+      raw = new Error().stack || "";
     }
-    var s = new Error().stack || "";
-    // Drop the first ~3 frames (Error, captureStack, the wrapper). Best-effort.
-    var lines = s.split("\\n");
-    // Keep lines that look like frame entries.
-    return lines.slice(3).join("\\n");
+    // Drop leading non-frame lines (e.g. "Error", "Error: <msg>"). V8 prepends
+    // an "Error" header even when no error occurred, which is misleading for
+    // non-error logs.
+    var lines = raw.split("\\n");
+    while (lines.length && !/^\\s*at\\s/.test(lines[0])) lines.shift();
+    return lines.join("\\n");
   }
 
   function makeEvent(type, level, extra) {
