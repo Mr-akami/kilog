@@ -1,5 +1,14 @@
 # @kilog/cli
 
+## 0.1.2
+
+### Patch Changes
+
+- [#18](https://github.com/Mr-akami/kilog/pull/18) [`e78e49c`](https://github.com/Mr-akami/kilog/commit/e78e49cd6f2df0677351ad78992f853da63521ad) Thanks [@Mr-akami](https://github.com/Mr-akami)! - Change default UI server port from 3000 to 3210 to avoid collision with common dev servers.
+
+- Updated dependencies [[`e78e49c`](https://github.com/Mr-akami/kilog/commit/e78e49cd6f2df0677351ad78992f853da63521ad)]:
+  - @kilog/web-ui@0.1.1
+
 ## 0.1.1
 
 ### Patch Changes
