@@ -1,5 +1,12 @@
 # @kilog/web-ui
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [[`5e5a868`](https://github.com/Mr-akami/kilog/commit/5e5a8680695dc061239137b1b3b9567973c7935f)]:
+  - @kilog/core@0.2.1
+
 ## 0.1.2
 
 ### Patch Changes

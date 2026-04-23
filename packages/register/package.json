@@ -1,6 +1,6 @@
 {
   "name": "@kilog/register",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Auto-register hook for kilog structured logging",
   "keywords": [
     "auto-import",
