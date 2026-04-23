@@ -1,30 +1,42 @@
 # kilog
 
-kilog is vite based browser log.
-Capture `console`, `fetch`, and uncaught errors from your app during development, then search and browse them via CLI or a browser UI powered by DuckDB-wasm.
+One place for logs from your Vite-based browser app, your Node app, and the AI agent working on them — seamlessly viewed together.
+Capture `console`, `fetch`, and uncaught errors during development, then search and browse them from the CLI or a browser UI.
 
 ## Features
 
-- Zero-code integration (`--import` flag or Vite plugin)
-- Works in Node and the browser
-- Per-project storage under each project's `.kilog/` (JSONL + DuckDB index)
-- CLI (`kilog tail / query / ui / ...`) with filters, aggregation, and raw SQL
-- Web UI: Hono SSR shell + in-browser DuckDB-wasm, 2 s live updates, raw SQL input, editable root, "Clear DuckDB" and "Clear logs on disk" buttons, auto-shutdown when the tab closes
+- CLI for AI agents — tail / query / aggregate logs from the terminal
+- Web UI for humans — live stream, filters, and a browsable history
+- DuckDB under the hood — run any SQL you want over your logs
+- Zero-code setup: `--import` flag for Node, one-line plugin for Vite
+- Per-project `.kilog/` storage, portable and standalone
 
 ## Install
 
-Install only what you need:
-
-```bash
-npm i -D @kilog/cli @kilog/register       # Node app
-npm i -D @kilog/cli @kilog/vite-plugin    # Browser / Vite app
-```
-
-Or install everything in one go (CLI + all libraries, includes web UI):
+Install everything in one go (Reccomended):
 
 ```bash
 npm i -D @kilog/kilog
+# or
+pnpm add -D @kilog/kilog
 ```
+
+Or install only what you need:
+
+```bash
+# Node app
+npm i -D @kilog/cli @kilog/register
+# or
+pnpm add -D @kilog/cli @kilog/register
+```
+
+```bash
+# Browser / Vite app
+npm i -D @kilog/cli @kilog/vite-plugin
+# or
+pnpm add -D @kilog/cli @kilog/vite-plugin
+```
+
 
 Available packages: `@kilog/cli`, `@kilog/core`, `@kilog/register`, `@kilog/runtime-node`, `@kilog/vite-plugin`, `@kilog/web-ui`. `@kilog/kilog` is a meta-package that depends on all of them — convenient for single-install; import paths are shorter via the individual packages.
 
