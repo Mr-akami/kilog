@@ -11,3 +11,5 @@ export {
 export { createWriter } from "./writer.js";
 export type { WriterOptions, Writer } from "./writer.js";
 export { readLogFile, listRawFiles } from "./reader.js";
+export { clearProjectLogs, clearOnce } from "./clear.js";
+export type { ClearProjectResult } from "./clear.js";

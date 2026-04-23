@@ -36,6 +36,14 @@ No code changes required. Instrumentation is enabled on startup, and events are 
 
 Written to `.kilog/raw/{date}.node.jsonl` under the cwd. Override with the `KILOG_DIR` environment variable.
 
+## Clear on start (default)
+
+Each process start wipes `.kilog/raw/*.jsonl` and `.kilog/index/` so logs reflect only the current run. Set `KILOG_PERSIST=1` to keep previous logs.
+
+```bash
+KILOG_PERSIST=1 node --import @kilog/register ./src/index.ts
+```
+
 ## Programmatic API
 
 Use `/register` in most cases; for manual setup:
