@@ -1,5 +1,11 @@
 # @kilog/vite-plugin
 
+## 0.2.2
+
+### Patch Changes
+
+- [#27](https://github.com/Mr-akami/kilog/pull/27) [`3fc7950`](https://github.com/Mr-akami/kilog/commit/3fc79502fc0e43b9a5ba834ab1a483f422fd556f) Thanks [@Mr-akami](https://github.com/Mr-akami)! - doc: rename vite plugin import to `kilogPlugin` in README examples, wrap config in `defineConfig`
+
 ## 0.2.1
 
 ### Patch Changes
