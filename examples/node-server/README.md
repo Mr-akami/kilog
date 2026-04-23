@@ -37,7 +37,7 @@ Run these in this example's directory (the cwd where `.kilog/` is created):
 ```bash
 pnpm kilog tail
 pnpm kilog query
-pnpm kilog ui --port 4000    # dev server uses 3000, so use a different port
+pnpm kilog ui --port 4000    # dev server uses 3210, so use a different port
 ```
 
 `@kilog/cli` is wired up as a `workspace:*` devDependency, so `pnpm kilog ...` works via the `"kilog": "kilog"` script in `package.json`. `pnpm exec kilog ...` also works.

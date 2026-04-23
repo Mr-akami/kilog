@@ -101,7 +101,7 @@ foo \AND bar                literal "foo AND bar"
 ### `ui` — start the Web UI
 
 ```bash
-pnpm kilog ui                 # http://localhost:3000
+pnpm kilog ui                 # http://localhost:3210
 pnpm kilog ui --port 4000
 pnpm kilog ui --root ../other
 ```

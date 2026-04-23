@@ -32,7 +32,8 @@
     "build": "vp build && tsc",
     "build:client": "vp build",
     "build:server": "tsc",
-    "dev:client": "vp dev"
+    "dev:client": "vp dev",
+    "prepack": "vp build && tsc"
   },
   "dependencies": {
     "@hono/node-server": "*",

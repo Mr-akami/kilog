@@ -17,13 +17,13 @@ describe("handleUi", () => {
     });
   });
 
-  it("should call startServer with default port 3000", async () => {
+  it("should call startServer with default port 3210", async () => {
     const { startServer } = await import("@kilog/web-ui");
 
-    await handleUi({ root: "/project", port: 3000 });
+    await handleUi({ root: "/project", port: 3210 });
 
     expect(startServer).toHaveBeenCalledWith({
-      port: 3000,
+      port: 3210,
       root: "/project",
     });
   });
