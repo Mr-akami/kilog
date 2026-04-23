@@ -19,9 +19,17 @@ export function captureStack(below: AnyFn): string | undefined {
       captureStackTrace?: (obj: object, below?: AnyFn) => void;
     }
   ).captureStackTrace;
+  let raw: string | undefined;
   if (typeof capture === "function") {
     capture(target, below);
-    return target.stack;
+    raw = target.stack;
+  } else {
+    raw = new Error().stack;
   }
-  return new Error().stack;
+  if (!raw) return raw;
+  // V8 prepends an "Error" header even though no error occurred. Drop any
+  // leading non-frame lines so the output doesn't look like an error.
+  const lines = raw.split("\n");
+  while (lines.length > 0 && !/^\s*at\s/.test(lines[0])) lines.shift();
+  return lines.join("\n");
 }

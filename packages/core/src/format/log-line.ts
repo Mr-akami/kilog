@@ -70,8 +70,21 @@ export function formatLogLine(event: LogEvent, options: FormatLogLineOptions = {
   let line = parts.join(" ");
   const stack = "stack" in event ? event.stack : undefined;
   if (stack && stack.length > 0) {
-    const stackText = indent(stack);
+    const trimmed = shouldTruncateStack(event) ? firstFrame(stack) : stack;
+    const stackText = indent(trimmed);
     line += "\n" + (useColor ? `${DIM}${stackText}${RESET}` : stackText);
   }
   return line;
+}
+
+// For low-severity console logs the full stack is noise — keep only the top
+// frame so the caller is still clickable without dominating the output.
+function shouldTruncateStack(event: LogEvent): boolean {
+  return event.type === "console" && (event.level === "info" || event.level === "debug");
+}
+
+function firstFrame(stack: string): string {
+  const lines = stack.split("\n");
+  for (const l of lines) if (l.trim().length > 0) return l;
+  return stack;
 }
