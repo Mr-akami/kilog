@@ -23,6 +23,9 @@ kilog({ terminal: true }); // mirror every captured event to stdout (colored)
 kilog({ terminal: "warn" }); // only warn/error (filter by level)
 kilog({ terminal: "error" }); // errors only
 // default: no terminal output; events go to .kilog/ only
+
+kilog({ persist: true }); // keep previous logs across dev restarts
+// default: wipe .kilog/raw/*.jsonl and .kilog/index/ on server start
 ```
 
 The level threshold applies to events with a `level` (console, error, rejection). Network events print only when `terminal: true`.
