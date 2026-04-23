@@ -37,7 +37,6 @@ npm i -D @kilog/cli @kilog/vite-plugin
 pnpm add -D @kilog/cli @kilog/vite-plugin
 ```
 
-
 Available packages: `@kilog/cli`, `@kilog/core`, `@kilog/register`, `@kilog/runtime-node`, `@kilog/vite-plugin`, `@kilog/web-ui`. `@kilog/kilog` is a meta-package that depends on all of them — convenient for single-install; import paths are shorter via the individual packages.
 
 ## Quick start
