@@ -121,7 +121,7 @@ void yargs(hideBin(process.argv))
     (y) =>
       y.option("port", {
         type: "number",
-        default: 3000,
+        default: 3210,
         describe: "Server port",
       }),
     async (argv) => {

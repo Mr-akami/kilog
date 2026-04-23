@@ -7,7 +7,7 @@ Browser UI for `.kilog/` backed by DuckDB-wasm. The server is a thin Hono app th
 Start it via [`@kilog/cli`](../cli/README.md):
 
 ```bash
-pnpm kilog ui                 # http://localhost:3000
+pnpm kilog ui                 # http://localhost:3210
 pnpm kilog ui --port 4000
 ```
 

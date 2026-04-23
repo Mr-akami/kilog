@@ -66,7 +66,7 @@ Live-stream new entries across every discovered `.kilog/`.
 
 - `--runtime node|browser` — filter
 
-### `kilog ui [--port 3000]`
+### `kilog ui [--port 3210]`
 
 Start the Hono + DuckDB-wasm browser UI. Auto-shuts down when the tab closes. Use when the user wants an interactive view, ad-hoc SQL, or the richer browser display.
 
@@ -123,7 +123,7 @@ pnpm kilog query --last 1h --json | jq '.[] | select(.level=="error") | .message
 ### Browse in the UI
 
 ```bash
-pnpm kilog ui          # default port 3000
+pnpm kilog ui          # default port 3210
 pnpm kilog ui --port 4000
 ```
 
