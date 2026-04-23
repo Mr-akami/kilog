@@ -1,5 +1,11 @@
 # @kilog/core
 
+## 0.2.1
+
+### Patch Changes
+
+- [#25](https://github.com/Mr-akami/kilog/pull/25) [`5e5a868`](https://github.com/Mr-akami/kilog/commit/5e5a8680695dc061239137b1b3b9567973c7935f) Thanks [@Mr-akami](https://github.com/Mr-akami)! - fix: drop misleading "Error" header from captured stacks and collapse stack to top frame for info/debug console logs
+
 ## 0.2.0
 
 ### Minor Changes

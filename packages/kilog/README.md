@@ -57,14 +57,14 @@ npx kilog ui       # browser UI
 
 Installing `@kilog/kilog` pulls in each of these — import them by their own name:
 
-| Package               | What it is                                    |
-| --------------------- | --------------------------------------------- |
-| `@kilog/cli`          | `kilog` CLI                                   |
-| `@kilog/core`         | Storage / discovery / query                   |
-| `@kilog/register`     | Node `--import` hook (auto-dispatch runtime)  |
-| `@kilog/runtime-node` | Node runtime instrumentation                  |
-| `@kilog/vite-plugin`  | Vite plugin (browser + dev-server receiver)   |
-| `@kilog/web-ui`       | Web UI server                                 |
+| Package               | What it is                                   |
+| --------------------- | -------------------------------------------- |
+| `@kilog/cli`          | `kilog` CLI                                  |
+| `@kilog/core`         | Storage / discovery / query                  |
+| `@kilog/register`     | Node `--import` hook (auto-dispatch runtime) |
+| `@kilog/runtime-node` | Node runtime instrumentation                 |
+| `@kilog/vite-plugin`  | Vite plugin (browser + dev-server receiver)  |
+| `@kilog/web-ui`       | Web UI server                                |
 
 If you only need a subset, install those packages directly instead of this meta-package.
 
