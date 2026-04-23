@@ -1,5 +1,11 @@
 # @kilog/kilog
 
+## 0.2.1
+
+### Patch Changes
+
+- [#23](https://github.com/Mr-akami/kilog/pull/23) [`16a0a0d`](https://github.com/Mr-akami/kilog/commit/16a0a0d21634ec48881993f7f2e0b3f123594dee) Thanks [@Mr-akami](https://github.com/Mr-akami)! - readme
+
 ## 0.2.0
 
 ### Minor Changes
