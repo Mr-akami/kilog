@@ -17,7 +17,7 @@ This single install gives you:
 - `kilog` CLI (for AI agents — tail / query / aggregate from the terminal)
 - Web UI (for humans — live stream, filters, browsable history)
 - Node runtime instrumentation (`--import @kilog/register`)
-- Vite plugin (`import kilog from "@kilog/vite-plugin"`)
+- Vite plugin (`import kilogPlugin from "@kilog/vite-plugin"`)
 
 DuckDB under the hood, so you can run any SQL over your logs.
 
@@ -37,8 +37,12 @@ DuckDB under the hood, so you can run any SQL over your logs.
 
 ```ts
 // vite.config.ts
-import kilog from "@kilog/vite-plugin";
-export default { plugins: [kilog()] };
+import { defineConfig } from "vite";
+import kilogPlugin from "@kilog/vite-plugin";
+
+export default defineConfig({
+  plugins: [kilogPlugin()],
+});
 ```
 
 ### View logs

@@ -7,10 +7,10 @@ Vite plugin. Injects the browser-side instrumentation script into `index.html` a
 ```ts
 // vite.config.ts
 import { defineConfig } from "vite";
-import kilog from "@kilog/vite-plugin";
+import kilogPlugin from "@kilog/vite-plugin";
 
 export default defineConfig({
-  plugins: [kilog()],
+  plugins: [kilogPlugin()],
 });
 ```
 
@@ -19,12 +19,12 @@ Running `vite` is enough to collect the browser's `console`, `fetch`, and uncaug
 ## Options
 
 ```ts
-kilog({ terminal: true }); // mirror every captured event to stdout (colored)
-kilog({ terminal: "warn" }); // only warn/error (filter by level)
-kilog({ terminal: "error" }); // errors only
+kilogPlugin({ terminal: true }); // mirror every captured event to stdout (colored)
+kilogPlugin({ terminal: "warn" }); // only warn/error (filter by level)
+kilogPlugin({ terminal: "error" }); // errors only
 // default: no terminal output; events go to .kilog/ only
 
-kilog({ persist: true }); // keep previous logs across dev restarts
+kilogPlugin({ persist: true }); // keep previous logs across dev restarts
 // default: wipe .kilog/raw/*.jsonl and .kilog/index/ on server start
 ```
 
