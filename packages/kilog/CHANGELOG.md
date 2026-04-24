@@ -1,5 +1,11 @@
 # @kilog/kilog
 
+## 0.2.4
+
+### Patch Changes
+
+- [#29](https://github.com/Mr-akami/kilog/pull/29) [`0194aac`](https://github.com/Mr-akami/kilog/commit/0194aac8545f5d8ee13cb5b7f5303bcbaf2410df) Thanks [@Mr-akami](https://github.com/Mr-akami)! - doc: document vite-plugin `terminal`/`persist` options and node `KILOG_PERSIST`/`KILOG_DIR` env vars in README; move Release / Development sections to `docs/`; auto-sync root README to `@kilog/kilog` on publish via `prepack`
+
 ## 0.2.3
 
 ### Patch Changes
