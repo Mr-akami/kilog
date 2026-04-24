@@ -1,5 +1,12 @@
 # @kilog/example-hono-vite
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kilog/vite-plugin@1.1.2
+
 ## 0.0.3
 
 ### Patch Changes
