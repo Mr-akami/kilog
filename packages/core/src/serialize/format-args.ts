@@ -1,11 +1,4 @@
-// CSI (`ESC [ ... letter`) and OSC (`ESC ] ... BEL`) — strip so `message`
-// stays grep/SQL/UI-friendly. `args` keeps the raw string untouched.
-// eslint-disable-next-line no-control-regex
-const ANSI_RE = /\u001b\[[0-9;?]*[@-~]|\u001b\][^\u0007]*\u0007/g;
-
-function stripAnsi(s: string): string {
-  return s.replace(ANSI_RE, "");
-}
+import { stripAnsi } from "../ansi.js";
 
 /**
  * Format an argument for a console message. Strings pass through (ANSI stripped),

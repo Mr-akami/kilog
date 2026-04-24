@@ -1,4 +1,5 @@
 import type { LogEvent } from "../schema/types.js";
+import { stripAnsi } from "../ansi.js";
 import type { RedactRule } from "./patterns.js";
 import { DEFAULT_RULES } from "./patterns.js";
 
@@ -18,7 +19,7 @@ function deepRedact(value: unknown, rules: RedactRule[], key?: string): unknown 
   }
 
   if (typeof value === "string") {
-    let result = value;
+    let result = stripAnsi(value);
     for (const rule of rules) {
       if (rule.valuePattern) {
         // Reset lastIndex for global regexps
