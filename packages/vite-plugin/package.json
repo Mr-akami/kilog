@@ -33,7 +33,8 @@
     "test": "vp test run"
   },
   "dependencies": {
-    "@kilog/core": "workspace:*"
+    "@kilog/core": "workspace:*",
+    "@kilog/register": "workspace:*"
   },
   "peerDependencies": {
     "vite": "^8"

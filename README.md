@@ -92,12 +92,16 @@ kilogPlugin({ terminal: "error" }); // errors only
 
 kilogPlugin({ persist: true }); // keep previous logs across dev restarts
 // default: wipe .kilog/raw/*.jsonl and .kilog/index/ on server start
+
+kilogPlugin({ server: false }); // disable server-side capture (Vite SSR)
+// default: server capture ON — Hono+Vite / Vite-Next / etc. just work
 ```
 
-| Option     | Type                                                | Default | Description                                                                                                                  |
-| ---------- | --------------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `terminal` | `boolean \| "debug" \| "info" \| "warn" \| "error"` | `false` | Also print captured events to stdout. `true` = all; a level threshold filters console/error/rejection events.                |
-| `persist`  | `boolean`                                           | `false` | Keep previously captured logs across dev server restarts. Default wipes `.kilog/raw/*.jsonl` and `.kilog/index/` on startup. |
+| Option     | Type                                                | Default | Description                                                                                                                        |
+| ---------- | --------------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `terminal` | `boolean \| "debug" \| "info" \| "warn" \| "error"` | `false` | Also print captured events to stdout. `true` = all; a level threshold filters console/error/rejection events.                      |
+| `persist`  | `boolean`                                           | `false` | Keep previously captured logs across dev server restarts. Default wipes `.kilog/raw/*.jsonl` and `.kilog/index/` on startup.       |
+| `server`   | `boolean`                                           | `true`  | Also capture the dev server's runtime (Node/Bun/Deno) — handles Vite SSR setups (Hono+Vite, Vite-Next, etc.). Set `false` to skip. |
 
 → [`packages/vite-plugin`](./packages/vite-plugin/README.md)
 
@@ -148,6 +152,7 @@ The CLI and UI walk down from the **invocation directory** (or `--root <path>`) 
 
 - [`examples/node-server`](./examples/node-server) — Hono + runtime-node
 - [`examples/vite-client`](./examples/vite-client) — Vite + vite-plugin
+- [`examples/hono-vite`](./examples/hono-vite) — Hono bundled by Vite (`@hono/vite-dev-server`) with server-side capture
 
 ## Claude Code plugin
 

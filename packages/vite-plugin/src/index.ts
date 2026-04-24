@@ -17,10 +17,17 @@ export interface KilogPluginOptions {
    * `.kilog/raw/*.jsonl` and `.kilog/index/` are wiped on dev server startup.
    */
   persist?: boolean;
+  /**
+   * Also capture logs from the dev server's runtime (Node / Bun / Deno) in the
+   * same process — useful for Vite-SSR setups such as Hono + Vite, Vite-Next, etc.
+   * Defaults to `true`. Set to `false` to skip server-side instrumentation.
+   */
+  server?: boolean;
 }
 
 export default function kilogPlugin(options: KilogPluginOptions = {}): Plugin {
   const baseDir = process.env.KILOG_DIR ?? process.cwd();
+  const enableServer = options.server !== false;
 
   return {
     name: "kilog",
@@ -33,6 +40,9 @@ export default function kilogPlugin(options: KilogPluginOptions = {}): Plugin {
     async configureServer(server) {
       if (!options.persist) {
         await clearOnce(baseDir);
+      }
+      if (enableServer) {
+        await import("@kilog/register");
       }
       server.middlewares.use(createKilogMiddleware(baseDir, { terminal: options.terminal }));
     },
