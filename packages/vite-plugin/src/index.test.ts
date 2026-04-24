@@ -25,6 +25,11 @@ describe("kilogPlugin()", () => {
     expect(plugin.name).toBe("kilog");
   });
 
+  it("accepts server option (on/off) and still returns a plugin", () => {
+    expect((kilogPlugin({ server: true }) as PluginWithHooks).name).toBe("kilog");
+    expect((kilogPlugin({ server: false }) as PluginWithHooks).name).toBe("kilog");
+  });
+
   it("exposes transformIndexHtml and configureServer hooks as functions", () => {
     const plugin = kilogPlugin() as PluginWithHooks;
     expect(typeof plugin.transformIndexHtml).toBe("function");

@@ -1,0 +1,21 @@
+{
+  "name": "@kilog/example-hono-vite",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vp dev",
+    "build": "vp build",
+    "kilog": "kilog"
+  },
+  "dependencies": {
+    "@hono/vite-dev-server": "latest",
+    "@kilog/vite-plugin": "workspace:*",
+    "hono": "*"
+  },
+  "devDependencies": {
+    "@kilog/cli": "workspace:*",
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}
