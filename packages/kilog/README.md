@@ -1,7 +1,8 @@
 # kilog
 
-One place for logs from your Vite-based browser app, your Node app, and the AI agent working on them — seamlessly viewed together.
-Capture `console`, `fetch`, and uncaught errors during development, then search and browse them from the CLI or a browser UI.
+**Let your AI agent search your browser and Node.js logs in one command.** That's the point of kilog.
+
+Kilog captures `console`, `fetch`, and uncaught errors during development into a per-project `.kilog/` directory. Point the CLI (or Web UI) at any directory and it searches every `.kilog/` beneath it — you pick the scope, nothing is centralized.
 
 ## Features
 
