@@ -57,10 +57,10 @@ where it's running (Node / Bun / Deno).
 
 Environment variables:
 
-| Var             | Default       | Description                                                                                           |
-| --------------- | ------------- | ----------------------------------------------------------------------------------------------------- |
-| `KILOG_DIR`     | `process.cwd()` | Base directory that holds `.kilog/`.                                                                  |
-| `KILOG_PERSIST` | unset         | Set to `1` to keep previous logs across restarts. Default wipes `.kilog/raw/*.jsonl` + `.kilog/index/` on each process start. |
+| Var             | Default         | Description                                                                                                                   |
+| --------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `KILOG_DIR`     | `process.cwd()` | Base directory that holds `.kilog/`.                                                                                          |
+| `KILOG_PERSIST` | unset           | Set to `1` to keep previous logs across restarts. Default wipes `.kilog/raw/*.jsonl` + `.kilog/index/` on each process start. |
 
 ```bash
 KILOG_PERSIST=1 node --import @kilog/register ./src/index.ts
@@ -85,19 +85,19 @@ export default defineConfig({
 Plugin options:
 
 ```ts
-kilogPlugin({ terminal: true });    // mirror every captured event to stdout (colored)
-kilogPlugin({ terminal: "warn" });  // only warn/error
+kilogPlugin({ terminal: true }); // mirror every captured event to stdout (colored)
+kilogPlugin({ terminal: "warn" }); // only warn/error
 kilogPlugin({ terminal: "error" }); // errors only
 // default: no terminal output; events go to .kilog/ only
 
-kilogPlugin({ persist: true });     // keep previous logs across dev restarts
+kilogPlugin({ persist: true }); // keep previous logs across dev restarts
 // default: wipe .kilog/raw/*.jsonl and .kilog/index/ on server start
 ```
 
-| Option     | Type                                              | Default | Description                                                                                        |
-| ---------- | ------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------- |
-| `terminal` | `boolean \| "debug" \| "info" \| "warn" \| "error"` | `false` | Also print captured events to stdout. `true` = all; a level threshold filters console/error/rejection events. |
-| `persist`  | `boolean`                                         | `false` | Keep previously captured logs across dev server restarts. Default wipes `.kilog/raw/*.jsonl` and `.kilog/index/` on startup. |
+| Option     | Type                                                | Default | Description                                                                                                                  |
+| ---------- | --------------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `terminal` | `boolean \| "debug" \| "info" \| "warn" \| "error"` | `false` | Also print captured events to stdout. `true` = all; a level threshold filters console/error/rejection events.                |
+| `persist`  | `boolean`                                           | `false` | Keep previously captured logs across dev server restarts. Default wipes `.kilog/raw/*.jsonl` and `.kilog/index/` on startup. |
 
 → [`packages/vite-plugin`](./packages/vite-plugin/README.md)
 

@@ -34,7 +34,11 @@ function jsonSafe(value: unknown): unknown {
   return value;
 }
 
-function rowsToObjects(result: DuckResult, source: string, project: string): Record<string, unknown>[] {
+function rowsToObjects(
+  result: DuckResult,
+  source: string,
+  project: string,
+): Record<string, unknown>[] {
   const rows = result.getRows();
   const names = columnNames(result, rows[0]?.length ?? 0);
   return rows.map((row) => {
@@ -46,7 +50,12 @@ function rowsToObjects(result: DuckResult, source: string, project: string): Rec
   });
 }
 
-async function runQuery(dbPath: string, sql: string, source: string, project: string): Promise<Record<string, unknown>[]> {
+async function runQuery(
+  dbPath: string,
+  sql: string,
+  source: string,
+  project: string,
+): Promise<Record<string, unknown>[]> {
   const db = await openIndex(dbPath);
   try {
     const conn = await db.connect();
@@ -78,7 +87,14 @@ export async function handleSql(options: SqlOptions): Promise<void> {
       "SELECT table_name, column_name, data_type FROM information_schema.columns WHERE table_name IN ('logs', 'sources') ORDER BY table_name, ordinal_position";
     const rows: Record<string, unknown>[] = [];
     for (const source of sources) {
-      rows.push(...(await runQuery(dbFilePathFromKilogDir(source.kilogDir), sql, source.kilogDir, source.project)));
+      rows.push(
+        ...(await runQuery(
+          dbFilePathFromKilogDir(source.kilogDir),
+          sql,
+          source.kilogDir,
+          source.project,
+        )),
+      );
     }
     if (options.json) {
       process.stdout.write(JSON.stringify(rows) + "\n");
@@ -99,7 +115,14 @@ export async function handleSql(options: SqlOptions): Promise<void> {
   const rows: Record<string, unknown>[] = [];
   for (const source of sources) {
     await catchUp(source.kilogDir, source.project);
-    rows.push(...(await runQuery(dbFilePathFromKilogDir(source.kilogDir), options.sql, source.kilogDir, source.project)));
+    rows.push(
+      ...(await runQuery(
+        dbFilePathFromKilogDir(source.kilogDir),
+        options.sql,
+        source.kilogDir,
+        source.project,
+      )),
+    );
   }
 
   if (options.json) {

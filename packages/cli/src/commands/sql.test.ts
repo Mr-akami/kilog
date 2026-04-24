@@ -79,10 +79,9 @@ describe("handleSql", () => {
       handleSql({ root, sql: "SELECT message FROM logs ORDER BY timestamp", json: true }),
     );
     const rows = JSON.parse(stdout) as Record<string, unknown>[];
-    expect(rows.map((row) => row.project).sort((a, b) => String(a).localeCompare(String(b)))).toEqual([
-      "app-a",
-      "app-b",
-    ]);
+    expect(
+      rows.map((row) => row.project).sort((a, b) => String(a).localeCompare(String(b))),
+    ).toEqual(["app-a", "app-b"]);
     expect(stderr).toContain("running across 2 sources");
   });
 

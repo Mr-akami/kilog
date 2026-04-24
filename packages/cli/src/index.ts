@@ -41,18 +41,9 @@ cli.option(
 cli
   .command("logs [...targets]", "Show logs, optionally following new entries")
   .option("-f, --follow", "Follow new log entries after printing the backfill")
-  .option(
-    "--since <time>",
-    "Show logs since ISO time or relative duration (e.g. 10m, 2h)",
-  )
-  .option(
-    "--until <time>",
-    "Show logs until ISO time or relative duration (e.g. 10m, 2h)",
-  )
-  .option(
-    "-n, --tail <n>",
-    "Show only the last N log entries before following or exiting",
-  )
+  .option("--since <time>", "Show logs since ISO time or relative duration (e.g. 10m, 2h)")
+  .option("--until <time>", "Show logs until ISO time or relative duration (e.g. 10m, 2h)")
+  .option("-n, --tail <n>", "Show only the last N log entries before following or exiting")
   .option("--runtime <runtime>", "Filter by runtime")
   .option("--type <type>", "Filter by event type")
   .option("--level <level>", "Filter by log level")
@@ -81,10 +72,7 @@ cli
   });
 
 cli
-  .command(
-    "sql [sql]",
-    "Run raw SQL against each discovered .kilog DuckDB index",
-  )
+  .command("sql [sql]", "Run raw SQL against each discovered .kilog DuckDB index")
   .option("--project <name>", "Filter by project label")
   .option("--json", "Output as JSON")
   .option("--schema", "Print logs/sources schema")
@@ -100,14 +88,8 @@ cli
 
 cli
   .command("stats", "Show aggregate log counts")
-  .option(
-    "--since <time>",
-    "Count logs since ISO time or relative duration (e.g. 10m, 2h)",
-  )
-  .option(
-    "--until <time>",
-    "Count logs until ISO time or relative duration (e.g. 10m, 2h)",
-  )
+  .option("--since <time>", "Count logs since ISO time or relative duration (e.g. 10m, 2h)")
+  .option("--until <time>", "Count logs until ISO time or relative duration (e.g. 10m, 2h)")
   .option("--runtime <runtime>", "Filter by runtime")
   .option("--type <type>", "Filter by event type")
   .option("--level <level>", "Filter by log level")
@@ -147,10 +129,7 @@ cli
   });
 
 cli
-  .command(
-    "doctor",
-    "Check .kilog health and per-project index consistency",
-  )
+  .command("doctor", "Check .kilog health and per-project index consistency")
   .action(async (opts) => {
     await handleDoctor({ root: resolveRoot(opts.root) });
   });

@@ -172,7 +172,9 @@ describe("handleLogs", () => {
   });
 
   it("can omit timestamps", async () => {
-    const output = await captureStdout(() => handleLogs({ root: baseDir, tail: 1, timestamps: false }));
+    const output = await captureStdout(() =>
+      handleLogs({ root: baseDir, tail: 1, timestamps: false }),
+    );
     expect(output).not.toContain("2026-04-18T");
   });
 
