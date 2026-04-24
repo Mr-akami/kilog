@@ -1,6 +1,6 @@
 {
   "name": "@kilog/runtime-node",
-  "version": "0.2.2",
+  "version": "1.0.0",
   "description": "Node.js runtime for kilog structured logging",
   "keywords": [
     "kilog",
