@@ -1,5 +1,11 @@
 # @kilog/kilog
 
+## 0.2.9
+
+### Patch Changes
+
+- [#39](https://github.com/Mr-akami/kilog/pull/39) [`6ce49ec`](https://github.com/Mr-akami/kilog/commit/6ce49ece5573f47dca1d9f5a827fc220362800b5) Thanks [@Mr-akami](https://github.com/Mr-akami)! - update skills
+
 ## 0.2.8
 
 ### Patch Changes
