@@ -1,5 +1,11 @@
 # @kilog/kilog
 
+## 0.2.5
+
+### Patch Changes
+
+- [#31](https://github.com/Mr-akami/kilog/pull/31) [`a31034d`](https://github.com/Mr-akami/kilog/commit/a31034df224aac73f5656c2e535e219d2ae2d736) Thanks [@Mr-akami](https://github.com/Mr-akami)! - doc: rewrite README intro — lead with AI-agent log search; drop inaccurate "one place" wording. Per-project `.kilog/` storage, CLI scope = invocation dir (or `--root`), nothing centralized.
+
 ## 0.2.4
 
 ### Patch Changes
