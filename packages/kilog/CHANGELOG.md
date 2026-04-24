@@ -1,5 +1,11 @@
 # @kilog/kilog
 
+## 0.2.8
+
+### Patch Changes
+
+- [#37](https://github.com/Mr-akami/kilog/pull/37) [`76b2fb4`](https://github.com/Mr-akami/kilog/commit/76b2fb46c97707eb3c4e175485aee40e0c06f7b1) Thanks [@Mr-akami](https://github.com/Mr-akami)! - README: add Claude Code plugin install section (`/plugin install` + `curl` fetch). Also trims the companion Claude skill (`plugin/skills/kilog/SKILL.md`) by ~60% to cut agent context usage, and adds a "When to trigger" section mapping natural-language phrases ("show me the logs", "ログを見て", "調査して") to the skill.
+
 ## 0.2.7
 
 ### Patch Changes
@@ -14,6 +20,7 @@
 - [#33](https://github.com/Mr-akami/kilog/pull/33) [`4a97a7b`](https://github.com/Mr-akami/kilog/commit/4a97a7b137d66b72b3ab59ee66420ef17fef4fc2) Thanks [@Mr-akami](https://github.com/Mr-akami)! - docker-logs-style CLI. `kilog tail` and `kilog query` are replaced by a single `kilog logs` with `-f`, `--since`, `--until`, `-n/--tail`, and `--timestamps`, matching the `docker logs` flag surface. Text search (`--search` with AND/OR/NOT) is removed — pipe to `rg`/`grep` instead, e.g. `kilog logs --since 10m | rg TypeError`.
 
   Also added:
+
   - `kilog sql <query>` — raw DuckDB passthrough, runs across every `.kilog/` and tags each row with `source` / `project`. Use `--project <name>` to target one.
   - `kilog stats` — replaces `kilog query --aggregate`.
   - `--json` on `kilog logs` / `kilog logs -f` is NDJSON (one event per line) for both backfill and follow, so `| jq` and log shipping work.
