@@ -57,10 +57,12 @@ async function ensureSchema(db: duckdb.AsyncDuckDB): Promise<void> {
   }
 }
 
+import { stripAnsi } from "@kilog/core";
+
 function formatArg(v: unknown): string {
-  if (typeof v === "string") return v;
+  if (typeof v === "string") return stripAnsi(v);
   if (typeof v === "number" || typeof v === "boolean" || v == null) return String(v);
-  if (v instanceof Error) return v.stack ?? `${v.name}: ${v.message}`;
+  if (v instanceof Error) return stripAnsi(v.stack ?? `${v.name}: ${v.message}`);
   try {
     return JSON.stringify(v);
   } catch {
@@ -78,7 +80,8 @@ function reformatMessage(event: Record<string, unknown>): string | null {
   if (event.type === "console" && Array.isArray(args)) {
     return args.map(formatArg).join(" ");
   }
-  return (event.message as string | undefined) ?? null;
+  const msg = event.message as string | undefined;
+  return msg != null ? stripAnsi(msg) : null;
 }
 
 export async function insertLogEvent(

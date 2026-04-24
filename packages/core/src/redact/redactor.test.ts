@@ -272,4 +272,17 @@ describe("createRedactor edge cases", () => {
     const redact2 = createRedactor();
     expect(typeof redact2).toBe("function");
   });
+
+  it("strips ANSI escape sequences from every string (message + args + nested)", () => {
+    const redact = createRedactor();
+    const event = makeConsoleEvent({
+      message: "[36mhi[0m",
+      args: ["GET / [32m200[0m 0ms", { nested: "[31merr[0m" }],
+    });
+    const result = redact(event) as ConsoleEvent;
+    const args = result.args as [string, { nested: string }];
+    expect(result.message).toBe("hi");
+    expect(args[0]).toBe("GET / 200 0ms");
+    expect(args[1].nested).toBe("err");
+  });
 });

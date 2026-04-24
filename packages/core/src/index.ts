@@ -6,3 +6,4 @@ export * from "./index/index.js";
 export * from "./sourcemap/index.js";
 export * from "./discovery/index.js";
 export * from "./format/index.js";
+export * from "./ansi.js";
