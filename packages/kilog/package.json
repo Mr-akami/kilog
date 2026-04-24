@@ -1,6 +1,6 @@
 {
   "name": "@kilog/kilog",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "kilog — structured logging toolkit (CLI + libraries bundled)",
   "keywords": [
     "cli",

@@ -1,5 +1,11 @@
 # @kilog/cli
 
+## 0.2.1
+
+### Patch Changes
+
+- [#35](https://github.com/Mr-akami/kilog/pull/35) [`9b5ad58`](https://github.com/Mr-akami/kilog/commit/9b5ad58c11155df14aae8d9ea5074cb0286b94c0) Thanks [@Mr-akami](https://github.com/Mr-akami)! - Swap the CLI argument parser from `yargs` to `cac`. Same commands, same flags, `kilog --version` / `-v` still print the package version. `@kilog/cli` now ships with a single 0-dep dependency (~40 KB) in place of yargs + @types/yargs.
+
 ## 0.2.0
 
 ### Minor Changes
@@ -7,6 +13,7 @@
 - [#33](https://github.com/Mr-akami/kilog/pull/33) [`4a97a7b`](https://github.com/Mr-akami/kilog/commit/4a97a7b137d66b72b3ab59ee66420ef17fef4fc2) Thanks [@Mr-akami](https://github.com/Mr-akami)! - docker-logs-style CLI. `kilog tail` and `kilog query` are replaced by a single `kilog logs` with `-f`, `--since`, `--until`, `-n/--tail`, and `--timestamps`, matching the `docker logs` flag surface. Text search (`--search` with AND/OR/NOT) is removed — pipe to `rg`/`grep` instead, e.g. `kilog logs --since 10m | rg TypeError`.
 
   Also added:
+
   - `kilog sql <query>` — raw DuckDB passthrough, runs across every `.kilog/` and tags each row with `source` / `project`. Use `--project <name>` to target one.
   - `kilog stats` — replaces `kilog query --aggregate`.
   - `--json` on `kilog logs` / `kilog logs -f` is NDJSON (one event per line) for both backfill and follow, so `| jq` and log shipping work.
