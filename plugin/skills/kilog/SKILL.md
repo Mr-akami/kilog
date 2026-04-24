@@ -17,7 +17,7 @@ Reach for this skill whenever the user wants to read or reason about captured de
 
 ## Scope
 
-`kilog` walks down from cwd (or `--root <path>`) and operates on every `.kilog/` it finds. `logs` / `sql` / `stats` auto-catch-up the index — **never run `reindex` before querying**. Invoke as `pnpm kilog <cmd>` in a workspace, or `kilog <cmd>` if globally installed.
+`kilog` walks down from cwd (or `--root <path>`) and operates on every `.kilog/` it finds. `logs` / `sql` / `stats` auto-catch-up the index — **never run `reindex` before querying**. Invoke as `./node_modules/.bin/kilog <cmd>` from the project root. Fallback `pnpm|yarn|npm|bun exec kilog <command>` in a workspace.
 
 ## Intent → command
 
