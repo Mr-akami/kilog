@@ -1,5 +1,12 @@
 # @kilog/example-vite-client
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies [[`cb8b371`](https://github.com/Mr-akami/kilog/commit/cb8b37191b7f481ab7afa414245f87792c3e1f7b)]:
+  - @kilog/vite-plugin@1.0.0
+
 ## 0.0.4
 
 ### Patch Changes
