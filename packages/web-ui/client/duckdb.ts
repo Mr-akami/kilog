@@ -57,7 +57,7 @@ async function ensureSchema(db: duckdb.AsyncDuckDB): Promise<void> {
   }
 }
 
-import { stripAnsi } from "@kilog/core";
+import { stripAnsi } from "@kilog/core/ansi";
 
 function formatArg(v: unknown): string {
   if (typeof v === "string") return stripAnsi(v);
