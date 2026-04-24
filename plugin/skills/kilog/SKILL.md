@@ -52,10 +52,10 @@ Flags:
 - `--until <time>` — relative duration or absolute end time (ISO 8601, e.g. `2026-04-21T12:00:00Z`).
 - `-f`, `--follow` — print backfill, then stream new entries.
 - `-n`, `--tail <n>` — print the last N entries across all discovered logs.
-- `--runtime node|browser|bun|deno`
+- `--runtime node|browser`
 - `--type console|network|error|unhandled-rejection`
 - `--level debug|info|warn|error`
-- `--project <name>` — project label (as labelled in the user's `.kilog/` or package discovery). Equivalent positional form: `kilog logs <name>` (supply one or more names as trailing args to scope by project).
+- `--project <name>` — project label (as labelled in the user's `.kilog/` or package discovery)
 - `--json` — emit structured events instead of formatted lines. Use when piping to jq or processing further.
 - `--no-timestamps` — hide timestamps in text output.
 
@@ -119,17 +119,14 @@ pnpm kilog logs --level error | rg "TypeError"
 ```bash
 # Don't know the project name yet? list first:
 pnpm kilog stats
-# Then scope (either form works):
+# Then scope:
 pnpm kilog logs --project my-app --tail 200
-pnpm kilog logs my-app --tail 200
-# Multiple projects:
-pnpm kilog logs my-app other-app
 ```
 
 ### Pipe into another tool
 
 ```bash
-pnpm kilog logs --since 1h --json | jq 'select(.level=="error") | .message'
+pnpm kilog logs --since 1h --json | jq '.[] | select(.level=="error") | .message'
 ```
 
 ### Browse in the UI
