@@ -13,7 +13,14 @@ import {
   queryLogs,
   resolveStackFrames,
 } from "@kilog/core";
-import type { DiscoveredSource, EventType, LogEvent, LogLevel, QueryFilter, Runtime } from "@kilog/core";
+import type {
+  DiscoveredSource,
+  EventType,
+  LogEvent,
+  LogLevel,
+  QueryFilter,
+  Runtime,
+} from "@kilog/core";
 import { resolveTimeInput } from "../format/time.js";
 
 export interface LogsOptions {
@@ -98,8 +105,13 @@ async function readSourceLogs(source: DiscoveredSource, filter: QueryFilter): Pr
   }
 }
 
-async function readBackfill(sources: DiscoveredSource[], filter: QueryFilter, tail?: number): Promise<LogEvent[]> {
-  const perSourceFilter = tail != null ? { ...filter, order: "desc" as const, limit: tail } : filter;
+async function readBackfill(
+  sources: DiscoveredSource[],
+  filter: QueryFilter,
+  tail?: number,
+): Promise<LogEvent[]> {
+  const perSourceFilter =
+    tail != null ? { ...filter, order: "desc" as const, limit: tail } : filter;
   const events: LogEvent[] = [];
   for (const source of sources) {
     events.push(...(await readSourceLogs(source, perSourceFilter)));
@@ -112,7 +124,9 @@ async function readBackfill(sources: DiscoveredSource[], filter: QueryFilter, ta
       .reverse();
   }
 
-  return events.sort((a, b) => (a.timestamp < b.timestamp ? -1 : a.timestamp > b.timestamp ? 1 : 0));
+  return events.sort((a, b) =>
+    a.timestamp < b.timestamp ? -1 : a.timestamp > b.timestamp ? 1 : 0,
+  );
 }
 
 async function readNewLines(

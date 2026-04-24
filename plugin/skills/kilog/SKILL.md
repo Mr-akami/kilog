@@ -21,18 +21,18 @@ description: Use when the user wants to inspect, search, or stream dev-time logs
 
 Route user intent like so:
 
-| Intent                                 | Command                                             |
-| -------------------------------------- | --------------------------------------------------- |
-| "logs from the last N min/hours/days"  | `logs --since 10m` / `--since 2h` / `--since 3d`    |
-| "grep logs for X" / "find X in logs"   | `logs ... \| rg X`                                  |
-| "all logs for project foo"             | `logs --project foo`                                |
-| "errors only" / "level=error"          | `logs --level error`                                |
-| "browser fetch failures"               | `logs --runtime browser --type network`             |
-| "live stream" / "tail -f style"        | `logs -f`                                           |
-| "open UI" / "browser view"             | `ui`                                                |
-| "run SQL"                              | `sql "<query>"`                                     |
-| "delete logs before date"              | `prune --before YYYY-MM-DD` (destructive — confirm) |
-| "health check" / "is it set up"        | `doctor`                                            |
+| Intent                                | Command                                             |
+| ------------------------------------- | --------------------------------------------------- |
+| "logs from the last N min/hours/days" | `logs --since 10m` / `--since 2h` / `--since 3d`    |
+| "grep logs for X" / "find X in logs"  | `logs ... \| rg X`                                  |
+| "all logs for project foo"            | `logs --project foo`                                |
+| "errors only" / "level=error"         | `logs --level error`                                |
+| "browser fetch failures"              | `logs --runtime browser --type network`             |
+| "live stream" / "tail -f style"       | `logs -f`                                           |
+| "open UI" / "browser view"            | `ui`                                                |
+| "run SQL"                             | `sql "<query>"`                                     |
+| "delete logs before date"             | `prune --before YYYY-MM-DD` (destructive — confirm) |
+| "health check" / "is it set up"       | `doctor`                                            |
 
 If the user shows a JSONL path directly (e.g. `.kilog/raw/2026-04-21.node.jsonl`), still prefer `kilog logs` on the enclosing project — the CLI resolves sourcemaps, merges runtimes, and returns typed events. Cat loses this.
 

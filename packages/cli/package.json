@@ -36,9 +36,6 @@
   "dependencies": {
     "@kilog/core": "workspace:*",
     "@kilog/web-ui": "workspace:*",
-    "yargs": "*"
-  },
-  "devDependencies": {
-    "@types/yargs": "*"
+    "cac": "^7.0.0"
   }
 }

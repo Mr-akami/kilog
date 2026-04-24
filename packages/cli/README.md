@@ -53,8 +53,8 @@ Filters:
 | Option            | Value                                                   | Description                                |
 | ----------------- | ------------------------------------------------------- | ------------------------------------------ |
 | `-f`, `--follow`  | flag                                                    | Keep streaming new entries after backfill  |
-| `--since`         | ISO datetime or `<N>(s\|m\|h\|d\|w)`                   | Start time                                 |
-| `--until`         | ISO datetime or `<N>(s\|m\|h\|d\|w)`                   | End time                                   |
+| `--since`         | ISO datetime or `<N>(s\|m\|h\|d\|w)`                    | Start time                                 |
+| `--until`         | ISO datetime or `<N>(s\|m\|h\|d\|w)`                    | End time                                   |
 | `-n`, `--tail`    | number                                                  | Last N entries across all discovered logs  |
 | `--runtime`       | `node` / `browser` / `bun` / `deno`                     | Runtime                                    |
 | `--type`          | `console` / `error` / `network` / `unhandled-rejection` | Event type                                 |
