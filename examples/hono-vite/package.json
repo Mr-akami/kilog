@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "vp dev",
-    "build": "vp build",
     "kilog": "kilog"
   },
   "dependencies": {
