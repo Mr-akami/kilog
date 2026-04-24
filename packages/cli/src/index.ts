@@ -1,5 +1,7 @@
 #!/usr/bin/env node
+import { readFileSync } from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { cac } from "cac";
 import { handleLogs } from "./commands/logs.js";
 import { handleSql } from "./commands/sql.js";
@@ -163,12 +165,17 @@ cli
     });
   });
 
+const pkg = JSON.parse(
+  readFileSync(fileURLToPath(new URL("../package.json", import.meta.url)), "utf8"),
+) as { version: string };
+
+cli.version(pkg.version);
 cli.help();
 
 try {
   const parsed = cli.parse(process.argv, { run: false });
-  if (parsed.options.help) {
-    // cac already printed help above; exit cleanly.
+  if (parsed.options.help || parsed.options.version) {
+    // cac already printed the requested output; exit cleanly.
     process.exit(0);
   }
   if (!cli.matchedCommand) {
