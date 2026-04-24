@@ -1,17 +1,17 @@
 import type { DuckDBInstance } from "@duckdb/node-api";
 import type { LogEvent, Runtime, EventType, LogLevel } from "../schema/types.js";
-import { parseSearch, escapeIlikePattern } from "./search-parser.js";
 
 export interface QueryFilter {
   runtime?: Runtime;
   type?: EventType;
   level?: LogLevel;
-  search?: string;
   from?: string;
   to?: string;
   project?: string;
+  projects?: string[];
   limit?: number;
   offset?: number;
+  order?: "asc" | "desc";
 }
 
 export interface AggregateRow {
@@ -39,26 +39,6 @@ function buildWhere(filter: QueryFilter): { clause: string; params: (string | nu
     conditions.push(`level = $${idx++}`);
     params.push(filter.level);
   }
-  if (filter.search) {
-    const expr = parseSearch(filter.search);
-    if (expr.length > 0) {
-      const orParts: string[] = [];
-      for (const andGroup of expr) {
-        const andParts: string[] = [];
-        for (const term of andGroup) {
-          const pattern = `%${escapeIlikePattern(term.text)}%`;
-          if (term.negate) {
-            andParts.push(`(message IS NULL OR message NOT ILIKE $${idx++} ESCAPE '\\')`);
-          } else {
-            andParts.push(`message ILIKE $${idx++} ESCAPE '\\'`);
-          }
-          params.push(pattern);
-        }
-        orParts.push(andParts.length > 1 ? `(${andParts.join(" AND ")})` : andParts[0]);
-      }
-      conditions.push(orParts.length > 1 ? `(${orParts.join(" OR ")})` : orParts[0]);
-    }
-  }
   if (filter.from) {
     conditions.push(`timestamp >= $${idx++}`);
     params.push(filter.from);
@@ -71,6 +51,11 @@ function buildWhere(filter: QueryFilter): { clause: string; params: (string | nu
     conditions.push(`project = $${idx++}`);
     params.push(filter.project);
   }
+  if (filter.projects && filter.projects.length > 0) {
+    const placeholders = filter.projects.map(() => `$${idx++}`);
+    conditions.push(`project IN (${placeholders.join(", ")})`);
+    params.push(...filter.projects);
+  }
 
   const clause = conditions.length > 0 ? " WHERE " + conditions.join(" AND ") : "";
   return { clause, params };
@@ -80,7 +65,8 @@ export async function queryLogs(db: DuckDBInstance, filter: QueryFilter): Promis
   const conn = await db.connect();
   const { clause, params } = buildWhere(filter);
 
-  let sql = `SELECT raw_json FROM logs${clause} ORDER BY timestamp ASC`;
+  const order = filter.order === "desc" ? "DESC" : "ASC";
+  let sql = `SELECT raw_json FROM logs${clause} ORDER BY timestamp ${order}`;
   if (filter.limit != null) {
     sql += ` LIMIT ${Number(filter.limit)}`;
   }

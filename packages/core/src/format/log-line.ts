@@ -34,6 +34,7 @@ function statusColor(status: number): string {
 
 export interface FormatLogLineOptions {
   color?: boolean;
+  timestamps?: boolean;
 }
 
 function indent(stack: string): string {
@@ -48,7 +49,9 @@ export function formatLogLine(event: LogEvent, options: FormatLogLineOptions = {
   const c = (col: string, text: string): string =>
     useColor && col ? `${col}${text}${RESET}` : text;
 
-  const parts: string[] = [c(DIM, event.timestamp), c(CYAN, event.runtime)];
+  const parts: string[] = [];
+  if (options.timestamps ?? true) parts.push(c(DIM, event.timestamp));
+  parts.push(c(CYAN, event.runtime));
 
   switch (event.type) {
     case "console":

@@ -6,9 +6,9 @@ Kilog captures `console`, `fetch`, and uncaught errors during development into a
 
 ## Features
 
-- CLI for AI agents — tail / query / aggregate logs from the terminal
+- CLI for AI agents — `kilog logs` mirrors the `docker logs` interface (`-f`, `--since`, `--until`, `-n/--tail`) and pipes naturally into `rg` / `grep` for text search
 - Web UI for humans — live stream, filters, and a browsable history
-- DuckDB under the hood — run any SQL you want over your logs
+- DuckDB under the hood — run any SQL you want over your logs (`kilog sql`)
 - Zero-code setup: `--import` flag for Node, one-line plugin for Vite
 - Per-project `.kilog/` storage, portable and standalone
 
@@ -103,11 +103,20 @@ kilogPlugin({ persist: true });     // keep previous logs across dev restarts
 
 ### View logs
 
+`kilog logs` takes the same flags as `docker logs` (`-f`, `--since`, `--until`, `-n/--tail`). Pipe to `rg` / `grep` for text search.
+
 ```bash
-npx kilog tail     # live stream across every .kilog/ under cwd
-npx kilog query    # search / filter
-npx kilog ui       # browser UI (auto-shuts down when you close the tab)
+npx kilog logs              # print logs across every .kilog/ under cwd
+npx kilog logs -f           # print backfill, then follow new logs
+npx kilog logs --since 10m | rg TypeError
+npx kilog sql "SELECT level, COUNT(*) FROM logs GROUP BY level"
+npx kilog ui                # browser UI (auto-shuts down when you close the tab)
 ```
+
+**When to use which:**
+
+- **Running in Docker** — set `kilogPlugin({ terminal: true })` so captured events go to stdout, then let the agent read `docker logs <container>`. No extra CLI needed.
+- **Native / nix shells, or you want structured queries** — use the `kilog` CLI. It adds `--since`/`--tail`/`--level`/`--runtime` filters and a SQL escape hatch that `docker logs` doesn't have.
 
 → [`packages/cli`](./packages/cli/README.md) / [`packages/web-ui`](./packages/web-ui/README.md)
 

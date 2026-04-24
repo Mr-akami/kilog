@@ -220,67 +220,6 @@ describe("queryLogs", () => {
     expect(result).toHaveLength(1);
   });
 
-  // ── search (ILIKE) ──
-
-  it("should search by message substring (case-insensitive)", async () => {
-    const result = await queryLogs(db, { search: "type error" });
-    expect(result).toHaveLength(1);
-    expect(result[0].message).toContain("type error");
-  });
-
-  it("should search case-insensitively", async () => {
-    const result = await queryLogs(db, { search: "TYPE ERROR" });
-    expect(result).toHaveLength(1);
-  });
-
-  it("should return empty for non-matching search", async () => {
-    const result = await queryLogs(db, { search: "nonexistent_string_xyz" });
-    expect(result).toHaveLength(0);
-  });
-
-  it("should AND two terms", async () => {
-    const result = await queryLogs(db, { search: "type AND error" });
-    expect(result).toHaveLength(1);
-    expect(result[0].message).toContain("type error");
-  });
-
-  it("should OR two terms", async () => {
-    const result = await queryLogs(db, { search: "debug msg OR warn msg" });
-    expect(result).toHaveLength(2);
-  });
-
-  it("should AND precede OR", async () => {
-    const result = await queryLogs(db, { search: "debug AND msg OR type AND error" });
-    expect(result).toHaveLength(2);
-  });
-
-  it("should NOT exclude term", async () => {
-    const result = await queryLogs(db, {
-      type: "console",
-      search: "NOT debug",
-    });
-    for (const e of result) {
-      expect(e.message).not.toContain("debug");
-    }
-    expect(result).toHaveLength(2);
-  });
-
-  it("should combine AND NOT", async () => {
-    const result = await queryLogs(db, { search: "msg AND NOT debug" });
-    for (const e of result) {
-      if (typeof e.message === "string") {
-        expect(e.message).not.toContain("debug");
-        expect(e.message).toContain("msg");
-      }
-    }
-    expect(result).toHaveLength(2);
-  });
-
-  it("should escape % as literal in search", async () => {
-    const result = await queryLogs(db, { search: "100%_impossible" });
-    expect(result).toHaveLength(0);
-  });
-
   // ── time range ──
 
   it("should filter by from timestamp", async () => {
@@ -332,6 +271,12 @@ describe("queryLogs", () => {
     expect(result).toHaveLength(1);
   });
 
+  it("should support descending order for tail-style reads", async () => {
+    const result = await queryLogs(db, { order: "desc", limit: 2 });
+    expect(result).toHaveLength(2);
+    expect(result[0].timestamp >= result[1].timestamp).toBe(true);
+  });
+
   it("should return empty when offset exceeds total", async () => {
     const result = await queryLogs(db, { offset: 1000 });
     expect(result).toHaveLength(0);
@@ -347,9 +292,10 @@ describe("queryLogs", () => {
     }
   });
 
-  it("should combine type + search filters", async () => {
-    const result = await queryLogs(db, { type: "console", search: "info" });
+  it("should combine runtime + type filters", async () => {
+    const result = await queryLogs(db, { runtime: "node", type: "console" });
     for (const event of result) {
+      expect(event.runtime).toBe("node");
       expect(event.type).toBe("console");
     }
   });
@@ -472,8 +418,8 @@ describe("aggregateLogs", () => {
     expect(result).toHaveLength(0);
   });
 
-  it("should support search filter in aggregation", async () => {
-    const result = await aggregateLogs(db, { search: "test" });
+  it("should support project list filters in aggregation", async () => {
+    const result = await aggregateLogs(db, { projects: ["kilog-aggregate"] });
     expect(result.length).toBeGreaterThanOrEqual(0);
   });
 });
