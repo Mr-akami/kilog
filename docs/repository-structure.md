@@ -63,8 +63,9 @@ The main user-facing CLI package.
 
 Responsibilities:
 
-- `kilog tail`
-- `kilog query`
+- `kilog logs`
+- `kilog sql`
+- `kilog stats`
 - `kilog reindex`
 - `kilog prune`
 - `kilog doctor`

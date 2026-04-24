@@ -12,6 +12,7 @@ export async function handleReindex(options: ReindexHandlerOptions): Promise<voi
     const result = await reindex({
       baseDir: path.dirname(src.kilogDir),
       dbPath: dbFilePathFromKilogDir(src.kilogDir),
+      project: src.project,
     });
     total += result.count;
   }

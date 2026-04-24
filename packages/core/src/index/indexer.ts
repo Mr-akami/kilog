@@ -13,6 +13,7 @@ import type { LogEvent } from "../schema/types.js";
 export interface ReindexOptions {
   baseDir: string;
   dbPath: string;
+  project?: string | null;
 }
 
 export interface ReindexResult {
@@ -60,7 +61,7 @@ export async function reindex(options: ReindexOptions): Promise<ReindexResult> {
     const files = await listRawFiles(baseDir);
     let totalCount = 0;
     for (const file of files) {
-      totalCount += await indexFile(db, file);
+      totalCount += await indexFile(db, file, options.project ?? null);
     }
     return { count: totalCount };
   } finally {

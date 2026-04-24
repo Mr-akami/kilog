@@ -27,8 +27,8 @@ Starts the Vite dev server. Open the page in a browser and click the buttons to 
 Run these in this example's directory (the cwd where `.kilog/` is created):
 
 ```bash
-pnpm kilog tail
-pnpm kilog query
+pnpm kilog logs -f
+pnpm kilog logs --since 10m
 pnpm kilog ui --port 4000    # use a port that doesn't collide with Vite's dev server
 ```
 

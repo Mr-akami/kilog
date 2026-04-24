@@ -26,3 +26,17 @@ export function parseDurationMs(input: string): number {
 export function durationAgoIso(input: string, now: Date = new Date()): string {
   return new Date(now.getTime() - parseDurationMs(input)).toISOString();
 }
+
+/** Resolve either a relative duration or an absolute timestamp to ISO. */
+export function resolveTimeInput(input: string, now: Date = new Date()): string {
+  const trimmed = input.trim();
+  if (DURATION.test(trimmed)) return durationAgoIso(trimmed, now);
+
+  const parsed = new Date(trimmed);
+  if (Number.isNaN(parsed.getTime())) {
+    throw new Error(
+      `invalid time: "${input}" (expected ISO datetime or <N>(s|m|h|d|w), e.g. 2026-04-20T10:00:00Z or 10m)`,
+    );
+  }
+  return parsed.toISOString();
+}

@@ -1,7 +1,6 @@
 # @kilog/cli
 
-TEST
-The `kilog` command. Search, browse, and manage `.kilog/` across every project under your invocation directory.
+The `kilog` command. Read, query, and manage `.kilog/` across every project under your invocation directory.
 
 ## Usage
 
@@ -28,75 +27,64 @@ Once published, `npx kilog <command>` will also work.
 
 - By default, the CLI walks **down** from the current working directory and finds every `.kilog/` under it.
 - `--root <path>` overrides the starting point.
-- Each discovered `.kilog/` keeps its own independent `index/logs.duckdb` — there is no unified database. Results from multiple projects are merged in memory at query time.
+- Each discovered `.kilog/` keeps its own independent `index/logs.duckdb` — there is no unified database. `logs` and `stats` merge results in memory; `sql` runs the same SQL against each discovered index and merges result rows.
 
 ## Commands
 
-### `tail` — stream new entries in real time
+### `logs` — show logs
 
 ```bash
-pnpm kilog tail
-pnpm kilog tail --runtime node
-pnpm kilog tail --root ../other-project
+pnpm kilog logs
+pnpm kilog logs -f
+pnpm kilog logs --since 10m
+pnpm kilog logs --since 2026-04-20T10:00:00Z --until 2026-04-20T11:00:00Z
+pnpm kilog logs --tail 100
+pnpm kilog logs --level error --runtime node
+pnpm kilog logs --project web-ui
+pnpm kilog logs --json
+pnpm kilog logs --no-timestamps
+pnpm kilog logs --since 1h | rg -i 'timeout|econnreset'
 ```
 
-Streams like `tail -f` across every `.kilog/raw/` under the root. Exit with Ctrl+C.
-
-### `query` — search / filter
-
-```bash
-pnpm kilog query                          # all
-pnpm kilog query --level error            # only error level
-pnpm kilog query --type network           # only fetch events
-pnpm kilog query --project web-ui         # only one project
-pnpm kilog query --search "httpbin"                 # single term
-pnpm kilog query --search "db AND timeout"          # AND
-pnpm kilog query --search "ENOENT OR EACCES"        # OR
-pnpm kilog query --search "error AND NOT timeout"   # NOT
-pnpm kilog query --last 10m                          # last 10 minutes
-pnpm kilog query --last 2h                           # last 2 hours
-pnpm kilog query --last 3d                           # last 3 days
-pnpm kilog query --from 2026-04-20 --to 2026-04-21
-pnpm kilog query --limit 50 --offset 100
-pnpm kilog query --json                   # JSON output
-pnpm kilog query --aggregate              # per-project counts
-```
+`logs -f` follows new entries after printing the requested backfill. `--tail 0 -f` follows only new entries.
 
 Filters:
 
-| Option                 | Value                                                   | Description                                               |
-| ---------------------- | ------------------------------------------------------- | --------------------------------------------------------- |
-| `--runtime`            | `node` / `browser` / `bun` / `deno`                     | Runtime                                                   |
-| `--type`               | `console` / `error` / `network` / `unhandled-rejection` | Event type                                                |
-| `--level`              | `debug` / `info` / `warn` / `error`                     | Log level                                                 |
-| `--project`            | string                                                  | Project label (see the `doctor` output)                   |
-| `--search`             | string                                                  | Message search (see syntax below)                         |
-| `--last`               | `<N>(s\|m\|h\|d\|w)` e.g. `10m`, `2h`, `3d`             | Relative window ending at now. Overrides `--from`/`--to`. |
-| `--from` / `--to`      | ISO datetime                                            | Date range                                                |
-| `--limit` / `--offset` | number                                                  | Paging (applied after merge)                              |
-| `--json`               | flag                                                    | JSON output                                               |
-| `--aggregate`          | flag                                                    | Per-project count aggregation                             |
-| `--root`               | path                                                    | Override the discovery root (default: cwd)                |
+| Option            | Value                                                   | Description                                |
+| ----------------- | ------------------------------------------------------- | ------------------------------------------ |
+| `-f`, `--follow`  | flag                                                    | Keep streaming new entries after backfill  |
+| `--since`         | ISO datetime or `<N>(s\|m\|h\|d\|w)`                   | Start time                                 |
+| `--until`         | ISO datetime or `<N>(s\|m\|h\|d\|w)`                   | End time                                   |
+| `-n`, `--tail`    | number                                                  | Last N entries across all discovered logs  |
+| `--runtime`       | `node` / `browser` / `bun` / `deno`                     | Runtime                                    |
+| `--type`          | `console` / `error` / `network` / `unhandled-rejection` | Event type                                 |
+| `--level`         | `debug` / `info` / `warn` / `error`                     | Log level                                  |
+| `--project`       | string                                                  | Project label (see the `doctor` output)    |
+| `--json`          | flag                                                    | JSON output for the backfill               |
+| `--no-timestamps` | flag                                                    | Hide timestamps in text output             |
+| `--root`          | path                                                    | Override the discovery root (default: cwd) |
 
-Under the hood, `query` opens each project's DuckDB, does a differential catch-up from the raw JSONL (only new bytes since last run), runs the filter, and merges results sorted by timestamp.
+`kilog` no longer implements text search. Pipe text output to `rg`, or use `--json` with `jq` for structured filtering.
 
-#### `--search` syntax
+### `sql` — raw DuckDB query
 
-- Case-insensitive substring match against message.
-- Operators (uppercase only): `AND`, `OR`, `NOT`. AND binds tighter than OR. No parentheses.
-- Escape operators / backslash as `\AND` `\OR` `\NOT` `\\`.
-- `%` / `_` in the term are treated as literal.
-
+```bash
+pnpm kilog sql "SELECT level, COUNT(*) FROM logs GROUP BY level"
+pnpm kilog sql "SELECT timestamp, project, message FROM logs WHERE level = 'error'" --json
+pnpm kilog sql --schema
 ```
-foo                         single term
-connection refused          phrase (spaces are literal)
-a AND b                     both
-a OR b                      either
-a AND NOT b                 a but not b
-NOT timeout                 exclude
-a AND b OR c                (a AND b) OR c
-foo \AND bar                literal "foo AND bar"
+
+`sql` discovers every `.kilog/` under `--root`, catches each index up from raw JSONL, runs the same SQL against each independent DuckDB, and merges rows for display. SQL `LIMIT` applies per source.
+
+### `stats` — aggregate counts
+
+```bash
+pnpm kilog stats
+pnpm kilog stats --since 1h
+pnpm kilog stats --level error --json
 ```
+
+Uses the same structured filters as `logs`.
 
 ### `ui` — start the Web UI
 

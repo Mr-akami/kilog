@@ -35,8 +35,8 @@ curl http://localhost:3000/throw   # uncaught error
 Run these in this example's directory (the cwd where `.kilog/` is created):
 
 ```bash
-pnpm kilog tail
-pnpm kilog query
+pnpm kilog logs -f
+pnpm kilog logs --since 10m
 pnpm kilog ui --port 4000    # dev server uses 3210, so use a different port
 ```
 

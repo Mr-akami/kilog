@@ -22,8 +22,9 @@ Make the CLI the primary query interface.
 
 Initial commands:
 
-- `kilog tail`
-- `kilog query`
+- `kilog logs`
+- `kilog sql`
+- `kilog stats`
 - `kilog reindex`
 - `kilog prune`
 - `kilog doctor`
