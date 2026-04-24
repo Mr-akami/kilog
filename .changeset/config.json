@@ -2,7 +2,17 @@
   "$schema": "https://unpkg.com/@changesets/config@3.1.4/schema.json",
   "changelog": ["@changesets/changelog-github", { "repo": "Mr-akami/kilog" }],
   "commit": false,
-  "fixed": [],
+  "fixed": [
+    [
+      "@kilog/cli",
+      "@kilog/core",
+      "@kilog/kilog",
+      "@kilog/register",
+      "@kilog/runtime-node",
+      "@kilog/vite-plugin",
+      "@kilog/web-ui"
+    ]
+  ],
   "linked": [],
   "access": "public",
   "baseBranch": "main",
