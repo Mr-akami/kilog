@@ -1,5 +1,27 @@
 # @kilog/kilog
 
+## 0.2.6
+
+### Patch Changes
+
+- [#33](https://github.com/Mr-akami/kilog/pull/33) [`4a97a7b`](https://github.com/Mr-akami/kilog/commit/4a97a7b137d66b72b3ab59ee66420ef17fef4fc2) Thanks [@Mr-akami](https://github.com/Mr-akami)! - docker-logs-style CLI. `kilog tail` and `kilog query` are replaced by a single `kilog logs` with `-f`, `--since`, `--until`, `-n/--tail`, and `--timestamps`, matching the `docker logs` flag surface. Text search (`--search` with AND/OR/NOT) is removed — pipe to `rg`/`grep` instead, e.g. `kilog logs --since 10m | rg TypeError`.
+
+  Also added:
+
+  - `kilog sql <query>` — raw DuckDB passthrough, runs across every `.kilog/` and tags each row with `source` / `project`. Use `--project <name>` to target one.
+  - `kilog stats` — replaces `kilog query --aggregate`.
+  - `--json` on `kilog logs` / `kilog logs -f` is NDJSON (one event per line) for both backfill and follow, so `| jq` and log shipping work.
+
+  `@kilog/core`: `QueryFilter.search` removed; added `QueryFilter.projects: string[]` and `QueryFilter.order: 'asc' | 'desc'`. `parseSearch` and the search-parser module are gone.
+
+- Updated dependencies [[`4a97a7b`](https://github.com/Mr-akami/kilog/commit/4a97a7b137d66b72b3ab59ee66420ef17fef4fc2)]:
+  - @kilog/cli@0.2.0
+  - @kilog/core@0.3.0
+  - @kilog/register@0.1.3
+  - @kilog/runtime-node@0.2.2
+  - @kilog/vite-plugin@0.2.3
+  - @kilog/web-ui@0.1.4
+
 ## 0.2.5
 
 ### Patch Changes
