@@ -54,6 +54,19 @@ Available packages: `@kilog/cli`, `@kilog/core`, `@kilog/register`, `@kilog/runt
 `@kilog/register` auto-dispatches to the right runtime package based on
 where it's running (Node / Bun / Deno).
 
+Environment variables:
+
+| Var             | Default       | Description                                                                                           |
+| --------------- | ------------- | ----------------------------------------------------------------------------------------------------- |
+| `KILOG_DIR`     | `process.cwd()` | Base directory that holds `.kilog/`.                                                                  |
+| `KILOG_PERSIST` | unset         | Set to `1` to keep previous logs across restarts. Default wipes `.kilog/raw/*.jsonl` + `.kilog/index/` on each process start. |
+
+```bash
+KILOG_PERSIST=1 node --import @kilog/register ./src/index.ts
+```
+
+(Node already logs to the terminal, so there is no `terminal` option on this side.)
+
 → [`packages/register`](./packages/register/README.md) · [`packages/runtime-node`](./packages/runtime-node/README.md)
 
 ### Browser (Vite)
@@ -67,6 +80,23 @@ export default defineConfig({
   plugins: [kilogPlugin()],
 });
 ```
+
+Plugin options:
+
+```ts
+kilogPlugin({ terminal: true });    // mirror every captured event to stdout (colored)
+kilogPlugin({ terminal: "warn" });  // only warn/error
+kilogPlugin({ terminal: "error" }); // errors only
+// default: no terminal output; events go to .kilog/ only
+
+kilogPlugin({ persist: true });     // keep previous logs across dev restarts
+// default: wipe .kilog/raw/*.jsonl and .kilog/index/ on server start
+```
+
+| Option     | Type                                              | Default | Description                                                                                        |
+| ---------- | ------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------- |
+| `terminal` | `boolean \| "debug" \| "info" \| "warn" \| "error"` | `false` | Also print captured events to stdout. `true` = all; a level threshold filters console/error/rejection events. |
+| `persist`  | `boolean`                                         | `false` | Keep previously captured logs across dev server restarts. Default wipes `.kilog/raw/*.jsonl` and `.kilog/index/` on startup. |
 
 → [`packages/vite-plugin`](./packages/vite-plugin/README.md)
 
@@ -109,100 +139,8 @@ The CLI and UI walk down from the **invocation directory** (or `--root <path>`) 
 - [`examples/node-server`](./examples/node-server) — Hono + runtime-node
 - [`examples/vite-client`](./examples/vite-client) — Vite + vite-plugin
 
-## Release
+## Docs
 
-Releases are driven by [changesets](https://github.com/changesets/changesets) and published via GitHub Actions (`.github/workflows/release.yml`) using npm [Trusted Publishing (OIDC)](https://docs.npmjs.com/trusted-publishers). No long-lived `NPM_TOKEN` is required after initial setup.
-
-### Author workflow
-
-```bash
-pnpm changeset              # record a change (bump kind + summary)
-# commit the generated .changeset/*.md with your PR
-```
-
-When the PR lands on `main`, the workflow opens (or updates) a "chore: version packages" PR. Merging that PR bumps versions, writes CHANGELOG, and publishes to npm with provenance via OIDC.
-
-### Required GitHub / npm setup
-
-- npm org `kilog` must exist (https://www.npmjs.com/org/create)
-- Settings → Actions → General → Workflow permissions → "Read and write" + "Allow GitHub Actions to create and approve pull requests"
-- For each published package on npmjs.com: Settings → Trusted Publisher → GitHub Actions
-  - Organization: `Mr-akami`
-  - Repository: `kilog`
-  - Workflow filename: `release.yml`
-  - Environment name: (leave empty)
-  - Configure for all 7 packages: `@kilog/core`, `@kilog/runtime-node`, `@kilog/register`, `@kilog/vite-plugin`, `@kilog/web-ui`, `@kilog/cli`, `@kilog/kilog`
-- (Recommended) On each package: Settings → Publishing access → "Require two-factor authentication and disallow tokens"
-
-### First publish (bootstrap — once)
-
-Trusted Publishing requires each package to exist on npm before its trusted publisher can be configured. Do the first publish manually, then switch to CI.
-
-```bash
-# 1. Prerequisites
-#    - Create npm org "kilog": https://www.npmjs.com/org/create
-#    - npm login (2FA enabled, no token needed)
-#    - Ensure local is clean: git status
-pnpm install --frozen-lockfile
-pnpm build
-pnpm test
-
-# 2. Temporarily disable provenance (no OIDC in local env)
-#    Edit each packages/*/package.json:
-#      "publishConfig": { "access": "public", "provenance": true }
-#    → "publishConfig": { "access": "public" }
-#    (all 7 packages under packages/)
-
-# 3. Publish in dependency order — workspace:* is auto-rewritten to the version
-pnpm --filter @kilog/core publish --access public --no-git-checks
-pnpm --filter @kilog/runtime-node publish --access public --no-git-checks
-pnpm --filter @kilog/register publish --access public --no-git-checks
-pnpm --filter @kilog/vite-plugin publish --access public --no-git-checks
-pnpm --filter @kilog/web-ui publish --access public --no-git-checks
-pnpm --filter @kilog/cli publish --access public --no-git-checks
-pnpm --filter @kilog/kilog publish --access public --no-git-checks
-
-# 4. Restore "provenance": true on all 7 packages and commit.
-#    (OIDC in CI will auto-generate provenance from this point on.)
-
-# 5. Configure Trusted Publisher on each package at npmjs.com (see setup list above).
-
-# 6. Verify
-npm view @kilog/kilog version
-```
-
-Tip: use `pnpm --filter <name> publish --dry-run` first to inspect what would be sent.
-
-## Development (monorepo)
-
-Requires Node >= 24 and pnpm.
-
-### Setup
-
-```bash
-pnpm install
-pnpm build        # build every package + bundle the browser client
-```
-
-Packages reference each other via `workspace:*` and their `main` points to `./dist/`, so **an initial build (and a rebuild after changes) is required**. `@kilog/web-ui` additionally bundles its browser client with Vite.
-
-### Watch
-
-```bash
-pnpm tsc -b --watch    # server-side TS (core, cli, web-ui server, etc.)
-# and in packages/web-ui, for the client side:
-pnpm --filter @kilog/web-ui dev:client
-```
-
-### Test / typecheck / lint
-
-```bash
-pnpm test
-pnpm typecheck
-pnpm lint
-```
-
-### Try it out
-
-- [`examples/node-server`](./examples/node-server/README.md) — Node runtime instrumentation
-- [`examples/vite-client`](./examples/vite-client/README.md) — Browser instrumentation
+- [Development (monorepo)](./docs/development.md) — setup, build, watch, test
+- [Release](./docs/release.md) — changesets, Trusted Publishing, bootstrap
+- [Docs index](./docs/index.md) — product / architecture / runtime / query model

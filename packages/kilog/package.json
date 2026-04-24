@@ -57,7 +57,8 @@
     "provenance": true
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepack": "node -e \"require('node:fs').copyFileSync('../../README.md','README.md')\""
   },
   "dependencies": {
     "@kilog/cli": "workspace:*",
