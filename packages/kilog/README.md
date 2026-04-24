@@ -149,6 +149,25 @@ The CLI and UI walk down from the **invocation directory** (or `--root <path>`) 
 - [`examples/node-server`](./examples/node-server) — Hono + runtime-node
 - [`examples/vite-client`](./examples/vite-client) — Vite + vite-plugin
 
+## Claude Code plugin
+
+kilog ships a Claude Code skill that routes natural-language log requests ("logs from the last 10 min", "errors in project foo") to the right `kilog` CLI invocation.
+
+```
+/plugin marketplace add Mr-akami/kilog
+/plugin install kilog
+```
+
+Or fetch the skill file directly with `curl`:
+
+```bash
+mkdir -p ~/.claude/skills/kilog
+curl -fsSL https://raw.githubusercontent.com/Mr-akami/kilog/main/plugin/skills/kilog/SKILL.md \
+  -o ~/.claude/skills/kilog/SKILL.md
+```
+
+See [`plugin/README.md`](./plugin/README.md) for details.
+
 ## Docs
 
 - [Development (monorepo)](./docs/development.md) — setup, build, watch, test
