@@ -1,5 +1,12 @@
 # @kilog/example-node-server
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kilog/register@1.1.0
+
 ## 0.0.4
 
 ### Patch Changes

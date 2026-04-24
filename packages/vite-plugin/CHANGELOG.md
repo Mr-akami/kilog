@@ -1,5 +1,17 @@
 # @kilog/vite-plugin
 
+## 1.1.0
+
+### Minor Changes
+
+- [#43](https://github.com/Mr-akami/kilog/pull/43) [`322823e`](https://github.com/Mr-akami/kilog/commit/322823e5035dc8559ae1faf77266dc02abb7c719) Thanks [@Mr-akami](https://github.com/Mr-akami)! - feat(vite-plugin): capture dev-server runtime (Node/Bun/Deno) by default via `@kilog/register` — handles Vite SSR setups such as Hono+Vite, Vite-Next, etc. New `server?: boolean` option (default `true`); pass `server: false` to opt out.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kilog/core@1.1.0
+  - @kilog/register@1.1.0
+
 ## 1.0.0
 
 ### Major Changes
@@ -7,6 +19,7 @@
 - [#41](https://github.com/Mr-akami/kilog/pull/41) [`cb8b371`](https://github.com/Mr-akami/kilog/commit/cb8b37191b7f481ab7afa414245f87792c3e1f7b) Thanks [@Mr-akami](https://github.com/Mr-akami)! - 1.0.0 — stable API. All packages are now versioned in lockstep (changesets `fixed` group).
 
   What's considered stable as of 1.0.0:
+
   - `.kilog/` on-disk layout (`raw/*.jsonl` + `index/logs.duckdb`) and JSONL event schema.
   - `kilog` CLI surface: `logs` / `sql` / `stats` / `reindex` / `prune` / `doctor` / `ui`, their flags, and docker-logs compatibility (`-f`, `--since`, `--until`, `-n/--tail`, `--timestamps`, positional `[TARGET...]`).
   - `@kilog/core` public exports: `QueryFilter`, `queryLogs`, `discoverSources`, `openIndex`, and the serialization / format helpers.
