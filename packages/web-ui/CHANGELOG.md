@@ -1,5 +1,14 @@
 # @kilog/web-ui
 
+## 1.1.2
+
+### Patch Changes
+
+- [#49](https://github.com/Mr-akami/kilog/pull/49) [`20d8f1a`](https://github.com/Mr-akami/kilog/commit/20d8f1abe3c3d3b26a57e7d02c79400dfe580fec) Thanks [@Mr-akami](https://github.com/Mr-akami)! - fix: also strip ANSI from `ConsoleEvent.args` and any nested strings via the redactor. 1.1.1 only cleaned `message`; raw JSONL still showed escapes inside `args` when Hono's `logger()` middleware (and similar chalk-using libraries) logged colored output. web-ui rebuilds the display message from `args`, so historical JSONL captured before the fix is also rendered cleanly now (`stripAnsi` applied in `packages/web-ui/client/duckdb.ts`). Shared `stripAnsi` helper is exported from `@kilog/core`.
+
+- Updated dependencies [[`20d8f1a`](https://github.com/Mr-akami/kilog/commit/20d8f1abe3c3d3b26a57e7d02c79400dfe580fec)]:
+  - @kilog/core@1.1.2
+
 ## 1.1.1
 
 ### Patch Changes
@@ -21,6 +30,7 @@
 - [#41](https://github.com/Mr-akami/kilog/pull/41) [`cb8b371`](https://github.com/Mr-akami/kilog/commit/cb8b37191b7f481ab7afa414245f87792c3e1f7b) Thanks [@Mr-akami](https://github.com/Mr-akami)! - 1.0.0 — stable API. All packages are now versioned in lockstep (changesets `fixed` group).
 
   What's considered stable as of 1.0.0:
+
   - `.kilog/` on-disk layout (`raw/*.jsonl` + `index/logs.duckdb`) and JSONL event schema.
   - `kilog` CLI surface: `logs` / `sql` / `stats` / `reindex` / `prune` / `doctor` / `ui`, their flags, and docker-logs compatibility (`-f`, `--since`, `--until`, `-n/--tail`, `--timestamps`, positional `[TARGET...]`).
   - `@kilog/core` public exports: `QueryFilter`, `queryLogs`, `discoverSources`, `openIndex`, and the serialization / format helpers.
