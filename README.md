@@ -38,7 +38,7 @@ npm i -D @kilog/cli @kilog/vite-plugin
 pnpm add -D @kilog/cli @kilog/vite-plugin
 ```
 
-Available packages: `@kilog/cli`, `@kilog/core`, `@kilog/register`, `@kilog/runtime-node`, `@kilog/vite-plugin`, `@kilog/web-ui`. `@kilog/kilog` is a meta-package that depends on all of them — convenient for single-install; import paths are shorter via the individual packages.
+Available packages: `@kilog/cli`, `@kilog/core`, `@kilog/next`, `@kilog/register`, `@kilog/runtime-node`, `@kilog/vite-plugin`, `@kilog/web-ui`. `@kilog/kilog` is a meta-package that depends on all of them — convenient for single-install; import paths are shorter via the individual packages.
 
 ## Quick start
 
@@ -105,6 +105,53 @@ kilogPlugin({ server: false }); // disable server-side capture (Vite SSR)
 
 → [`packages/vite-plugin`](./packages/vite-plugin/README.md)
 
+### Next.js
+
+```bash
+npm i -D @kilog/next
+```
+
+```ts
+// next.config.ts
+import { withKilog } from "@kilog/next";
+import type { NextConfig } from "next";
+
+export default withKilog({ reactStrictMode: true } satisfies NextConfig);
+```
+
+**App Router** — create `app/api/__kilog/route.ts`:
+
+```ts
+import { createKilogAppRoute } from "@kilog/next";
+export const POST = createKilogAppRoute();
+```
+
+**Pages Router** — create `pages/api/__kilog.ts`:
+
+```ts
+import { createKilogPagesHandler } from "@kilog/next";
+export default createKilogPagesHandler();
+```
+
+Inject the browser-capture script in your root layout (`app/layout.tsx`) or `pages/_document.tsx`:
+
+```tsx
+import { KilogScript } from "@kilog/next";
+// <KilogScript /> renders an inline <script> that captures console/fetch/errors
+```
+
+Optional — capture server-side logs via `instrumentation.ts`:
+
+```ts
+export async function register() {
+  if (process.env.NEXT_RUNTIME === "nodejs") {
+    await import("@kilog/register");
+  }
+}
+```
+
+→ [`packages/next`](./packages/next/README.md)
+
 ### View logs
 
 `kilog logs` takes the same flags as `docker logs` (`-f`, `--since`, `--until`, `-n/--tail`). Pipe to `rg` / `grep` for text search.
@@ -143,6 +190,7 @@ The CLI and UI walk down from the **invocation directory** (or `--root <path>`) 
 | [`@kilog/kilog`](./packages/kilog)                         | Meta-package: CLI + all libraries bundled                   |
 | [`@kilog/runtime-node`](./packages/runtime-node/README.md) | Node runtime instrumentation                                |
 | [`@kilog/vite-plugin`](./packages/vite-plugin/README.md)   | Vite plugin (browser instrumentation + dev-server receiver) |
+| [`@kilog/next`](./packages/next/README.md)                 | Next.js plugin (browser capture + API route handlers)       |
 | [`@kilog/cli`](./packages/cli/README.md)                   | `kilog` CLI                                                 |
 | [`@kilog/web-ui`](./packages/web-ui/README.md)             | Hono server + DuckDB-wasm browser UI                        |
 | [`@kilog/register`](./packages/register/README.md)         | Auto-register hook (runtime dispatch)                       |

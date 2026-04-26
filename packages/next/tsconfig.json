@@ -3,15 +3,12 @@
   "compilerOptions": {
     "composite": true,
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "jsx": "react-jsx"
   },
   "include": ["src"],
   "references": [
     { "path": "../core" },
-    { "path": "../next" },
-    { "path": "../register" },
-    { "path": "../runtime-node" },
-    { "path": "../vite-plugin" },
-    { "path": "../web-ui" }
+    { "path": "../register" }
   ]
 }

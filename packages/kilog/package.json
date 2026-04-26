@@ -47,6 +47,10 @@
       "types": "./dist/vite-plugin.d.ts",
       "import": "./dist/vite-plugin.js"
     },
+    "./next": {
+      "types": "./dist/next.d.ts",
+      "import": "./dist/next.js"
+    },
     "./web-ui": {
       "types": "./dist/web-ui.d.ts",
       "import": "./dist/web-ui.js"
@@ -63,6 +67,7 @@
   "dependencies": {
     "@kilog/cli": "workspace:*",
     "@kilog/core": "workspace:*",
+    "@kilog/next": "workspace:*",
     "@kilog/register": "workspace:*",
     "@kilog/runtime-node": "workspace:*",
     "@kilog/vite-plugin": "workspace:*",
