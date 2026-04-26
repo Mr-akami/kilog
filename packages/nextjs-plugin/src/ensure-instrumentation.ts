@@ -11,14 +11,17 @@ interface Spec {
 
 const SERVER_SPEC: Spec = {
   path: "instrumentation.ts",
+  // Dynamic import + NODE_ENV gate keeps the duckdb-touching @kilog/register
+  // dependency out of the production runtime path: the gate returns early in
+  // `next start`, so the dynamic chunk is never loaded.
   managedContent: `${MANAGED_HEADER}
-import { registerServer } from "@kilog/nextjs-plugin/register-server";
-
 export async function register(): Promise<void> {
+  if (process.env.NODE_ENV !== "development") return;
+  const { registerServer } = await import("@kilog/nextjs-plugin/register-server");
   await registerServer();
 }
 `,
-  conflictHint: `add: import { registerServer } from "@kilog/nextjs-plugin/register-server"; and call await registerServer() from your existing register()`,
+  conflictHint: `add: const { registerServer } = await import("@kilog/nextjs-plugin/register-server"); await registerServer(); inside a development-gated branch of your existing register()`,
 };
 
 const CLIENT_SPEC: Spec = {

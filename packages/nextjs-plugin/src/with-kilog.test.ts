@@ -28,12 +28,14 @@ describe("withKilog", () => {
     await rm(projectRoot, { recursive: true, force: true });
   });
 
-  it("passes through user config in non-dev mode", () => {
+  it("in non-dev mode: leaves rewrites alone, but still sets serverExternalPackages", () => {
     process.env.NODE_ENV = "production";
     const userRewrites = () => Promise.resolve([]);
     const wrapped = withKilog({ reactStrictMode: true, rewrites: userRewrites });
     expect(wrapped.reactStrictMode).toBe(true);
     expect(wrapped.rewrites).toBe(userRewrites);
+    expect(wrapped.serverExternalPackages).toContain("@duckdb/node-api");
+    expect(wrapped.serverExternalPackages).toContain("@kilog/register");
     expect(existsSync(path.join(projectRoot, "instrumentation.ts"))).toBe(false);
     expect(existsSync(path.join(projectRoot, "instrumentation-client.ts"))).toBe(false);
   });

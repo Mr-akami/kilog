@@ -9,7 +9,7 @@ export default defineConfig({
     env: {
       builtin: true,
     },
-    ignorePatterns: ["**/dist/**", "**/node_modules/**"],
+    ignorePatterns: ["**/dist/**", "**/node_modules/**", "**/next-env.d.ts", "**/.next/**"],
     rules: {
       "constructor-super": "error",
       "for-direction": "error",

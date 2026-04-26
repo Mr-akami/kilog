@@ -31,6 +31,7 @@ describe("ensureInstrumentation", () => {
     expect(conflicts).toHaveLength(1);
     expect(conflicts[0]).toContain("instrumentation.ts");
     expect(conflicts[0]).toContain("registerServer");
+    expect(conflicts[0]).toContain("development");
     // user file is untouched
     expect(readFileSync(target, "utf8")).toBe("// my own code\nexport function register() {}\n");
   });

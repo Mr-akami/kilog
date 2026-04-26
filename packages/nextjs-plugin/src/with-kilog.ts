@@ -15,9 +15,63 @@ type RewriteObject = {
 type Rewrites = RewriteArray | RewriteObject;
 type RewritesProvider = (() => Promise<Rewrites> | Rewrites) | Rewrites;
 
+type WebpackExternalEntry =
+  | string
+  | RegExp
+  | Record<string, string>
+  | ((...args: unknown[]) => unknown);
+interface WebpackConfigLike {
+  externals?: WebpackExternalEntry | WebpackExternalEntry[];
+  [key: string]: unknown;
+}
+type WebpackHook = (
+  config: WebpackConfigLike,
+  ctx: { isServer: boolean; [key: string]: unknown },
+) => WebpackConfigLike;
+
 interface NextConfigLike {
   rewrites?: RewritesProvider;
+  serverExternalPackages?: string[];
+  webpack?: WebpackHook;
   [key: string]: unknown;
+}
+
+// Kilog's server runtime depends on @duckdb/node-api, which ships native
+// bindings (.node files). Webpack/Turbopack can't bundle those, so we mark
+// kilog's server-side packages as external — Next requires them at runtime
+// from node_modules instead of trying to bundle them.
+//
+// `serverExternalPackages` covers the App Router server bundle. The
+// instrumentation hook is bundled separately and (in Next 15.5) doesn't
+// honor that field, so we also push externals into the webpack config.
+const EXTERNAL_PACKAGES = [
+  "@kilog/core",
+  "@kilog/register",
+  "@kilog/runtime-node",
+  "@kilog/nextjs-plugin",
+  "@duckdb/node-api",
+  "@duckdb/node-bindings",
+];
+
+const EXTERNAL_PATTERNS: RegExp[] = [
+  /^@kilog\/(core|register|runtime-node|nextjs-plugin)(\/.*)?$/,
+  /^@duckdb\/.*/,
+];
+
+function composeWebpack(userHook: WebpackHook | undefined): WebpackHook {
+  return (config, ctx) => {
+    const next = userHook ? userHook(config, ctx) : config;
+    if (!ctx.isServer) return next;
+
+    const existing = next.externals;
+    const externalsArray: WebpackExternalEntry[] = Array.isArray(existing)
+      ? [...existing]
+      : existing != null
+        ? [existing]
+        : [];
+    next.externals = [...externalsArray, ...EXTERNAL_PATTERNS];
+    return next;
+  };
 }
 
 export interface KilogPluginOptions {
@@ -85,14 +139,29 @@ async function ensurePort(options: KilogPluginOptions, projectRoot: string): Pro
 export function withKilog<T extends NextConfigLike>(
   nextConfig: T = {} as T,
   options: KilogPluginOptions = {},
-): T & { rewrites?: RewritesProvider } {
-  if (!isDev()) return nextConfig;
+): T & {
+  rewrites?: RewritesProvider;
+  serverExternalPackages?: string[];
+  webpack?: WebpackHook;
+} {
+  // serverExternalPackages must be set in every mode (build, dev, start) so
+  // Next never tries to bundle the native @duckdb/node-api binding. Without
+  // this `next build` fails on the auto-generated instrumentation.ts even
+  // though that file is dev-gated at runtime.
+  const merged = new Set([...(nextConfig.serverExternalPackages ?? []), ...EXTERNAL_PACKAGES]);
+  const baseConfig = {
+    ...nextConfig,
+    serverExternalPackages: [...merged],
+    webpack: composeWebpack(nextConfig.webpack),
+  };
+
+  if (!isDev()) return baseConfig;
 
   const projectRoot = process.cwd();
   const userRewrites = nextConfig.rewrites;
 
   return {
-    ...nextConfig,
+    ...baseConfig,
     async rewrites(): Promise<Rewrites> {
       const port = await ensurePort(options, projectRoot);
       const existing = await resolveExisting(userRewrites);

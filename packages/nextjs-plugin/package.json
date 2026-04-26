@@ -25,15 +25,18 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./register-client": {
       "types": "./dist/register-client.d.ts",
-      "import": "./dist/register-client.js"
+      "import": "./dist/register-client.js",
+      "default": "./dist/register-client.js"
     },
     "./register-server": {
       "types": "./dist/register-server.d.ts",
-      "import": "./dist/register-server.js"
+      "import": "./dist/register-server.js",
+      "default": "./dist/register-server.js"
     }
   },
   "publishConfig": {

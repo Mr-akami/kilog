@@ -24,15 +24,18 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./ansi": {
       "types": "./dist/ansi.d.ts",
-      "import": "./dist/ansi.js"
+      "import": "./dist/ansi.js",
+      "default": "./dist/ansi.js"
     },
     "./browser": {
       "types": "./dist/browser/index.d.ts",
-      "import": "./dist/browser/index.js"
+      "import": "./dist/browser/index.js",
+      "default": "./dist/browser/index.js"
     }
   },
   "publishConfig": {

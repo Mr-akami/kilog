@@ -1,0 +1,8 @@
+node_modules
+.next
+next-env.d.ts
+.kilog
+
+# kilog (auto-generated)
+instrumentation.ts
+instrumentation-client.ts
