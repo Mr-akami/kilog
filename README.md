@@ -38,7 +38,14 @@ npm i -D @kilog/cli @kilog/vite-plugin
 pnpm add -D @kilog/cli @kilog/vite-plugin
 ```
 
-Available packages: `@kilog/cli`, `@kilog/core`, `@kilog/register`, `@kilog/runtime-node`, `@kilog/vite-plugin`, `@kilog/web-ui`. `@kilog/kilog` is a meta-package that depends on all of them — convenient for single-install; import paths are shorter via the individual packages.
+```bash
+# Next.js app
+npm i -D @kilog/cli @kilog/nextjs-plugin
+# or
+pnpm add -D @kilog/cli @kilog/nextjs-plugin
+```
+
+Available packages: `@kilog/cli`, `@kilog/core`, `@kilog/register`, `@kilog/runtime-node`, `@kilog/vite-plugin`, `@kilog/nextjs-plugin`, `@kilog/web-ui`. `@kilog/kilog` is a meta-package that depends on all of them — convenient for single-install; import paths are shorter via the individual packages.
 
 ## Quick start
 
@@ -105,6 +112,23 @@ kilogPlugin({ server: false }); // disable server-side capture (Vite SSR)
 
 → [`packages/vite-plugin`](./packages/vite-plugin/README.md)
 
+### Next.js (App Router or Pages Router)
+
+```ts
+// next.config.ts
+import { withKilog } from "@kilog/nextjs-plugin";
+
+export default withKilog({
+  // your existing Next config
+});
+```
+
+`next dev` is enough — the plugin auto-generates `instrumentation.ts` and `instrumentation-client.ts` (gitignored), starts a localhost receiver, and rewrites `/__kilog` to it. `next build` / `next start` are no-ops.
+
+Same `terminal` / `persist` options as the Vite plugin. Requires Next 15.3+.
+
+→ [`packages/nextjs-plugin`](./packages/nextjs-plugin/README.md)
+
 ### View logs
 
 `kilog logs` takes the same flags as `docker logs` (`-f`, `--since`, `--until`, `-n/--tail`). Pipe to `rg` / `grep` for text search.
@@ -138,21 +162,24 @@ The CLI and UI walk down from the **invocation directory** (or `--root <path>`) 
 
 ## Packages
 
-| Package                                                    | Role                                                        |
-| ---------------------------------------------------------- | ----------------------------------------------------------- |
-| [`@kilog/kilog`](./packages/kilog)                         | Meta-package: CLI + all libraries bundled                   |
-| [`@kilog/runtime-node`](./packages/runtime-node/README.md) | Node runtime instrumentation                                |
-| [`@kilog/vite-plugin`](./packages/vite-plugin/README.md)   | Vite plugin (browser instrumentation + dev-server receiver) |
-| [`@kilog/cli`](./packages/cli/README.md)                   | `kilog` CLI                                                 |
-| [`@kilog/web-ui`](./packages/web-ui/README.md)             | Hono server + DuckDB-wasm browser UI                        |
-| [`@kilog/register`](./packages/register/README.md)         | Auto-register hook (runtime dispatch)                       |
-| [`@kilog/core`](./packages/core/README.md)                 | Internal: storage / discovery / index / query               |
+| Package                                                      | Role                                                        |
+| ------------------------------------------------------------ | ----------------------------------------------------------- |
+| [`@kilog/kilog`](./packages/kilog)                           | Meta-package: CLI + all libraries bundled                   |
+| [`@kilog/runtime-node`](./packages/runtime-node/README.md)   | Node runtime instrumentation                                |
+| [`@kilog/vite-plugin`](./packages/vite-plugin/README.md)     | Vite plugin (browser instrumentation + dev-server receiver) |
+| [`@kilog/nextjs-plugin`](./packages/nextjs-plugin/README.md) | Next.js plugin (App + Pages Router; Webpack + Turbopack)    |
+| [`@kilog/cli`](./packages/cli/README.md)                     | `kilog` CLI                                                 |
+| [`@kilog/web-ui`](./packages/web-ui/README.md)               | Hono server + DuckDB-wasm browser UI                        |
+| [`@kilog/register`](./packages/register/README.md)           | Auto-register hook (runtime dispatch)                       |
+| [`@kilog/core`](./packages/core/README.md)                   | Internal: storage / discovery / index / query               |
 
 ## Examples
 
 - [`examples/node-server`](./examples/node-server) — Hono + runtime-node
 - [`examples/vite-client`](./examples/vite-client) — Vite + vite-plugin
 - [`examples/hono-vite`](./examples/hono-vite) — Hono bundled by Vite (`@hono/vite-dev-server`) with server-side capture
+- [`examples/nextjs-app`](./examples/nextjs-app) — Next.js App Router + nextjs-plugin
+- [`examples/nextjs-pages`](./examples/nextjs-pages) — Next.js Pages Router + nextjs-plugin
 
 ## Claude Code plugin
 

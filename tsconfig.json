@@ -17,6 +17,9 @@
       "path": "packages/vite-plugin"
     },
     {
+      "path": "packages/nextjs-plugin"
+    },
+    {
       "path": "packages/web-ui"
     },
     {
