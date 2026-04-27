@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vite-plus/test";
-import { generateBrowserRuntime } from "./browser-runtime.js";
+import { generateBrowserRuntime } from "./runtime.js";
 
 describe("generateBrowserRuntime", () => {
   it("should return non-empty string", () => {

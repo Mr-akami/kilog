@@ -1,1 +1,1 @@
-export const ENDPOINT = "/__kilog";
+export { ENDPOINT } from "@kilog/core/browser";

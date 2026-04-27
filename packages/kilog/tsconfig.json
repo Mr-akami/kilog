@@ -11,6 +11,7 @@
     { "path": "../register" },
     { "path": "../runtime-node" },
     { "path": "../vite-plugin" },
+    { "path": "../nextjs-plugin" },
     { "path": "../web-ui" }
   ]
 }

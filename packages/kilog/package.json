@@ -47,6 +47,10 @@
       "types": "./dist/vite-plugin.d.ts",
       "import": "./dist/vite-plugin.js"
     },
+    "./nextjs-plugin": {
+      "types": "./dist/nextjs-plugin.d.ts",
+      "import": "./dist/nextjs-plugin.js"
+    },
     "./web-ui": {
       "types": "./dist/web-ui.d.ts",
       "import": "./dist/web-ui.js"
@@ -63,15 +67,20 @@
   "dependencies": {
     "@kilog/cli": "workspace:*",
     "@kilog/core": "workspace:*",
+    "@kilog/nextjs-plugin": "workspace:*",
     "@kilog/register": "workspace:*",
     "@kilog/runtime-node": "workspace:*",
     "@kilog/vite-plugin": "workspace:*",
     "@kilog/web-ui": "workspace:*"
   },
   "peerDependencies": {
+    "next": ">=15.3.0",
     "vite": "^8"
   },
   "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    },
     "vite": {
       "optional": true
     }

@@ -1,0 +1,57 @@
+{
+  "name": "@kilog/nextjs-plugin",
+  "version": "0.1.0",
+  "description": "Next.js plugin for kilog structured logging",
+  "keywords": [
+    "kilog",
+    "logging",
+    "next",
+    "next.js",
+    "nextjs"
+  ],
+  "homepage": "https://github.com/Mr-akami/kilog/tree/main/packages/nextjs-plugin#readme",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mr-akami/kilog.git",
+    "directory": "packages/nextjs-plugin"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./register-client": {
+      "types": "./dist/register-client.d.ts",
+      "import": "./dist/register-client.js",
+      "default": "./dist/register-client.js"
+    },
+    "./register-server": {
+      "types": "./dist/register-server.d.ts",
+      "import": "./dist/register-server.js",
+      "default": "./dist/register-server.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vp test run"
+  },
+  "dependencies": {
+    "@kilog/core": "workspace:*",
+    "@kilog/register": "workspace:*"
+  },
+  "peerDependencies": {
+    "next": ">=15.3.0"
+  }
+}
