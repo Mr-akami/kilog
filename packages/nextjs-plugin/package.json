@@ -1,6 +1,6 @@
 {
   "name": "@kilog/nextjs-plugin",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Next.js plugin for kilog structured logging",
   "keywords": [
     "kilog",
