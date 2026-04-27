@@ -1,5 +1,13 @@
 # @kilog/register
 
+## 1.2.0
+
+### Patch Changes
+
+- Updated dependencies [[`32ccaa2`](https://github.com/Mr-akami/kilog/commit/32ccaa2bc2651e496f5faf4f05cc2a87d3dd130f)]:
+  - @kilog/core@1.2.0
+  - @kilog/runtime-node@1.2.0
+
 ## 1.1.2
 
 ### Patch Changes
@@ -31,6 +39,7 @@
 - [#41](https://github.com/Mr-akami/kilog/pull/41) [`cb8b371`](https://github.com/Mr-akami/kilog/commit/cb8b37191b7f481ab7afa414245f87792c3e1f7b) Thanks [@Mr-akami](https://github.com/Mr-akami)! - 1.0.0 — stable API. All packages are now versioned in lockstep (changesets `fixed` group).
 
   What's considered stable as of 1.0.0:
+
   - `.kilog/` on-disk layout (`raw/*.jsonl` + `index/logs.duckdb`) and JSONL event schema.
   - `kilog` CLI surface: `logs` / `sql` / `stats` / `reindex` / `prune` / `doctor` / `ui`, their flags, and docker-logs compatibility (`-f`, `--since`, `--until`, `-n/--tail`, `--timestamps`, positional `[TARGET...]`).
   - `@kilog/core` public exports: `QueryFilter`, `queryLogs`, `discoverSources`, `openIndex`, and the serialization / format helpers.
