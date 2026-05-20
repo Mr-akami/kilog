@@ -208,10 +208,10 @@ the top-level `instrument` import has a target.
 
 #### Which one?
 
-| You're using…                                       | Use                  |
-| --------------------------------------------------- | -------------------- |
-| Vite + `@cloudflare/vite-plugin` (Vite serves your worker via its dev proxy) | Setup **A**          |
-| `wrangler dev` directly (no Vite)                   | Setup **B**          |
+| You're using…                                                                | Use         |
+| ---------------------------------------------------------------------------- | ----------- |
+| Vite + `@cloudflare/vite-plugin` (Vite serves your worker via its dev proxy) | Setup **A** |
+| `wrangler dev` directly (no Vite)                                            | Setup **B** |
 
 → [`packages/wrangler-plugin`](./packages/wrangler-plugin/README.md)
 

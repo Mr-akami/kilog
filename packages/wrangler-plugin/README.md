@@ -89,10 +89,10 @@ What `kilog-wrangler` does:
 
 ## Which setup?
 
-| You're using…                                       | Setup    |
-| --------------------------------------------------- | -------- |
-| Vite + `@cloudflare/vite-plugin` (Vite serves your worker via its dev proxy) | **A**    |
-| `wrangler dev` directly (no Vite)                   | **B**    |
+| You're using…                                                                | Setup |
+| ---------------------------------------------------------------------------- | ----- |
+| Vite + `@cloudflare/vite-plugin` (Vite serves your worker via its dev proxy) | **A** |
+| `wrangler dev` directly (no Vite)                                            | **B** |
 
 You can't easily mix the two — Setup A relies on Vite's middleware, Setup
 B relies on the `kilog-wrangler` launcher. Pick whichever matches how you
