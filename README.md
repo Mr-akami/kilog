@@ -45,6 +45,13 @@ npm i -D @kilog/cli @kilog/nextjs-plugin
 pnpm add -D @kilog/cli @kilog/nextjs-plugin
 ```
 
+```bash
+# Cloudflare Workers (wrangler dev)
+npm i -D @kilog/cli @kilog/wrangler-plugin
+# or
+pnpm add -D @kilog/cli @kilog/wrangler-plugin
+```
+
 Available packages: `@kilog/cli`, `@kilog/core`, `@kilog/register`, `@kilog/runtime-node`, `@kilog/vite-plugin`, `@kilog/nextjs-plugin`, `@kilog/wrangler-plugin`, `@kilog/web-ui`. `@kilog/kilog` is a meta-package that depends on all of them — convenient for single-install; import paths are shorter via the individual packages.
 
 ## Quick start
@@ -131,9 +138,49 @@ Same `terminal` / `persist` options as the Vite plugin. Requires Next 15.3+.
 
 ### Cloudflare Workers (`wrangler dev`)
 
-Local-only — production deploys are unaffected.
+Local development only — `wrangler deploy` produces an unmodified bundle.
+Worker `console`, `fetch`, and uncaught errors land in
+`.kilog/raw/<date>.workerd.jsonl`.
 
-**Plain `wrangler dev`:**
+Two setups depending on whether you already use Vite:
+
+#### A. With Vite (uses `@cloudflare/vite-plugin` as the dev proxy)
+
+Use this when your project is driven by Vite and `@cloudflare/vite-plugin`
+runs the worker inside Vite's dev server. The Vite dev server hosts the
+`/__kilog` receiver in the same process; no extra launcher.
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import { cloudflare } from "@cloudflare/vite-plugin";
+import kilogWranglerPlugin from "@kilog/wrangler-plugin";
+
+export default defineConfig({
+  plugins: [cloudflare(), kilogWranglerPlugin()],
+});
+```
+
+That's it. The plugin:
+
+- registers a `POST /__kilog` middleware on the Vite dev server
+- auto-injects `import "@kilog/wrangler-plugin/instrument"` plus the
+  resolved receiver URL into the worker entry — your worker code stays
+  untouched
+
+Run as usual:
+
+```bash
+pnpm dev      # vite dev — the worker runs in workerd via @cloudflare/vite-plugin
+```
+
+#### B. Without Vite (plain `wrangler dev`)
+
+Use this when you run `wrangler dev` directly (no Vite). A small launcher
+`kilog-wrangler` starts a localhost receiver, then exec's `wrangler dev`
+with `--var KILOG_RECEIVER_URL:…` and `--define __KILOG_RECEIVER_URL__:"…"`
+so the worker can ship events back. You add one import + one wrapper to
+your worker entry:
 
 ```ts
 // src/index.ts
@@ -152,22 +199,19 @@ export default withKilog({
 { "scripts": { "dev": "kilog-wrangler dev" } }
 ```
 
-`kilog-wrangler` starts a localhost receiver, then exec's `wrangler dev` with `--var KILOG_RECEIVER_URL:…` and `--define __KILOG_RECEIVER_URL__:"…"` so the worker can ship `console`/`fetch`/error events back. Events land in `.kilog/raw/<date>.workerd.jsonl`.
-
-**Vite + `@cloudflare/vite-plugin`:**
-
-```ts
-// vite.config.ts
-import { defineConfig } from "vite";
-import { cloudflare } from "@cloudflare/vite-plugin";
-import kilogWranglerPlugin from "@kilog/wrangler-plugin";
-
-export default defineConfig({
-  plugins: [cloudflare(), kilogWranglerPlugin()],
-});
+```bash
+pnpm dev      # = kilog-wrangler dev → wrangler dev with kilog vars injected
 ```
 
-The plugin registers the `/__kilog` middleware on the Vite dev server and auto-injects `import "@kilog/wrangler-plugin/instrument"` into the worker entry — no code changes required in your worker.
+`withKilog` lifts `env.KILOG_RECEIVER_URL` into a global per request so
+the top-level `instrument` import has a target.
+
+#### Which one?
+
+| You're using…                                                                | Use         |
+| ---------------------------------------------------------------------------- | ----------- |
+| Vite + `@cloudflare/vite-plugin` (Vite serves your worker via its dev proxy) | Setup **A** |
+| `wrangler dev` directly (no Vite)                                            | Setup **B** |
 
 → [`packages/wrangler-plugin`](./packages/wrangler-plugin/README.md)
 
