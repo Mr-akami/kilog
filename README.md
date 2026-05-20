@@ -45,7 +45,7 @@ npm i -D @kilog/cli @kilog/nextjs-plugin
 pnpm add -D @kilog/cli @kilog/nextjs-plugin
 ```
 
-Available packages: `@kilog/cli`, `@kilog/core`, `@kilog/register`, `@kilog/runtime-node`, `@kilog/vite-plugin`, `@kilog/nextjs-plugin`, `@kilog/web-ui`. `@kilog/kilog` is a meta-package that depends on all of them — convenient for single-install; import paths are shorter via the individual packages.
+Available packages: `@kilog/cli`, `@kilog/core`, `@kilog/register`, `@kilog/runtime-node`, `@kilog/vite-plugin`, `@kilog/nextjs-plugin`, `@kilog/wrangler-plugin`, `@kilog/web-ui`. `@kilog/kilog` is a meta-package that depends on all of them — convenient for single-install; import paths are shorter via the individual packages.
 
 ## Quick start
 
@@ -129,6 +129,48 @@ Same `terminal` / `persist` options as the Vite plugin. Requires Next 15.3+.
 
 → [`packages/nextjs-plugin`](./packages/nextjs-plugin/README.md)
 
+### Cloudflare Workers (`wrangler dev`)
+
+Local-only — production deploys are unaffected.
+
+**Plain `wrangler dev`:**
+
+```ts
+// src/index.ts
+import "@kilog/wrangler-plugin/instrument";
+import { withKilog } from "@kilog/wrangler-plugin/with-kilog";
+
+export default withKilog({
+  async fetch(req, env, ctx) {
+    return new Response("hi");
+  },
+});
+```
+
+```json
+// package.json
+{ "scripts": { "dev": "kilog-wrangler dev" } }
+```
+
+`kilog-wrangler` starts a localhost receiver, then exec's `wrangler dev` with `--var KILOG_RECEIVER_URL:…` and `--define __KILOG_RECEIVER_URL__:"…"` so the worker can ship `console`/`fetch`/error events back. Events land in `.kilog/raw/<date>.workerd.jsonl`.
+
+**Vite + `@cloudflare/vite-plugin`:**
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import { cloudflare } from "@cloudflare/vite-plugin";
+import kilogWranglerPlugin from "@kilog/wrangler-plugin";
+
+export default defineConfig({
+  plugins: [cloudflare(), kilogWranglerPlugin()],
+});
+```
+
+The plugin registers the `/__kilog` middleware on the Vite dev server and auto-injects `import "@kilog/wrangler-plugin/instrument"` into the worker entry — no code changes required in your worker.
+
+→ [`packages/wrangler-plugin`](./packages/wrangler-plugin/README.md)
+
 ### View logs
 
 `kilog logs` takes the same flags as `docker logs` (`-f`, `--since`, `--until`, `-n/--tail`). Pipe to `rg` / `grep` for text search.
@@ -168,6 +210,7 @@ The CLI and UI walk down from the **invocation directory** (or `--root <path>`) 
 | [`@kilog/runtime-node`](./packages/runtime-node/README.md)   | Node runtime instrumentation                                |
 | [`@kilog/vite-plugin`](./packages/vite-plugin/README.md)     | Vite plugin (browser instrumentation + dev-server receiver) |
 | [`@kilog/nextjs-plugin`](./packages/nextjs-plugin/README.md) | Next.js plugin (App + Pages Router; Webpack + Turbopack)    |
+| [`@kilog/wrangler-plugin`](./packages/wrangler-plugin/README.md) | Cloudflare Wrangler dev integration (workerd capture)   |
 | [`@kilog/cli`](./packages/cli/README.md)                     | `kilog` CLI                                                 |
 | [`@kilog/web-ui`](./packages/web-ui/README.md)               | Hono server + DuckDB-wasm browser UI                        |
 | [`@kilog/register`](./packages/register/README.md)           | Auto-register hook (runtime dispatch)                       |
@@ -180,6 +223,8 @@ The CLI and UI walk down from the **invocation directory** (or `--root <path>`) 
 - [`examples/hono-vite`](./examples/hono-vite) — Hono bundled by Vite (`@hono/vite-dev-server`) with server-side capture
 - [`examples/nextjs-app`](./examples/nextjs-app) — Next.js App Router + nextjs-plugin
 - [`examples/nextjs-pages`](./examples/nextjs-pages) — Next.js Pages Router + nextjs-plugin
+- [`examples/wrangler-vite`](./examples/wrangler-vite) — Cloudflare Worker via Vite + @cloudflare/vite-plugin + wrangler-plugin
+- [`examples/wrangler-worker`](./examples/wrangler-worker) — plain `wrangler dev` + wrangler-plugin's `kilog-wrangler` launcher
 
 ## Claude Code plugin
 

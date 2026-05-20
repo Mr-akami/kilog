@@ -1,0 +1,69 @@
+{
+  "name": "@kilog/wrangler-plugin",
+  "version": "0.1.0",
+  "description": "Cloudflare Wrangler / @cloudflare/vite-plugin integration for kilog structured logging",
+  "keywords": [
+    "kilog",
+    "logging",
+    "cloudflare",
+    "wrangler",
+    "workerd",
+    "vite-plugin"
+  ],
+  "homepage": "https://github.com/Mr-akami/kilog/tree/main/packages/wrangler-plugin#readme",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mr-akami/kilog.git",
+    "directory": "packages/wrangler-plugin"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./instrument": {
+      "types": "./dist/instrument.d.ts",
+      "import": "./dist/instrument.js",
+      "default": "./dist/instrument.js"
+    },
+    "./with-kilog": {
+      "types": "./dist/with-kilog.d.ts",
+      "import": "./dist/with-kilog.js",
+      "default": "./dist/with-kilog.js"
+    }
+  },
+  "bin": {
+    "kilog-wrangler": "./dist/cli.js"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vp test run"
+  },
+  "dependencies": {
+    "@kilog/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "vite": "^8",
+    "wrangler": ">=3"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": true
+    },
+    "wrangler": {
+      "optional": true
+    }
+  }
+}

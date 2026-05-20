@@ -12,6 +12,7 @@
     { "path": "../runtime-node" },
     { "path": "../vite-plugin" },
     { "path": "../nextjs-plugin" },
+    { "path": "../wrangler-plugin" },
     { "path": "../web-ui" }
   ]
 }

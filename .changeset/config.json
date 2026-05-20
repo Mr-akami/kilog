@@ -11,7 +11,8 @@
       "@kilog/register",
       "@kilog/runtime-node",
       "@kilog/vite-plugin",
-      "@kilog/web-ui"
+      "@kilog/web-ui",
+      "@kilog/wrangler-plugin"
     ]
   ],
   "linked": [],
