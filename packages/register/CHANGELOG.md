@@ -6,7 +6,6 @@
 
 - [#56](https://github.com/Mr-akami/kilog/pull/56) [`b0e5469`](https://github.com/Mr-akami/kilog/commit/b0e546937fb149dfe7bfa02d453f01c1da0d47e4) Thanks [@Mr-akami](https://github.com/Mr-akami)! - Add `@kilog/wrangler-plugin` for Cloudflare Workers (`wrangler dev`).
   Supports both plain `wrangler dev` (via `kilog-wrangler` launcher) and Vite
-
   - `@cloudflare/vite-plugin`. Worker `console`/`fetch`/error events stream
     into `.kilog/raw/<date>.workerd.jsonl` over a localhost receiver. Adds
     `"workerd"` to the `Runtime` schema and moves the dev-receiver server +
@@ -57,7 +56,6 @@
 - [#41](https://github.com/Mr-akami/kilog/pull/41) [`cb8b371`](https://github.com/Mr-akami/kilog/commit/cb8b37191b7f481ab7afa414245f87792c3e1f7b) Thanks [@Mr-akami](https://github.com/Mr-akami)! - 1.0.0 — stable API. All packages are now versioned in lockstep (changesets `fixed` group).
 
   What's considered stable as of 1.0.0:
-
   - `.kilog/` on-disk layout (`raw/*.jsonl` + `index/logs.duckdb`) and JSONL event schema.
   - `kilog` CLI surface: `logs` / `sql` / `stats` / `reindex` / `prune` / `doctor` / `ui`, their flags, and docker-logs compatibility (`-f`, `--since`, `--until`, `-n/--tail`, `--timestamps`, positional `[TARGET...]`).
   - `@kilog/core` public exports: `QueryFilter`, `queryLogs`, `discoverSources`, `openIndex`, and the serialization / format helpers.
