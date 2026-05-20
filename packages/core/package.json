@@ -36,6 +36,11 @@
       "types": "./dist/browser/index.d.ts",
       "import": "./dist/browser/index.js",
       "default": "./dist/browser/index.js"
+    },
+    "./dev-receiver": {
+      "types": "./dist/dev-receiver/index.d.ts",
+      "import": "./dist/dev-receiver/index.js",
+      "default": "./dist/dev-receiver/index.js"
     }
   },
   "publishConfig": {

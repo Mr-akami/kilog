@@ -1,4 +1,4 @@
-export type Runtime = "browser" | "node" | "bun" | "deno";
+export type Runtime = "browser" | "node" | "bun" | "deno" | "workerd";
 export type LogLevel = "debug" | "info" | "warn" | "error";
 export type EventType = "console" | "error" | "network" | "unhandled-rejection";
 

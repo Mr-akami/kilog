@@ -2,8 +2,8 @@ import { describe, it, expect, beforeEach, afterEach } from "vite-plus/test";
 import { mkdtemp, rm, readFile, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { startDevReceiver } from "./dev-receiver.js";
-import { ENDPOINT } from "@kilog/core/browser";
+import { startDevReceiver } from "./server.js";
+import { ENDPOINT } from "../browser/endpoint.js";
 
 describe("startDevReceiver", () => {
   let baseDir: string;
@@ -57,5 +57,31 @@ describe("startDevReceiver", () => {
       body: "not-json",
     });
     expect(res.status).toBe(400);
+  });
+
+  it("accepts workerd runtime events", async () => {
+    const port = await startDevReceiver({ baseDir });
+    const event = {
+      id: "22222222-2222-2222-2222-222222222222",
+      timestamp: new Date().toISOString(),
+      runtime: "workerd",
+      session: "33333333-3333-3333-3333-333333333333",
+      type: "console",
+      level: "info",
+      message: "from workerd",
+    };
+    const res = await fetch(`http://127.0.0.1:${port}${ENDPOINT}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify([event]),
+    });
+    expect(res.status).toBe(200);
+
+    const rawDir = path.join(baseDir, ".kilog", "raw");
+    const files = await readdir(rawDir);
+    const workerdFile = files.find((f) => f.endsWith(".workerd.jsonl"));
+    expect(workerdFile).toBeDefined();
+    const body = await readFile(path.join(rawDir, workerdFile!), "utf8");
+    expect(body).toContain("from workerd");
   });
 });

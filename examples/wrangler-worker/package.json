@@ -1,0 +1,17 @@
+{
+  "name": "@kilog/example-wrangler-worker",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "kilog-wrangler dev",
+    "kilog": "kilog"
+  },
+  "dependencies": {
+    "@kilog/wrangler-plugin": "workspace:*"
+  },
+  "devDependencies": {
+    "@kilog/cli": "workspace:*",
+    "wrangler": "latest"
+  }
+}

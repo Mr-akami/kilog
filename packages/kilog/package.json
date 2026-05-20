@@ -51,6 +51,10 @@
       "types": "./dist/nextjs-plugin.d.ts",
       "import": "./dist/nextjs-plugin.js"
     },
+    "./wrangler-plugin": {
+      "types": "./dist/wrangler-plugin.d.ts",
+      "import": "./dist/wrangler-plugin.js"
+    },
     "./web-ui": {
       "types": "./dist/web-ui.d.ts",
       "import": "./dist/web-ui.js"
@@ -71,7 +75,8 @@
     "@kilog/register": "workspace:*",
     "@kilog/runtime-node": "workspace:*",
     "@kilog/vite-plugin": "workspace:*",
-    "@kilog/web-ui": "workspace:*"
+    "@kilog/web-ui": "workspace:*",
+    "@kilog/wrangler-plugin": "workspace:*"
   },
   "peerDependencies": {
     "next": ">=15.3.0",
