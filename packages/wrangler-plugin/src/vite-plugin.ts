@@ -71,9 +71,10 @@ export function kilogWranglerPlugin(options: KilogWranglerPluginOptions = {}): P
         httpServer.once("listening", () => {
           const address = httpServer.address();
           if (address && typeof address !== "string") {
-            const host = address.address === "::" || address.address === "0.0.0.0"
-              ? "127.0.0.1"
-              : address.address;
+            const host =
+              address.address === "::" || address.address === "0.0.0.0"
+                ? "127.0.0.1"
+                : address.address;
             receiverUrl = `http://${host}:${address.port}${ENDPOINT}`;
           }
         });
@@ -84,9 +85,7 @@ export function kilogWranglerPlugin(options: KilogWranglerPluginOptions = {}): P
       if (!server) return null;
       if (!isLikelyWorkerEntry(code, id, options.workerEntries)) return null;
 
-      const setUrl = receiverUrl
-        ? `${RECEIVER_GLOBAL} = ${JSON.stringify(receiverUrl)};\n`
-        : "";
+      const setUrl = receiverUrl ? `${RECEIVER_GLOBAL} = ${JSON.stringify(receiverUrl)};\n` : "";
       const prelude = `${setUrl}${INSTRUMENT_IMPORT}\n`;
       return { code: prelude + code, map: null };
     },

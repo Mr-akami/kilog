@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "description": "Cloudflare Wrangler / @cloudflare/vite-plugin integration for kilog structured logging",
   "keywords": [
+    "cloudflare",
     "kilog",
     "logging",
-    "cloudflare",
-    "wrangler",
+    "vite-plugin",
     "workerd",
-    "vite-plugin"
+    "wrangler"
   ],
   "homepage": "https://github.com/Mr-akami/kilog/tree/main/packages/wrangler-plugin#readme",
   "license": "MIT",
@@ -16,6 +16,9 @@
     "type": "git",
     "url": "https://github.com/Mr-akami/kilog.git",
     "directory": "packages/wrangler-plugin"
+  },
+  "bin": {
+    "kilog-wrangler": "./dist/cli.js"
   },
   "files": [
     "dist"
@@ -39,9 +42,6 @@
       "import": "./dist/with-kilog.js",
       "default": "./dist/with-kilog.js"
     }
-  },
-  "bin": {
-    "kilog-wrangler": "./dist/cli.js"
   },
   "publishConfig": {
     "access": "public",

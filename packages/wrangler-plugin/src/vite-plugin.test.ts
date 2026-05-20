@@ -73,6 +73,6 @@ describe("kilogWranglerPlugin transform", () => {
     const code = `export const handler = () => {};`;
     const out = callTransform(plugin, code, "/proj/src/my-entry.ts");
     expect(out).not.toBeNull();
-    expect(out!.code).toContain('@kilog/wrangler-plugin/instrument');
+    expect(out!.code).toContain("@kilog/wrangler-plugin/instrument");
   });
 });

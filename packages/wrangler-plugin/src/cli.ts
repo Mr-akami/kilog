@@ -13,10 +13,7 @@ interface ParsedFlags {
 function parseFlags(argv: string[]): ParsedFlags {
   // Only consume flags that precede the wrangler subcommand; anything after
   // the first positional is forwarded verbatim. `--kilog-*` flags are ours.
-  const ours = new Set([
-    "--kilog-persist",
-    "--kilog-terminal",
-  ]);
+  const ours = new Set(["--kilog-persist", "--kilog-terminal"]);
   let persist = process.env.KILOG_PERSIST === "1";
   let terminal: boolean | LogLevel = false;
   const out: string[] = [];
@@ -72,8 +69,7 @@ async function main(): Promise<void> {
   // Default to `wrangler dev` if the user didn't pass a subcommand. Anything
   // they did pass — including their own `dev`, flags, entry path — is
   // forwarded verbatim after our injected flags.
-  const hasSubcommand =
-    wranglerArgs.length > 0 && !wranglerArgs[0].startsWith("-");
+  const hasSubcommand = wranglerArgs.length > 0 && !wranglerArgs[0].startsWith("-");
   const finalArgs = hasSubcommand ? wranglerArgs : ["dev", ...wranglerArgs];
 
   const wranglerFlags = [

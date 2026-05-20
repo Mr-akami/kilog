@@ -63,24 +63,24 @@ The plugin:
 
 ```ts
 kilogWranglerPlugin({
-  terminal: "warn",       // mirror warn+/error events to stdout
-  persist: true,          // keep previous logs across dev restarts
+  terminal: "warn", // mirror warn+/error events to stdout
+  persist: true, // keep previous logs across dev restarts
   workerEntries: ["src/index.ts"], // override entry detection
 });
 ```
 
-| Option          | Type                                  | Default | Description                                                                                |
-| --------------- | ------------------------------------- | ------- | ------------------------------------------------------------------------------------------ |
-| `terminal`      | `boolean \| LogLevel`                 | `false` | Print captured events to stdout. `true` = all; a level filters by `level` field.           |
-| `persist`       | `boolean`                             | `false` | Keep previous logs across dev server restarts.                                             |
-| `workerEntries` | `string[]`                            | —       | Explicit entry paths to inject into. Defaults to a heuristic `export default { fetch... }` scan. |
+| Option          | Type                  | Default | Description                                                                                      |
+| --------------- | --------------------- | ------- | ------------------------------------------------------------------------------------------------ |
+| `terminal`      | `boolean \| LogLevel` | `false` | Print captured events to stdout. `true` = all; a level filters by `level` field.                 |
+| `persist`       | `boolean`             | `false` | Keep previous logs across dev server restarts.                                                   |
+| `workerEntries` | `string[]`            | —       | Explicit entry paths to inject into. Defaults to a heuristic `export default { fetch... }` scan. |
 
 ## CLI flags (`kilog-wrangler`)
 
 `kilog-wrangler` forwards everything to `wrangler` verbatim except a few
 flags it consumes itself:
 
-| Flag                              | Description                                            |
-| --------------------------------- | ------------------------------------------------------ |
-| `--kilog-persist`                 | Keep previous logs across runs (same as `KILOG_PERSIST=1`). |
-| `--kilog-terminal[=true\|level]`  | Mirror events to stdout (optionally filtered by level). |
+| Flag                             | Description                                                 |
+| -------------------------------- | ----------------------------------------------------------- |
+| `--kilog-persist`                | Keep previous logs across runs (same as `KILOG_PERSIST=1`). |
+| `--kilog-terminal[=true\|level]` | Mirror events to stdout (optionally filtered by level).     |

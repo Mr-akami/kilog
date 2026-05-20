@@ -119,16 +119,9 @@ export function installKilogInstrumentation(): void {
     console[method] = wrapped;
   }
 
-  const wrappedFetch = async (
-    input: RequestInfo | URL,
-    init?: RequestInit,
-  ): Promise<Response> => {
+  const wrappedFetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
     const url =
-      typeof input === "string"
-        ? input
-        : input instanceof Request
-          ? input.url
-          : String(input);
+      typeof input === "string" ? input : input instanceof Request ? input.url : String(input);
 
     if (url.includes("__kilog")) {
       return originalFetch(input, init);
@@ -140,8 +133,7 @@ export function installKilogInstrumentation(): void {
     } catch {
       // non-URL input; leave default
     }
-    const method =
-      init?.method ?? (input instanceof Request ? input.method : "GET");
+    const method = init?.method ?? (input instanceof Request ? input.method : "GET");
     const start = performance.now();
     const stack = captureStack(wrappedFetch);
 

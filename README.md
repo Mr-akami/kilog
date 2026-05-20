@@ -204,17 +204,17 @@ The CLI and UI walk down from the **invocation directory** (or `--root <path>`) 
 
 ## Packages
 
-| Package                                                      | Role                                                        |
-| ------------------------------------------------------------ | ----------------------------------------------------------- |
-| [`@kilog/kilog`](./packages/kilog)                           | Meta-package: CLI + all libraries bundled                   |
-| [`@kilog/runtime-node`](./packages/runtime-node/README.md)   | Node runtime instrumentation                                |
-| [`@kilog/vite-plugin`](./packages/vite-plugin/README.md)     | Vite plugin (browser instrumentation + dev-server receiver) |
-| [`@kilog/nextjs-plugin`](./packages/nextjs-plugin/README.md) | Next.js plugin (App + Pages Router; Webpack + Turbopack)    |
-| [`@kilog/wrangler-plugin`](./packages/wrangler-plugin/README.md) | Cloudflare Wrangler dev integration (workerd capture)   |
-| [`@kilog/cli`](./packages/cli/README.md)                     | `kilog` CLI                                                 |
-| [`@kilog/web-ui`](./packages/web-ui/README.md)               | Hono server + DuckDB-wasm browser UI                        |
-| [`@kilog/register`](./packages/register/README.md)           | Auto-register hook (runtime dispatch)                       |
-| [`@kilog/core`](./packages/core/README.md)                   | Internal: storage / discovery / index / query               |
+| Package                                                          | Role                                                        |
+| ---------------------------------------------------------------- | ----------------------------------------------------------- |
+| [`@kilog/kilog`](./packages/kilog)                               | Meta-package: CLI + all libraries bundled                   |
+| [`@kilog/runtime-node`](./packages/runtime-node/README.md)       | Node runtime instrumentation                                |
+| [`@kilog/vite-plugin`](./packages/vite-plugin/README.md)         | Vite plugin (browser instrumentation + dev-server receiver) |
+| [`@kilog/nextjs-plugin`](./packages/nextjs-plugin/README.md)     | Next.js plugin (App + Pages Router; Webpack + Turbopack)    |
+| [`@kilog/wrangler-plugin`](./packages/wrangler-plugin/README.md) | Cloudflare Wrangler dev integration (workerd capture)       |
+| [`@kilog/cli`](./packages/cli/README.md)                         | `kilog` CLI                                                 |
+| [`@kilog/web-ui`](./packages/web-ui/README.md)                   | Hono server + DuckDB-wasm browser UI                        |
+| [`@kilog/register`](./packages/register/README.md)               | Auto-register hook (runtime dispatch)                       |
+| [`@kilog/core`](./packages/core/README.md)                       | Internal: storage / discovery / index / query               |
 
 ## Examples
 
