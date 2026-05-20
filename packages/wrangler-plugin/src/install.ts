@@ -64,14 +64,14 @@ export function installKilogInstrumentation(): void {
     try {
       return JSON.stringify(v);
     } catch {
-      return String(v);
+      return Object.prototype.toString.call(v);
     }
   }
   function formatArgs(args: unknown[]): string {
     return args.map(formatArg).join(" ");
   }
 
-  function captureStack(below: Function): string {
+  function captureStack(below: (...args: never[]) => unknown): string {
     let raw: string;
     if (Error.captureStackTrace) {
       const target: { stack?: string } = {};
@@ -177,11 +177,19 @@ export function installKilogInstrumentation(): void {
       const e = rawEvent as Event & { error?: unknown; message?: string };
       const err = e.error;
       const isError = err instanceof Error;
+      const fallback =
+        typeof e.message === "string" && e.message.length > 0
+          ? e.message
+          : err == null
+            ? "Error"
+            : err instanceof Error
+              ? err.message
+              : "Error";
       const event: KilogErrorEvent = {
         ...baseFields(),
         type: "error",
         level: "error",
-        message: isError ? err.message : String(e.message ?? err ?? "Error"),
+        message: isError ? err.message : fallback,
         name: isError ? err.name : "Error",
         stack: isError ? err.stack : undefined,
       };

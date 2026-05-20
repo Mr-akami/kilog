@@ -42,8 +42,8 @@ function postedEvents(fetchMock: ReturnType<typeof vi.fn>): Array<Record<string,
   const events: Array<Record<string, unknown>> = [];
   for (const call of fetchMock.mock.calls) {
     const [url, init] = call as [unknown, RequestInit | undefined];
-    if (typeof url === "string" && url.includes("__kilog") && init?.body) {
-      const parsed = JSON.parse(String(init.body)) as Array<Record<string, unknown>>;
+    if (typeof url === "string" && url.includes("__kilog") && typeof init?.body === "string") {
+      const parsed = JSON.parse(init.body) as Array<Record<string, unknown>>;
       events.push(...parsed);
     }
   }
@@ -71,7 +71,9 @@ describe("installKilogInstrumentation", () => {
     await new Promise((r) => setTimeout(r, 0));
 
     const events = postedEvents(fetchMock);
-    const e = events.find((ev) => String(ev.message ?? "").includes("hello workerd"));
+    const e = events.find(
+      (ev) => typeof ev.message === "string" && ev.message.includes("hello workerd"),
+    );
     expect(e).toBeDefined();
     expect(e!.runtime).toBe("workerd");
     expect(e!.type).toBe("console");
