@@ -37,6 +37,6 @@
     "@kilog/register": "workspace:*"
   },
   "peerDependencies": {
-    "vite": "^8"
+    "vite": "^8.0.10"
   }
 }
