@@ -1,5 +1,15 @@
 # @kilog/vite-plugin
 
+## 1.3.1
+
+### Patch Changes
+
+- [#74](https://github.com/Mr-akami/kilog/pull/74) [`2c55a12`](https://github.com/Mr-akami/kilog/commit/2c55a12d64709f1185669a134b14212e2edf195f) Thanks [@Mr-akami](https://github.com/Mr-akami)! - Apply the Vite plugin in `serve` mode only. Previously `transformIndexHtml` also ran during `vite build`, injecting the browser runtime into production HTML; now the plugin no-ops outside the dev server.
+
+- Updated dependencies []:
+  - @kilog/core@1.3.1
+  - @kilog/register@1.3.1
+
 ## 1.3.0
 
 ### Minor Changes
@@ -68,6 +78,7 @@
 - [#41](https://github.com/Mr-akami/kilog/pull/41) [`cb8b371`](https://github.com/Mr-akami/kilog/commit/cb8b37191b7f481ab7afa414245f87792c3e1f7b) Thanks [@Mr-akami](https://github.com/Mr-akami)! - 1.0.0 — stable API. All packages are now versioned in lockstep (changesets `fixed` group).
 
   What's considered stable as of 1.0.0:
+
   - `.kilog/` on-disk layout (`raw/*.jsonl` + `index/logs.duckdb`) and JSONL event schema.
   - `kilog` CLI surface: `logs` / `sql` / `stats` / `reindex` / `prune` / `doctor` / `ui`, their flags, and docker-logs compatibility (`-f`, `--since`, `--until`, `-n/--tail`, `--timestamps`, positional `[TARGET...]`).
   - `@kilog/core` public exports: `QueryFilter`, `queryLogs`, `discoverSources`, `openIndex`, and the serialization / format helpers.
