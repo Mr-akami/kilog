@@ -15,12 +15,13 @@ When the PR lands on `main`, the workflow opens (or updates) a "chore: version p
 
 - npm org `kilog` must exist (https://www.npmjs.com/org/create)
 - Settings → Actions → General → Workflow permissions → "Read and write" + "Allow GitHub Actions to create and approve pull requests"
-- For each published package on npmjs.com: Settings → Trusted Publisher → GitHub Actions
+- For **every** published package under `packages/` on npmjs.com: Settings → Trusted Publisher → GitHub Actions
   - Organization: `Mr-akami`
   - Repository: `kilog`
   - Workflow filename: `release.yml`
   - Environment name: (leave empty)
-  - Configure for all 7 packages: `@kilog/core`, `@kilog/runtime-node`, `@kilog/register`, `@kilog/vite-plugin`, `@kilog/web-ui`, `@kilog/cli`, `@kilog/kilog`
+  - Current packages: `@kilog/core`, `@kilog/runtime-node`, `@kilog/register`, `@kilog/vite-plugin`, `@kilog/web-ui`, `@kilog/cli`, `@kilog/kilog`, `@kilog/nextjs-plugin`, `@kilog/wrangler-plugin`
+  - A package whose Trusted Publisher is missing/misconfigured fails CI publish with a misleading `E404 Not Found - PUT` (npm treats the tokenless OIDC request as anonymous).
 - (Recommended) On each package: Settings → Publishing access → "Require two-factor authentication and disallow tokens"
 
 ## First publish (bootstrap — once)
@@ -61,6 +62,37 @@ npm view @kilog/kilog version
 ```
 
 Tip: use `pnpm --filter <name> publish --dry-run` first to inspect what would be sent.
+
+## Adding a new package (after initial setup)
+
+npm Trusted Publishing **cannot perform a package's very first publish**: the OIDC request 404s because the package does not exist yet, and the npmjs.com UI only exposes Trusted Publisher settings for packages that already exist (chicken-and-egg). So a brand-new package needs one manual publish to bootstrap it, then Trusted Publisher configuration. After that, CI handles it like every other package.
+
+Symptom if you skip this: the release workflow logs `@kilog/<new> is being published because our local version (x.y.z) has not been published on npm` followed by `error E404 Not Found - PUT .../@kilog%2f<new>`. Already-configured packages publish fine in the same run; only the unconfigured new one fails.
+
+```bash
+# 1. Build the new package (dist must exist)
+pnpm build
+
+# 2. Manually publish the CURRENT version once.
+#    --provenance=false is required: provenance needs CI/OIDC and cannot be
+#    generated in a local environment. (This overrides publishConfig.provenance
+#    without editing the file.) Auth via npm login / 2FA / security key.
+npm publish ./packages/<new-package> --access public --provenance=false
+
+# 3. Confirm it landed (registry, not the cached website page):
+npm view @kilog/<new-package> version
+
+# 4. On npmjs.com → @kilog/<new-package> → Trusted Publisher → GitHub Actions:
+#      Organization: Mr-akami   Repository: kilog
+#      Workflow filename: release.yml   Environment: (empty)
+#    Then add the package to the "Current packages" list in this doc.
+```
+
+From the next release on, CI publishes the new package via OIDC automatically. If the version PR has already bumped the new package past the version on npm, publish that exact version in step 2 (or merge the version PR, then re-run the release workflow once Trusted Publisher is set).
+
+Gotchas observed:
+- The npmjs.com **package page** can show 404/403 to `curl` (bot protection) or serve a stale cache right after publishing — trust `npm view <pkg> version` / the registry API, not the web page.
+- "Publishing access" (2FA requirement) and "Trusted Publisher" are **separate** sections on the same Settings page. Configuring 2FA does not configure trusted publishing.
 
 ## README sync
 
