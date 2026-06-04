@@ -31,6 +31,9 @@ export default function kilogPlugin(options: KilogPluginOptions = {}): Plugin {
 
   return {
     name: "kilog",
+    // Dev-server only. Without this, `transformIndexHtml` runs during
+    // `vite build` too and injects the browser runtime into production HTML.
+    apply: "serve",
 
     transformIndexHtml() {
       const script = generateBrowserRuntime();
