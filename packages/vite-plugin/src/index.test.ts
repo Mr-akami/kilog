@@ -10,6 +10,7 @@ interface HtmlTag {
 
 interface PluginWithHooks {
   name: string;
+  apply?: unknown;
   transformIndexHtml?: unknown;
   configureServer?: unknown;
 }
@@ -28,6 +29,11 @@ describe("kilogPlugin()", () => {
   it("accepts server option (on/off) and still returns a plugin", () => {
     expect((kilogPlugin({ server: true }) as PluginWithHooks).name).toBe("kilog");
     expect((kilogPlugin({ server: false }) as PluginWithHooks).name).toBe("kilog");
+  });
+
+  it("only applies during dev serve, never in production build", () => {
+    const plugin = kilogPlugin() as PluginWithHooks;
+    expect(plugin.apply).toBe("serve");
   });
 
   it("exposes transformIndexHtml and configureServer hooks as functions", () => {
