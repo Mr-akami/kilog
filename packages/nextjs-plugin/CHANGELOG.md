@@ -1,5 +1,13 @@
 # @kilog/nextjs-plugin
 
+## 1.3.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kilog/core@1.3.1
+  - @kilog/register@1.3.1
+
 ## 1.3.0
 
 ### Minor Changes

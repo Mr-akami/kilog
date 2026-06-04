@@ -1,5 +1,12 @@
 # @kilog/example-nextjs-pages
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kilog/nextjs-plugin@1.3.1
+
 ## 0.0.2
 
 ### Patch Changes
