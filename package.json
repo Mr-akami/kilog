@@ -15,7 +15,7 @@
     "release": "pnpm -r build && changeset publish"
   },
   "dependencies": {
-    "@hono/node-server": "^2",
+    "@hono/node-server": "^2.0.2",
     "hono": "^4.12.14"
   },
   "devDependencies": {
