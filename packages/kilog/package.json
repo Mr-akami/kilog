@@ -79,7 +79,7 @@
     "@kilog/wrangler-plugin": "workspace:*"
   },
   "peerDependencies": {
-    "next": ">=15.3.0",
+    "next": ">=16.2.6",
     "vite": "^8.0.10"
   },
   "peerDependenciesMeta": {
