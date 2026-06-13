@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^2",
-    "hono": "^4.12.14"
+    "hono": "^4.12.18"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.6.0",
