@@ -8,7 +8,7 @@
     "kilog": "kilog"
   },
   "dependencies": {
-    "kilog": "workspace:*"
+    "@mr-akami/kilog": "workspace:*"
   },
   "devDependencies": {
     "wrangler": "latest"

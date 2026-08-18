@@ -1,4 +1,4 @@
-# kilog/vite-plugin
+# @mr-akami/kilog/vite-plugin
 
 Vite plugin. Injects the browser-side instrumentation script into `index.html` and registers a dev-server middleware that receives events and writes them to `.kilog/`.
 
@@ -7,7 +7,7 @@ Vite plugin. Injects the browser-side instrumentation script into `index.html` a
 ```ts
 // vite.config.ts
 import { defineConfig } from "vite";
-import kilogPlugin from "kilog/vite-plugin";
+import kilogPlugin from "@mr-akami/kilog/vite-plugin";
 
 export default defineConfig({
   plugins: [kilogPlugin()],
@@ -43,14 +43,14 @@ This is enabled by default. Pass `server: false` to skip it (useful for pure-SPA
 kilogPlugin({ server: false });
 ```
 
-Runtime detection (`node` / `bun` / `deno`) is handled by [`kilog/register`](./register.md), which the plugin loads on dev server start.
+Runtime detection (`node` / `bun` / `deno`) is handled by [`@mr-akami/kilog/register`](./register.md), which the plugin loads on dev server start.
 
 ## How it works
 
 - `transformIndexHtml`: injects the browser instrumentation script into `<head>`
 - `configureServer`:
   - adds a POST-receiver middleware to the dev server (browser → dev server → `.kilog/raw/`)
-  - when `server !== false`, dynamically imports `kilog/register` so the dev-server runtime captures its own `console` / `fetch` / errors
+  - when `server !== false`, dynamically imports `@mr-akami/kilog/register` so the dev-server runtime captures its own `console` / `fetch` / errors
 
 ## Storage
 

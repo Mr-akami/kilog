@@ -10,7 +10,7 @@
     "kilog": "kilog"
   },
   "dependencies": {
-    "kilog": "workspace:*",
+    "@mr-akami/kilog": "workspace:*",
     "next": "^15.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

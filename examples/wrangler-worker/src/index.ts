@@ -1,5 +1,5 @@
-import "kilog/wrangler-plugin/instrument";
-import { withKilog } from "kilog/wrangler-plugin/with-kilog";
+import "@mr-akami/kilog/wrangler-plugin/instrument";
+import { withKilog } from "@mr-akami/kilog/wrangler-plugin/with-kilog";
 
 interface Env {
   KILOG_RECEIVER_URL?: string;

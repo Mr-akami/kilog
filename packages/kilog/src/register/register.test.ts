@@ -32,7 +32,7 @@ describe("register", () => {
     delete (globalThis as Record<string, unknown>).Deno;
   });
 
-  it("imports kilog/runtime-node/register when no runtime globals exist", async () => {
+  it("imports @mr-akami/kilog/runtime-node/register when no runtime globals exist", async () => {
     await import("./register.js");
 
     expect(mocks.nodeLoaded).toHaveBeenCalledOnce();

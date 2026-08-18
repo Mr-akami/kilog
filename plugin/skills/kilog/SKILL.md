@@ -66,4 +66,4 @@ Aggregate counts by project / runtime / type / level. Same filters as `logs`. Go
 - **Never invoke `prune` without explicit confirmation.** Destructive, irreversible.
 - **Never invent flags.** Relative windows → `--since 10m` etc. Last-N output → `--tail N`.
 - **Default scope is wide** (every `.kilog/` under cwd). Narrow with `--project` / positional target / `--root` when the user implies one project; mention when the fan-out may be wider than wanted.
-- **Empty result?** Run `doctor` first — index drift is rare, but missing instrumentation (`--import kilog/register` or `kilog/vite-plugin`) is common.
+- **Empty result?** Run `doctor` first — index drift is rare, but missing instrumentation (`--import @mr-akami/kilog/register` or `@mr-akami/kilog/vite-plugin`) is common.

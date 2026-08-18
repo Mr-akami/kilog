@@ -1,11 +1,11 @@
-# kilog/nextjs-plugin
+# @mr-akami/kilog/nextjs-plugin
 
 Next.js plugin for [kilog](https://github.com/Mr-akami/kilog). Captures `console`, `fetch`, and uncaught errors from both the browser and the Node server runtime — with one `next.config.ts` edit and nothing else.
 
 ## Install
 
 ```bash
-pnpm add -D kilog
+pnpm add -D @mr-akami/kilog
 ```
 
 Requires Next.js 15.3 or newer.
@@ -14,7 +14,7 @@ Requires Next.js 15.3 or newer.
 
 ```ts
 // next.config.ts
-import { withKilog } from "kilog/nextjs-plugin";
+import { withKilog } from "@mr-akami/kilog/nextjs-plugin";
 
 export default withKilog({
   // your existing Next config
@@ -50,7 +50,7 @@ Generated files carry a marker comment so re-running `next dev` is idempotent. I
 
 ```ts
 // instrumentation.ts
-import { registerServer } from "kilog/nextjs-plugin/register-server";
+import { registerServer } from "@mr-akami/kilog/nextjs-plugin/register-server";
 
 export async function register() {
   await registerServer();
@@ -59,7 +59,7 @@ export async function register() {
 
 ```ts
 // instrumentation-client.ts
-import "kilog/nextjs-plugin/register-client";
+import "@mr-akami/kilog/nextjs-plugin/register-client";
 ```
 
 The receiver runs in-process with `next dev` and is bound to `127.0.0.1` only.

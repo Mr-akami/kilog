@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "@hono/vite-dev-server": "latest",
-    "hono": "*",
-    "kilog": "workspace:*"
+    "@mr-akami/kilog": "workspace:*",
+    "hono": "*"
   },
   "devDependencies": {
     "vite": "catalog:",

@@ -5,13 +5,13 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "node --import kilog/register ./src/index.ts",
+    "dev": "node --import @mr-akami/kilog/register ./src/index.ts",
     "kilog": "kilog"
   },
   "dependencies": {
     "@hono/node-server": "*",
-    "hono": "*",
-    "kilog": "workspace:*"
+    "@mr-akami/kilog": "workspace:*",
+    "hono": "*"
   },
   "devDependencies": {}
 }

@@ -5,7 +5,7 @@ Actions (`.github/workflows/release.yml`) using npm
 [Trusted Publishing (OIDC)](https://docs.npmjs.com/trusted-publishers). No `NPM_TOKEN` is
 required.
 
-Only one package is published: `kilog` (`packages/kilog`).
+Only one package is published: `@mr-akami/kilog` (`packages/kilog`).
 
 ## Author workflow
 
@@ -39,7 +39,7 @@ Major/minor labels are ignored under CalVer.
 
 - Settings → Actions → General → Workflow permissions → "Read and write" +
   "Allow GitHub Actions to create and approve pull requests"
-- On npmjs.com, for the `kilog` package: Settings → Trusted Publisher → GitHub Actions
+- On npmjs.com, for the `@mr-akami/kilog` package: Settings → Trusted Publisher → GitHub Actions
   - Organization: `Mr-akami`
   - Repository: `kilog`
   - Workflow filename: `release.yml`
@@ -65,22 +65,21 @@ pnpm test
 #    and set an initial CalVer version, e.g. "2026.818.0".
 
 # 3. Publish
-pnpm --filter kilog publish --access public --no-git-checks
+pnpm --filter @mr-akami/kilog publish --access public --no-git-checks
 
 # 4. Restore "provenance": true and commit.
 # 5. Configure the Trusted Publisher on npmjs.com (see above).
 # 6. Verify
-npm view kilog version
+npm view @mr-akami/kilog version
 ```
 
 ## Legacy `@kilog/*` packages
 
-The pre-consolidation releases were published as nine scoped packages under the `kilog`
-npm org. They are frozen at `1.3.1` and deprecated:
+The pre-consolidation releases were published as nine packages under the `kilog` npm org. They are frozen at `1.3.1` and deprecated:
 
 ```bash
 for p in core cli web-ui register runtime-node vite-plugin nextjs-plugin wrangler-plugin kilog; do
-  npm deprecate "@kilog/$p" "moved to the single 'kilog' package — npm i -D kilog"
+  npm deprecate "@kilog/$p" "moved to @mr-akami/kilog — npm i -D @mr-akami/kilog"
 done
 ```
 

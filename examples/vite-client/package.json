@@ -9,7 +9,7 @@
     "kilog": "kilog"
   },
   "dependencies": {
-    "kilog": "workspace:*"
+    "@mr-akami/kilog": "workspace:*"
   },
   "devDependencies": {
     "vite": "catalog:",

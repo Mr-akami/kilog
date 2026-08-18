@@ -35,13 +35,13 @@ describe("kilogWranglerPlugin transform", () => {
     const code = `export default {\n  async fetch(req, env, ctx) { return new Response("ok"); }\n};\n`;
     const out = callTransform(plugin, code, "/proj/src/worker.ts");
     expect(out).not.toBeNull();
-    expect(out!.code).toContain('import "kilog/wrangler-plugin/instrument";');
+    expect(out!.code).toContain('import "@mr-akami/kilog/wrangler-plugin/instrument";');
     expect(out!.code).toContain("export default");
   });
 
   it("does not double-inject", () => {
     const plugin = withServer(kilogWranglerPlugin());
-    const already = `import "kilog/wrangler-plugin/instrument";\nexport default { fetch(){} };\n`;
+    const already = `import "@mr-akami/kilog/wrangler-plugin/instrument";\nexport default { fetch(){} };\n`;
     const out = callTransform(plugin, already, "/proj/src/worker.ts");
     expect(out).toBeNull();
   });
@@ -73,6 +73,6 @@ describe("kilogWranglerPlugin transform", () => {
     const code = `export const handler = () => {};`;
     const out = callTransform(plugin, code, "/proj/src/my-entry.ts");
     expect(out).not.toBeNull();
-    expect(out!.code).toContain("kilog/wrangler-plugin/instrument");
+    expect(out!.code).toContain("@mr-akami/kilog/wrangler-plugin/instrument");
   });
 });

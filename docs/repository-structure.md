@@ -2,7 +2,7 @@
 
 ## Root Layout
 
-The repository is a pnpm workspace that publishes exactly **one** npm package, `kilog`.
+The repository is a pnpm workspace that publishes exactly **one** npm package, `@mr-akami/kilog`.
 Everything the user installs lives in `packages/kilog`; the other workspace entries are
 examples and tests that are never published.
 
@@ -18,7 +18,7 @@ kilog/
 
   packages/
     kilog/
-      package.json        # name: "kilog"
+      package.json        # name: "@mr-akami/kilog"
       index.html          # web UI shell
       vite.config.ts      # web UI client bundle
       client/             # browser-side web UI (DuckDB-wasm)
@@ -50,16 +50,16 @@ kilog/
 Each module maps to a subpath export of the single package. See the table in the
 root [README](../README.md#install).
 
-| Module                | Export                                                                        |
-| --------------------- | ----------------------------------------------------------------------------- |
-| `src/core`            | `kilog`, `kilog/ansi`, `kilog/browser`, `kilog/dev-receiver`                  |
-| `src/cli`             | `kilog` bin                                                                   |
-| `src/register`        | `kilog/register`, `kilog/register/detect`                                     |
-| `src/runtime-node`    | `kilog/runtime-node`, `kilog/runtime-node/register`                           |
-| `src/vite-plugin`     | `kilog/vite-plugin`                                                           |
-| `src/nextjs-plugin`   | `kilog/nextjs-plugin` (+ `register-client` / `register-server`)               |
-| `src/wrangler-plugin` | `kilog/wrangler-plugin` (+ `instrument` / `with-kilog`), `kilog-wrangler` bin |
-| `src/web-ui`          | `kilog/web-ui`                                                                |
+| Module                | Export                                                                                     |
+| --------------------- | ------------------------------------------------------------------------------------------ |
+| `src/core`            | `kilog`, `@mr-akami/kilog/ansi`, `@mr-akami/kilog/browser`, `@mr-akami/kilog/dev-receiver` |
+| `src/cli`             | `kilog` bin                                                                                |
+| `src/register`        | `@mr-akami/kilog/register`, `@mr-akami/kilog/register/detect`                              |
+| `src/runtime-node`    | `@mr-akami/kilog/runtime-node`, `@mr-akami/kilog/runtime-node/register`                    |
+| `src/vite-plugin`     | `@mr-akami/kilog/vite-plugin`                                                              |
+| `src/nextjs-plugin`   | `@mr-akami/kilog/nextjs-plugin` (+ `register-client` / `register-server`)                  |
+| `src/wrangler-plugin` | `@mr-akami/kilog/wrangler-plugin` (+ `instrument` / `with-kilog`), `kilog-wrangler` bin    |
+| `src/web-ui`          | `@mr-akami/kilog/web-ui`                                                                   |
 
 ## Module Roles
 
@@ -96,7 +96,7 @@ DuckDB-wasm and is bundled into `dist/public` by Vite. Secondary to the CLI work
 ## Example Apps
 
 `examples/*` are private workspace packages (`kilog-example-*`) that depend on
-`kilog` via `workspace:*`. They exist to validate integrations and to document usage.
+`@mr-akami/kilog` via `workspace:*`. They exist to validate integrations and to document usage.
 
 ## Test Layout
 

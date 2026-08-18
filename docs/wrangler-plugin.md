@@ -1,4 +1,4 @@
-# kilog/wrangler-plugin
+# @mr-akami/kilog/wrangler-plugin
 
 Capture `console`, `fetch`, and uncaught errors from Cloudflare Workers
 running under `wrangler dev` (workerd), and ship them into the local
@@ -27,7 +27,7 @@ in the same process — no extra launcher needed.
 // vite.config.ts
 import { defineConfig } from "vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
-import kilogWranglerPlugin from "kilog/wrangler-plugin";
+import kilogWranglerPlugin from "@mr-akami/kilog/wrangler-plugin";
 
 export default defineConfig({
   plugins: [cloudflare(), kilogWranglerPlugin()],
@@ -38,7 +38,7 @@ export default defineConfig({
 
 - registers a `POST /__kilog` middleware on the Vite dev server (writes
   events to `.kilog/raw/`)
-- auto-injects `import "kilog/wrangler-plugin/instrument"` and the
+- auto-injects `import "@mr-akami/kilog/wrangler-plugin/instrument"` and the
   resolved receiver URL into the worker entry — **no code changes in
   your worker**
 
@@ -58,8 +58,8 @@ Worker side — explicit (`import` + wrapper, no auto-inject):
 
 ```ts
 // src/index.ts
-import "kilog/wrangler-plugin/instrument";
-import { withKilog } from "kilog/wrangler-plugin/with-kilog";
+import "@mr-akami/kilog/wrangler-plugin/instrument";
+import { withKilog } from "@mr-akami/kilog/wrangler-plugin/with-kilog";
 
 export default withKilog({
   async fetch(req, env, ctx) {

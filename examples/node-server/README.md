@@ -1,6 +1,6 @@
 # kilog Node Server Example
 
-Hono + [`kilog/runtime-node`](../../docs/runtime-node.md) for automatic log capture.
+Hono + [`@mr-akami/kilog/runtime-node`](../../docs/runtime-node.md) for automatic log capture.
 
 ## Prerequisites (inside the workspace)
 
@@ -12,7 +12,7 @@ pnpm install
 pnpm build      # builds the kilog package + bundles the web UI client
 ```
 
-`kilog` is linked via `workspace:*` and resolved through its `dist/`. When editing TS, keep `pnpm tsc -b --watch` running at the root.
+`@mr-akami/kilog` is linked via `workspace:*` and resolved through its `dist/`. When editing TS, keep `pnpm tsc -b --watch` running at the root.
 
 ## Run
 
@@ -40,7 +40,7 @@ pnpm kilog logs --since 10m
 pnpm kilog ui --port 4000    # dev server uses 3210, so use a different port
 ```
 
-`kilog` is wired up as a `workspace:*` devDependency, so `pnpm kilog ...` works via the `"kilog": "kilog"` script in `package.json`. `pnpm exec kilog ...` also works.
+`@mr-akami/kilog` is wired up as a `workspace:*` devDependency, so `pnpm kilog ...` works via the `"kilog": "kilog"` script in `package.json`. `pnpm exec kilog ...` also works.
 
 > `npx kilog` will not work: since it isn't published yet, npx tries to fetch it from the registry and fails. Use `pnpm` instead.
 

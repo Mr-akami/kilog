@@ -4,12 +4,12 @@ The `kilog` command. Read, query, and manage `.kilog/` across every project unde
 
 ## Usage
 
-Installed with the `kilog` package (`npm i -D kilog`). Inside this workspace, wire it up as a devDependency:
+Installed with the `@mr-akami/kilog` package (`npm i -D @mr-akami/kilog`). Inside this workspace, wire it up as a devDependency:
 
 ```json
 {
   "scripts": { "kilog": "kilog" },
-  "devDependencies": { "kilog": "workspace:*" }
+  "devDependencies": { "@mr-akami/kilog": "workspace:*" }
 }
 ```
 
@@ -94,7 +94,7 @@ pnpm kilog ui --port 4000
 pnpm kilog ui --root ../other
 ```
 
-The server auto-shuts down when you close the browser tab (via a heartbeat / beacon). See [`kilog/web-ui`](./web-ui.md) for details.
+The server auto-shuts down when you close the browser tab (via a heartbeat / beacon). See [`@mr-akami/kilog/web-ui`](./web-ui.md) for details.
 
 ### `reindex` — rebuild every index
 

@@ -44,9 +44,9 @@ interface NextConfigLike {
 // `serverExternalPackages` covers the App Router server bundle. The
 // instrumentation hook is bundled separately and (in Next 15.5) doesn't
 // honor that field, so we also push externals into the webpack config.
-const EXTERNAL_PACKAGES = ["kilog", "@duckdb/node-api", "@duckdb/node-bindings"];
+const EXTERNAL_PACKAGES = ["@mr-akami/kilog", "@duckdb/node-api", "@duckdb/node-bindings"];
 
-const EXTERNAL_PATTERNS: RegExp[] = [/^kilog(\/.*)?$/, /^@duckdb\/.*/];
+const EXTERNAL_PATTERNS: RegExp[] = [/^@mr-akami\/kilog(\/.*)?$/, /^@duckdb\/.*/];
 
 function composeWebpack(userHook: WebpackHook | undefined): WebpackHook {
   return (config, ctx) => {

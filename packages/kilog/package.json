@@ -1,5 +1,5 @@
 {
-  "name": "kilog",
+  "name": "@mr-akami/kilog",
   "version": "0.0.0",
   "description": "kilog — dev-time structured logging toolkit (CLI, web UI, runtime + framework integrations)",
   "keywords": [

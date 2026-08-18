@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "latest",
-    "hono": "*",
-    "kilog": "workspace:*"
+    "@mr-akami/kilog": "workspace:*",
+    "hono": "*"
   },
   "devDependencies": {
     "vite": "catalog:",

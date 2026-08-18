@@ -24,7 +24,7 @@ export interface KilogWranglerPluginOptions {
   workerEntries?: string[];
 }
 
-const INSTRUMENT_IMPORT = `import "kilog/wrangler-plugin/instrument";`;
+const INSTRUMENT_IMPORT = `import "@mr-akami/kilog/wrangler-plugin/instrument";`;
 const RECEIVER_GLOBAL = "globalThis.__KILOG_RECEIVER_URL__";
 const ENTRY_HINT = /export\s+default\s+[\s\S]{0,200}?\bfetch\s*[(:]/;
 
@@ -32,7 +32,7 @@ function isLikelyWorkerEntry(code: string, id: string, entries: string[] | undef
   if (entries && entries.some((e) => id === e || id.endsWith(e))) return true;
   if (id.includes("/node_modules/")) return false;
   if (!/\.(ts|tsx|mts|js|jsx|mjs|cts)$/.test(id)) return false;
-  if (code.includes("kilog/wrangler-plugin/instrument")) return false;
+  if (code.includes("@mr-akami/kilog/wrangler-plugin/instrument")) return false;
   return ENTRY_HINT.test(code);
 }
 
@@ -41,7 +41,7 @@ function isLikelyWorkerEntry(code: string, id: string, entries: string[] | undef
  *
  * - Registers a Vite dev-server middleware for `POST /__kilog` that writes
  *   events to `.kilog/raw/*.jsonl`.
- * - Auto-injects `import "kilog/wrangler-plugin/instrument"` plus the
+ * - Auto-injects `import "@mr-akami/kilog/wrangler-plugin/instrument"` plus the
  *   resolved receiver URL into the worker entry file — users don't need to
  *   touch their worker code.
  *

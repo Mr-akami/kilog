@@ -4,7 +4,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter kilog build:client && tsc -b",
+    "build": "pnpm --filter @mr-akami/kilog build:client && tsc -b",
     "typecheck": "tsc -b --noEmit",
     "test": "vp test run",
     "lint": "vp lint .",

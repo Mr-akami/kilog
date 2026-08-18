@@ -1,4 +1,4 @@
-# kilog/web-ui
+# @mr-akami/kilog/web-ui
 
 Browser UI for `.kilog/` backed by DuckDB-wasm. The server is a thin Hono app that does SSR of the initial HTML and serves JSONL files on demand — all queries run in the browser.
 
@@ -58,7 +58,7 @@ open http://localhost:3000/docs      # interactive reference
 ## Programmatic API
 
 ```ts
-import { startServer } from "kilog/web-ui";
+import { startServer } from "@mr-akami/kilog/web-ui";
 
 await startServer({
   port: 3000, // auto-incremented if busy
@@ -89,10 +89,10 @@ await startServer({
 ### Build
 
 ```bash
-pnpm --filter kilog/web-ui build        # vite build + tsc
-pnpm --filter kilog/web-ui build:client # vite only
-pnpm --filter kilog/web-ui build:server # tsc only
-pnpm --filter kilog/web-ui dev:client   # Vite dev server for the browser bundle
+pnpm --filter @mr-akami/kilog/web-ui build        # vite build + tsc
+pnpm --filter @mr-akami/kilog/web-ui build:client # vite only
+pnpm --filter @mr-akami/kilog/web-ui build:server # tsc only
+pnpm --filter @mr-akami/kilog/web-ui dev:client   # Vite dev server for the browser bundle
 ```
 
 The client build emits to `dist/public/` (hashed assets + `.vite/manifest.json`). The server resolves the JS URL from the manifest at request time.
@@ -103,12 +103,12 @@ Rebuild with `pnpm tsc -b --watch` from the repo root.
 
 ### Editing browser client
 
-Run `pnpm --filter kilog/web-ui dev:client` for Vite's HMR, or `pnpm --filter kilog/web-ui build:client` for one-off builds.
+Run `pnpm --filter @mr-akami/kilog/web-ui dev:client` for Vite's HMR, or `pnpm --filter @mr-akami/kilog/web-ui build:client` for one-off builds.
 
 ### Tests
 
 ```bash
-pnpm --filter kilog/web-ui test
+pnpm --filter @mr-akami/kilog/web-ui test
 ```
 
 Covers SSR output, `/api/sources`, `/api/read` (including offset + security), `/api/clear`, `/api/heartbeat`, `/openapi.json`, and `/docs`.

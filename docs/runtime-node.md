@@ -1,15 +1,15 @@
-# kilog/runtime-node
+# @mr-akami/kilog/runtime-node
 
 Automatically capture `console`, `fetch`, and uncaught errors in Node.js.
 
 ## Usage
 
-Most apps should load the **[`kilog/register`](./register.md)** meta entry instead — it auto-dispatches to the right runtime for Node / Bun / Deno:
+Most apps should load the **[`@mr-akami/kilog/register`](./register.md)** meta entry instead — it auto-dispatches to the right runtime for Node / Bun / Deno:
 
 ```json
 {
   "scripts": {
-    "dev": "node --import kilog/register ./src/index.ts"
+    "dev": "node --import @mr-akami/kilog/register ./src/index.ts"
   }
 }
 ```
@@ -19,7 +19,7 @@ If you want to pin Node explicitly, load this package's register entry directly:
 ```json
 {
   "scripts": {
-    "dev": "node --import kilog/runtime-node/register ./src/index.ts"
+    "dev": "node --import @mr-akami/kilog/runtime-node/register ./src/index.ts"
   }
 }
 ```
@@ -41,7 +41,7 @@ Written to `.kilog/raw/{date}.node.jsonl` under the cwd. Override with the `KILO
 Each process start wipes `.kilog/raw/*.jsonl` and `.kilog/index/` so logs reflect only the current run. Set `KILOG_PERSIST=1` to keep previous logs.
 
 ```bash
-KILOG_PERSIST=1 node --import kilog/register ./src/index.ts
+KILOG_PERSIST=1 node --import @mr-akami/kilog/register ./src/index.ts
 ```
 
 ## Programmatic API
@@ -54,7 +54,7 @@ import {
   captureConsole,
   captureFetch,
   captureErrors,
-} from "kilog/runtime-node";
+} from "@mr-akami/kilog/runtime-node";
 
 const ctx = createRuntimeContext();
 captureConsole(ctx);
