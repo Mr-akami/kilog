@@ -1,5 +1,9 @@
 # @kilog/kilog
 
+## [v2026.818.1](https://github.com/Mr-akami/kilog/compare/v2026.818.0...v2026.818.1) - 2026-08-18
+
+- feat!: consolidate into a single @mr-akami/kilog package by @Mr-akami in https://github.com/Mr-akami/kilog/pull/89
+
 ## 1.3.1
 
 ### Patch Changes
