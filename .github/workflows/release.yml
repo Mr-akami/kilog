@@ -34,7 +34,7 @@ jobs:
       - uses: actions/setup-node@v6
         if: steps.tagpr.outputs.tag != ''
         with:
-          node-version: 24.15.0
+          node-version: 24.18.0
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
