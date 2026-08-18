@@ -28,9 +28,9 @@
 - Use DuckDB as the query backend
 - Resolve sourcemaps at query time in the MVP
 - Enable a minimum PII masking policy by default and allow extension through configuration
-- Organize the monorepo around workspace packages instead of large domain folders
-- Start with `packages/core`, `packages/cli`, `packages/vite-plugin`, and `packages/runtime-node`
-- Keep sample applications under `apps/` and `examples/`
+- Publish a single npm package (`kilog`) with subpath exports per integration
+- Organize the code as modules under `packages/kilog/src` instead of large domain folders
+- Keep sample applications under `examples/`
 - Keep repository-level end-to-end tests under `tests/e2e`
 
 ## Runtime Support

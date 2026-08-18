@@ -13,28 +13,39 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      issues: read
       id-token: write
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          persist-credentials: false
+
+      # Maintains the release pull request; tags + creates the GitHub Release
+      # when that pull request is merged. `tag` is non-empty only on that merge.
+      - id: tagpr
+        uses: Songmu/tagpr@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: pnpm/action-setup@v6
+        if: steps.tagpr.outputs.tag != ''
 
       - uses: actions/setup-node@v6
+        if: steps.tagpr.outputs.tag != ''
         with:
           node-version: 24.15.0
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
-      - run: pnpm install --frozen-lockfile
+      - if: steps.tagpr.outputs.tag != ''
+        run: pnpm install --frozen-lockfile
 
-      - uses: changesets/action@v1
-        with:
-          publish: pnpm release
-          version: pnpm version-packages
-          commit: "chore: version packages"
-          title: "chore: version packages"
-          createGithubReleases: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - if: steps.tagpr.outputs.tag != ''
+        run: pnpm build
+
+      # Trusted Publishing (OIDC) — no NPM_TOKEN. Provenance comes from
+      # publishConfig.provenance in packages/kilog/package.json.
+      - if: steps.tagpr.outputs.tag != ''
+        run: npm publish
+        working-directory: packages/kilog

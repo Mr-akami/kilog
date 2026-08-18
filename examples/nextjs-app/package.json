@@ -1,5 +1,5 @@
 {
-  "name": "@kilog/example-nextjs-app",
+  "name": "kilog-example-nextjs-app",
   "version": "0.0.3",
   "private": true,
   "type": "module",
@@ -10,13 +10,12 @@
     "kilog": "kilog"
   },
   "dependencies": {
-    "@kilog/nextjs-plugin": "workspace:*",
+    "kilog": "workspace:*",
     "next": "^15.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@kilog/cli": "workspace:*",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0"
   }

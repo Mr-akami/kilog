@@ -14,45 +14,19 @@ Kilog captures `console`, `fetch`, and uncaught errors during development into a
 
 ## Install
 
-Install everything in one go (Reccomended):
+One package, one install:
 
 ```bash
-npm i -D @kilog/kilog
+npm i -D kilog
 # or
-pnpm add -D @kilog/kilog
+pnpm add -D kilog
 ```
 
-Or install only what you need:
+The CLI, the web UI, and every framework integration ship inside it — see
+[Packages](#packages) for the full list of entry points.
 
-```bash
-# Node app
-npm i -D @kilog/cli @kilog/register
-# or
-pnpm add -D @kilog/cli @kilog/register
-```
-
-```bash
-# Browser / Vite app
-npm i -D @kilog/cli @kilog/vite-plugin
-# or
-pnpm add -D @kilog/cli @kilog/vite-plugin
-```
-
-```bash
-# Next.js app
-npm i -D @kilog/cli @kilog/nextjs-plugin
-# or
-pnpm add -D @kilog/cli @kilog/nextjs-plugin
-```
-
-```bash
-# Cloudflare Workers (wrangler dev)
-npm i -D @kilog/cli @kilog/wrangler-plugin
-# or
-pnpm add -D @kilog/cli @kilog/wrangler-plugin
-```
-
-Available packages: `@kilog/cli`, `@kilog/core`, `@kilog/register`, `@kilog/runtime-node`, `@kilog/vite-plugin`, `@kilog/nextjs-plugin`, `@kilog/wrangler-plugin`, `@kilog/web-ui`. `@kilog/kilog` is a meta-package that depends on all of them — convenient for single-install; import paths are shorter via the individual packages.
+Earlier releases were published as the `@kilog/*` scoped packages. Those are deprecated:
+replace them with `kilog` plus the matching subpath.
 
 ## Quick start
 
@@ -61,12 +35,12 @@ Available packages: `@kilog/cli`, `@kilog/core`, `@kilog/register`, `@kilog/runt
 ```json
 {
   "scripts": {
-    "dev": "node --import @kilog/register ./src/index.ts"
+    "dev": "node --import kilog/register ./src/index.ts"
   }
 }
 ```
 
-`@kilog/register` auto-dispatches to the right runtime package based on
+`kilog/register` auto-dispatches to the right runtime package based on
 where it's running (Node / Bun / Deno).
 
 Environment variables:
@@ -77,19 +51,19 @@ Environment variables:
 | `KILOG_PERSIST` | unset           | Set to `1` to keep previous logs across restarts. Default wipes `.kilog/raw/*.jsonl` + `.kilog/index/` on each process start. |
 
 ```bash
-KILOG_PERSIST=1 node --import @kilog/register ./src/index.ts
+KILOG_PERSIST=1 node --import kilog/register ./src/index.ts
 ```
 
 (Node already logs to the terminal, so there is no `terminal` option on this side.)
 
-→ [`packages/register`](./packages/register/README.md) · [`packages/runtime-node`](./packages/runtime-node/README.md)
+→ [`kilog/register`](./docs/register.md) · [`kilog/runtime-node`](./docs/runtime-node.md)
 
 ### Browser (Vite)
 
 ```ts
 // vite.config.ts
 import { defineConfig } from "vite";
-import kilogPlugin from "@kilog/vite-plugin";
+import kilogPlugin from "kilog/vite-plugin";
 
 export default defineConfig({
   plugins: [kilogPlugin()],
@@ -117,13 +91,13 @@ kilogPlugin({ server: false }); // disable server-side capture (Vite SSR)
 | `persist`  | `boolean`                                           | `false` | Keep previously captured logs across dev server restarts. Default wipes `.kilog/raw/*.jsonl` and `.kilog/index/` on startup.       |
 | `server`   | `boolean`                                           | `true`  | Also capture the dev server's runtime (Node/Bun/Deno) — handles Vite SSR setups (Hono+Vite, Vite-Next, etc.). Set `false` to skip. |
 
-→ [`packages/vite-plugin`](./packages/vite-plugin/README.md)
+→ [`kilog/vite-plugin`](./docs/vite-plugin.md)
 
 ### Next.js (App Router or Pages Router)
 
 ```ts
 // next.config.ts
-import { withKilog } from "@kilog/nextjs-plugin";
+import { withKilog } from "kilog/nextjs-plugin";
 
 export default withKilog({
   // your existing Next config
@@ -134,7 +108,7 @@ export default withKilog({
 
 Same `terminal` / `persist` options as the Vite plugin. Requires Next 15.3+.
 
-→ [`packages/nextjs-plugin`](./packages/nextjs-plugin/README.md)
+→ [`kilog/nextjs-plugin`](./docs/nextjs-plugin.md)
 
 ### Cloudflare Workers (`wrangler dev`)
 
@@ -154,7 +128,7 @@ runs the worker inside Vite's dev server. The Vite dev server hosts the
 // vite.config.ts
 import { defineConfig } from "vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
-import kilogWranglerPlugin from "@kilog/wrangler-plugin";
+import kilogWranglerPlugin from "kilog/wrangler-plugin";
 
 export default defineConfig({
   plugins: [cloudflare(), kilogWranglerPlugin()],
@@ -164,7 +138,7 @@ export default defineConfig({
 That's it. The plugin:
 
 - registers a `POST /__kilog` middleware on the Vite dev server
-- auto-injects `import "@kilog/wrangler-plugin/instrument"` plus the
+- auto-injects `import "kilog/wrangler-plugin/instrument"` plus the
   resolved receiver URL into the worker entry — your worker code stays
   untouched
 
@@ -184,8 +158,8 @@ your worker entry:
 
 ```ts
 // src/index.ts
-import "@kilog/wrangler-plugin/instrument";
-import { withKilog } from "@kilog/wrangler-plugin/with-kilog";
+import "kilog/wrangler-plugin/instrument";
+import { withKilog } from "kilog/wrangler-plugin/with-kilog";
 
 export default withKilog({
   async fetch(req, env, ctx) {
@@ -213,7 +187,7 @@ the top-level `instrument` import has a target.
 | Vite + `@cloudflare/vite-plugin` (Vite serves your worker via its dev proxy) | Setup **A** |
 | `wrangler dev` directly (no Vite)                                            | Setup **B** |
 
-→ [`packages/wrangler-plugin`](./packages/wrangler-plugin/README.md)
+→ [`kilog/wrangler-plugin`](./docs/wrangler-plugin.md)
 
 ### View logs
 
@@ -232,7 +206,7 @@ npx kilog ui                # browser UI (auto-shuts down when you close the tab
 - **Running in Docker** — set `kilogPlugin({ terminal: true })` so captured events go to stdout, then let the agent read `docker logs <container>`. No extra CLI needed.
 - **Native / nix shells, or you want structured queries** — use the `kilog` CLI. It adds `--since`/`--tail`/`--level`/`--runtime` filters and a SQL escape hatch that `docker logs` doesn't have.
 
-→ [`packages/cli`](./packages/cli/README.md) / [`packages/web-ui`](./packages/web-ui/README.md)
+→ [CLI](./docs/cli.md) / [`kilog/web-ui`](./docs/web-ui.md)
 
 ## Storage model
 
@@ -248,17 +222,21 @@ The CLI and UI walk down from the **invocation directory** (or `--root <path>`) 
 
 ## Packages
 
-| Package                                                          | Role                                                        |
-| ---------------------------------------------------------------- | ----------------------------------------------------------- |
-| [`@kilog/kilog`](./packages/kilog)                               | Meta-package: CLI + all libraries bundled                   |
-| [`@kilog/runtime-node`](./packages/runtime-node/README.md)       | Node runtime instrumentation                                |
-| [`@kilog/vite-plugin`](./packages/vite-plugin/README.md)         | Vite plugin (browser instrumentation + dev-server receiver) |
-| [`@kilog/nextjs-plugin`](./packages/nextjs-plugin/README.md)     | Next.js plugin (App + Pages Router; Webpack + Turbopack)    |
-| [`@kilog/wrangler-plugin`](./packages/wrangler-plugin/README.md) | Cloudflare Wrangler dev integration (workerd capture)       |
-| [`@kilog/cli`](./packages/cli/README.md)                         | `kilog` CLI                                                 |
-| [`@kilog/web-ui`](./packages/web-ui/README.md)                   | Hono server + DuckDB-wasm browser UI                        |
-| [`@kilog/register`](./packages/register/README.md)               | Auto-register hook (runtime dispatch)                       |
-| [`@kilog/core`](./packages/core/README.md)                       | Internal: storage / discovery / index / query               |
+Everything ships in the single `kilog` package; each area is a subpath export.
+
+| Entry point                                          | Role                                                                    |
+| ---------------------------------------------------- | ----------------------------------------------------------------------- |
+| `kilog`                                              | storage / discovery / index / query primitives ([docs](./docs/core.md)) |
+| `kilog` (bin)                                        | the CLI ([docs](./docs/cli.md))                                         |
+| [`kilog/register`](./docs/register.md)               | Auto-register hook (runtime dispatch)                                   |
+| [`kilog/runtime-node`](./docs/runtime-node.md)       | Node runtime instrumentation                                            |
+| [`kilog/vite-plugin`](./docs/vite-plugin.md)         | Vite plugin (browser instrumentation + dev-server receiver)             |
+| [`kilog/nextjs-plugin`](./docs/nextjs-plugin.md)     | Next.js plugin (App + Pages Router; Webpack + Turbopack)                |
+| [`kilog/wrangler-plugin`](./docs/wrangler-plugin.md) | Cloudflare Wrangler dev integration (workerd capture)                   |
+| [`kilog/web-ui`](./docs/web-ui.md)                   | Hono server + DuckDB-wasm browser UI                                    |
+
+The deprecated `@kilog/*` scoped packages (frozen at 1.3.1) map onto these subpaths
+one-to-one.
 
 ## Examples
 
@@ -292,5 +270,5 @@ See [`plugin/README.md`](./plugin/README.md) for details.
 ## Docs
 
 - [Development (monorepo)](./docs/development.md) — setup, build, watch, test
-- [Release](./docs/release.md) — changesets, Trusted Publishing, bootstrap
+- [Release](./docs/release.md) — tagpr, CalVer, Trusted Publishing, bootstrap
 - [Docs index](./docs/index.md) — product / architecture / runtime / query model

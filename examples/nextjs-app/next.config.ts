@@ -1,3 +1,3 @@
-import { withKilog } from "@kilog/nextjs-plugin";
+import { withKilog } from "kilog/nextjs-plugin";
 
 export default withKilog({});

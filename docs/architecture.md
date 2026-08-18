@@ -16,13 +16,9 @@ Target package families:
 - `cli`: tail, query, reindex, prune, doctor, ui
 - `web-ui`: sample web UI
 
-Initial repository packages and apps:
+These are modules inside the single published package, not separate packages:
 
-- `packages/core`
-- `packages/cli`
-- `packages/vite-plugin`
-- `packages/runtime-node`
-- `packages/web-ui`
+- `packages/kilog/src/{core,cli,vite-plugin,runtime-node,web-ui,...}`
 - `examples/vite-client`
 - `examples/node-server`
 - `tests/e2e`
@@ -30,7 +26,7 @@ Initial repository packages and apps:
 ## Repository Policy
 
 - Use `pnpm` as the package manager
-- Split the workspace into packages
+- Publish a single package (`kilog`); split the codebase into modules under `packages/kilog/src`
 - Implement everything as ESM
 - Use TypeScript in strict mode
 - Use `ESLint` as the linter

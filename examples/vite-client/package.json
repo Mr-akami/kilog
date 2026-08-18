@@ -1,5 +1,5 @@
 {
-  "name": "@kilog/example-vite-client",
+  "name": "kilog-example-vite-client",
   "version": "0.0.11",
   "private": true,
   "type": "module",
@@ -9,10 +9,9 @@
     "kilog": "kilog"
   },
   "dependencies": {
-    "@kilog/vite-plugin": "workspace:*"
+    "kilog": "workspace:*"
   },
   "devDependencies": {
-    "@kilog/cli": "workspace:*",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   }

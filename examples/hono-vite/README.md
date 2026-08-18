@@ -1,6 +1,6 @@
 # kilog Hono + Vite Example
 
-Hono bundled by Vite via [`@hono/vite-dev-server`](https://github.com/honojs/vite-plugins/tree/main/packages/dev-server) + [`@kilog/vite-plugin`](../../packages/vite-plugin/README.md). Demonstrates that `kilogPlugin()` captures **server-side** `console` / `fetch` / errors when Hono runs inside the Vite dev process — no `--import @kilog/register` needed.
+Hono bundled by Vite via [`@hono/vite-dev-server`](https://github.com/honojs/vite-plugins/tree/main/packages/dev-server) + [`kilog/vite-plugin`](../../docs/vite-plugin.md). Demonstrates that `kilogPlugin()` captures **server-side** `console` / `fetch` / errors when Hono runs inside the Vite dev process — no `--import kilog/register` needed.
 
 ## Prerequisites (inside the workspace)
 
@@ -38,6 +38,6 @@ pnpm kilog ui --port 4000
 
 ## How it works
 
-`kilogPlugin()` defaults to `server: true`, so on `configureServer` it dynamically imports `@kilog/register`, which installs `console` / `fetch` / uncaughtException / unhandledRejection hooks in the same Node process that `@hono/vite-dev-server` uses to run your Hono app. The same pattern covers any Vite-SSR setup (Vite-Next, etc.).
+`kilogPlugin()` defaults to `server: true`, so on `configureServer` it dynamically imports `kilog/register`, which installs `console` / `fetch` / uncaughtException / unhandledRejection hooks in the same Node process that `@hono/vite-dev-server` uses to run your Hono app. The same pattern covers any Vite-SSR setup (Vite-Next, etc.).
 
 Opt out with `kilogPlugin({ server: false })` for pure-SPA projects.

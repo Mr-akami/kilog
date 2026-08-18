@@ -1,19 +1,17 @@
 {
-  "name": "@kilog/example-node-server",
+  "name": "kilog-example-node-server",
   "version": "0.0.10",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "node --import @kilog/register ./src/index.ts",
+    "dev": "node --import kilog/register ./src/index.ts",
     "kilog": "kilog"
   },
   "dependencies": {
     "@hono/node-server": "*",
-    "@kilog/register": "workspace:*",
-    "hono": "*"
+    "hono": "*",
+    "kilog": "workspace:*"
   },
-  "devDependencies": {
-    "@kilog/cli": "workspace:*"
-  }
+  "devDependencies": {}
 }

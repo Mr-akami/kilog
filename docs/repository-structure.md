@@ -2,175 +2,111 @@
 
 ## Root Layout
 
-The repository uses a pnpm workspace monorepo with shared configuration files at the root.
+The repository is a pnpm workspace that publishes exactly **one** npm package, `kilog`.
+Everything the user installs lives in `packages/kilog`; the other workspace entries are
+examples and tests that are never published.
 
 ```text
 kilog/
   pnpm-workspace.yaml
   package.json
   tsconfig.base.json
-  eslint.config.js
-  .gitignore
+  vite.config.ts
+  .tagpr
   README.md
+  CHANGELOG.md
 
   packages/
-    core/
-    cli/
-    vite-plugin/
-    runtime-node/
-
-  apps/
-    web-ui/
+    kilog/
+      package.json        # name: "kilog"
+      index.html          # web UI shell
+      vite.config.ts      # web UI client bundle
+      client/             # browser-side web UI (DuckDB-wasm)
+      src/
+        core/
+        cli/
+        register/
+        runtime-node/
+        vite-plugin/
+        nextjs-plugin/
+        wrangler-plugin/
+        web-ui/
 
   examples/
     vite-client/
     node-server/
+    hono-vite/
+    nextjs-app/
+    nextjs-pages/
+    wrangler-vite/
+    wrangler-worker/
 
   tests/
     e2e/
 ```
 
-## Package Roles
+## Published Entry Points
 
-### `packages/core`
+Each module maps to a subpath export of the single package. See the table in the
+root [README](../README.md#install).
 
-Shared primitives and storage logic.
+| Module                | Export                                                                        |
+| --------------------- | ----------------------------------------------------------------------------- |
+| `src/core`            | `kilog`, `kilog/ansi`, `kilog/browser`, `kilog/dev-receiver`                  |
+| `src/cli`             | `kilog` bin                                                                   |
+| `src/register`        | `kilog/register`, `kilog/register/detect`                                     |
+| `src/runtime-node`    | `kilog/runtime-node`, `kilog/runtime-node/register`                           |
+| `src/vite-plugin`     | `kilog/vite-plugin`                                                           |
+| `src/nextjs-plugin`   | `kilog/nextjs-plugin` (+ `register-client` / `register-server`)               |
+| `src/wrangler-plugin` | `kilog/wrangler-plugin` (+ `instrument` / `with-kilog`), `kilog-wrangler` bin |
+| `src/web-ui`          | `kilog/web-ui`                                                                |
 
-Responsibilities:
+## Module Roles
 
-- event schema
-- JSONL persistence
-- PII redaction
-- DuckDB indexing
-- shared serialization helpers
+### `src/core`
 
-Suggested internal layout:
+Shared primitives and storage logic: event schema, JSONL persistence, PII redaction,
+DuckDB indexing, shared serialization helpers, the browser runtime generator, and the
+dev-receiver middleware.
 
-```text
-packages/core/
-  package.json
-  src/
-    schema/
-    serialize/
-    redact/
-    storage/
-    index/
-```
+### `src/cli`
 
-### `packages/cli`
+The main user-facing surface: `kilog logs` / `sql` / `stats` / `reindex` / `prune` /
+`doctor` / `ui`.
 
-The main user-facing CLI package.
+### `src/register`
 
-Responsibilities:
+Runtime detection plus dispatch to the matching runtime module.
 
-- `kilog logs`
-- `kilog sql`
-- `kilog stats`
-- `kilog reindex`
-- `kilog prune`
-- `kilog doctor`
-- `kilog ui`
+### `src/runtime-node`
 
-Suggested internal layout:
+Node.js instrumentation: preload-style registration, console capture, process error
+capture, fetch capture.
 
-```text
-packages/cli/
-  package.json
-  src/
-    commands/
-      tail.ts
-      query.ts
-      reindex.ts
-      prune.ts
-      doctor.ts
-      ui.ts
-```
+### `src/vite-plugin`, `src/nextjs-plugin`, `src/wrangler-plugin`
 
-### `packages/vite-plugin`
+Framework integrations. Each injects the browser runtime and wires a dev-time receiver
+that writes into `.kilog/`.
 
-Browser log capture for Vite-based local development.
+### `src/web-ui`
 
-Responsibilities:
-
-- inject the browser client runtime
-- capture browser console and error events
-- capture browser fetch events
-- transport captured events into local storage
-
-Suggested internal layout:
-
-```text
-packages/vite-plugin/
-  package.json
-  src/
-    index.ts
-    client.ts
-    capture/
-    transport/
-```
-
-### `packages/runtime-node`
-
-Runtime instrumentation for Node.js.
-
-Responsibilities:
-
-- preload-style registration
-- console capture
-- process error capture
-- fetch capture
-
-Suggested internal layout:
-
-```text
-packages/runtime-node/
-  package.json
-  src/
-    register.ts
-    console.ts
-    process.ts
-    fetch.ts
-```
-
-## Application Role
-
-### `packages/web-ui`
-
-This app is a sample web UI, not the primary product surface.
-
-Responsibilities:
-
-- provide a local visual reference for log browsing
-- exercise the shared query model
-- stay secondary to the CLI workflow
+Hono server plus SSR shell for the browser UI. The client under `client/` runs
+DuckDB-wasm and is bundled into `dist/public` by Vite. Secondary to the CLI workflow.
 
 ## Example Apps
 
-### `examples/vite-client`
-
-Browser-side example used to validate Vite plugin behavior.
-
-### `examples/node-server`
-
-Node-side example used to validate runtime-node behavior.
+`examples/*` are private workspace packages (`kilog-example-*`) that depend on
+`kilog` via `workspace:*`. They exist to validate integrations and to document usage.
 
 ## Test Layout
 
-### `tests/e2e`
-
-End-to-end coverage for the CLI and example apps.
-
-Responsibilities:
-
-- verify CLI behavior against real example projects
-- verify ingest, persistence, indexing, and query flows
-- cover integration boundaries across packages
+`tests/e2e` holds repository-level end-to-end coverage for the CLI and the example apps.
+Unit tests live next to their sources under `packages/kilog/src`.
 
 ## Structure Policy
 
-- Keep cross-runtime shared logic inside `packages/core`
-- Keep runtime-specific instrumentation isolated in separate packages
+- Keep cross-runtime shared logic inside `src/core`
+- Keep runtime-specific instrumentation isolated in its own module
 - Keep the CLI as the main entry point for product usage
-- Keep `apps/` for runnable product-facing applications
 - Keep `examples/` for validation and documentation aids
-- Keep repository-level integration tests under `tests/e2e`
+- Add a new integration as a new module plus a new subpath export — never as a new package
