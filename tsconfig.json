@@ -1,32 +1,4 @@
 {
   "files": [],
-  "references": [
-    {
-      "path": "packages/core"
-    },
-    {
-      "path": "packages/cli"
-    },
-    {
-      "path": "packages/runtime-node"
-    },
-    {
-      "path": "packages/register"
-    },
-    {
-      "path": "packages/vite-plugin"
-    },
-    {
-      "path": "packages/nextjs-plugin"
-    },
-    {
-      "path": "packages/web-ui"
-    },
-    {
-      "path": "packages/kilog"
-    },
-    {
-      "path": "examples/node-server"
-    }
-  ]
+  "references": [{ "path": "packages/kilog" }, { "path": "examples/node-server" }]
 }

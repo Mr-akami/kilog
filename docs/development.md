@@ -9,14 +9,13 @@ pnpm install
 pnpm build        # build every package + bundle the browser client
 ```
 
-Packages reference each other via `workspace:*` and their `main` points to `./dist/`, so **an initial build (and a rebuild after changes) is required**. `@kilog/web-ui` additionally bundles its browser client with Vite.
+Everything ships from the single `@mr-akami/kilog` package under `packages/kilog`. Its `main`/`exports` point to `./dist/`, and the examples depend on it via `workspace:*`, so **an initial build (and a rebuild after changes) is required**. The build also bundles the web UI's browser client with Vite.
 
 ## Watch
 
 ```bash
 pnpm tsc -b --watch    # server-side TS (core, cli, web-ui server, etc.)
-# and in packages/web-ui, for the client side:
-pnpm --filter @kilog/web-ui dev:client
+pnpm --filter @mr-akami/kilog dev:client   # browser client for the web UI
 ```
 
 ## Test / typecheck / lint

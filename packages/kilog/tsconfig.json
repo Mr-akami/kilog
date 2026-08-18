@@ -3,16 +3,9 @@
   "compilerOptions": {
     "composite": true,
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx"
   },
-  "include": ["src"],
-  "references": [
-    { "path": "../core" },
-    { "path": "../register" },
-    { "path": "../runtime-node" },
-    { "path": "../vite-plugin" },
-    { "path": "../nextjs-plugin" },
-    { "path": "../wrangler-plugin" },
-    { "path": "../web-ui" }
-  ]
+  "include": ["src"]
 }

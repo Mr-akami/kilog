@@ -29,7 +29,7 @@ Goals:
 Example:
 
 ```bash
-NODE_OPTIONS="--import @kilog/register" node server.js
+NODE_OPTIONS="--import @mr-akami/kilog/register" node server.js
 ```
 
 Collected signals:
@@ -64,12 +64,12 @@ Local `wrangler dev` only — production deploys are unaffected.
 Integration approach:
 
 - Workerd has no `fs`, so the worker can't write `.kilog/` directly.
-  Instead, an instrumented shim (`@kilog/wrangler-plugin/instrument`)
+  Instead, an instrumented shim (`@mr-akami/kilog/wrangler-plugin/instrument`)
   POSTs each event to a localhost HTTP receiver in the dev driver.
 - The receiver URL is baked into the bundle via `define` (Vite path) or
   `wrangler --define` (plain-wrangler path).
 - The receiver is the same `/__kilog` endpoint used by the browser and
-  Next.js paths, served by `@kilog/core/dev-receiver`.
+  Next.js paths, served by `@mr-akami/kilog/dev-receiver`.
 
 Two setups:
 
@@ -79,7 +79,7 @@ Two setups:
   worker entry.
 - **Setup B — Plain `wrangler dev`**: `kilog-wrangler` launcher starts a
   receiver, then exec's `wrangler dev` with `--var` + `--define`.
-  Worker entry adds `import "@kilog/wrangler-plugin/instrument"` and
+  Worker entry adds `import "@mr-akami/kilog/wrangler-plugin/instrument"` and
   wraps its default export with `withKilog`.
 
 Collected signals:

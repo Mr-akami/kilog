@@ -18,5 +18,5 @@ Plugin root is this directory (`plugin/` within the repo), so pointing the marke
 
 ## Requires
 
-- `@kilog/cli` available in the target workspace (either as a devDependency or globally installed).
-- The target project instrumented via `@kilog/register` (Node) or `@kilog/vite-plugin` (browser).
+- `kilog` available in the target workspace (either as a devDependency or globally installed).
+- The target project instrumented via `@mr-akami/kilog/register` (Node) or `@mr-akami/kilog/vite-plugin` (browser).

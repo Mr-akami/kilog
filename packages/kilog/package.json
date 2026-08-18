@@ -1,13 +1,16 @@
 {
-  "name": "@kilog/kilog",
-  "version": "1.3.1",
-  "description": "kilog — structured logging toolkit (CLI + libraries bundled)",
+  "name": "@mr-akami/kilog",
+  "version": "2026.818.0",
+  "description": "kilog — dev-time structured logging toolkit (CLI, web UI, runtime + framework integrations)",
   "keywords": [
     "cli",
+    "cloudflare",
     "duckdb",
     "kilog",
     "logging",
-    "structured-logging"
+    "next",
+    "structured-logging",
+    "vite"
   ],
   "homepage": "https://github.com/Mr-akami/kilog#readme",
   "license": "MIT",
@@ -17,47 +20,95 @@
     "directory": "packages/kilog"
   },
   "bin": {
-    "kilog": "./bin/kilog.js"
+    "kilog": "./dist/cli/index.js",
+    "kilog-wrangler": "./dist/wrangler-plugin/cli.js"
   },
   "files": [
-    "bin",
     "dist"
   ],
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/core/index.js",
+  "types": "./dist/core/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js",
+      "default": "./dist/core/index.js"
     },
-    "./core": {
-      "types": "./dist/core.d.ts",
-      "import": "./dist/core.js"
+    "./ansi": {
+      "types": "./dist/core/ansi.d.ts",
+      "import": "./dist/core/ansi.js",
+      "default": "./dist/core/ansi.js"
+    },
+    "./browser": {
+      "types": "./dist/core/browser/index.d.ts",
+      "import": "./dist/core/browser/index.js",
+      "default": "./dist/core/browser/index.js"
+    },
+    "./dev-receiver": {
+      "types": "./dist/core/dev-receiver/index.d.ts",
+      "import": "./dist/core/dev-receiver/index.js",
+      "default": "./dist/core/dev-receiver/index.js"
     },
     "./register": {
-      "types": "./dist/register.d.ts",
-      "import": "./dist/register.js"
+      "types": "./dist/register/register.d.ts",
+      "import": "./dist/register/register.js",
+      "default": "./dist/register/register.js"
+    },
+    "./register/detect": {
+      "types": "./dist/register/index.d.ts",
+      "import": "./dist/register/index.js",
+      "default": "./dist/register/index.js"
     },
     "./runtime-node": {
-      "types": "./dist/runtime-node.d.ts",
-      "import": "./dist/runtime-node.js"
+      "types": "./dist/runtime-node/index.d.ts",
+      "import": "./dist/runtime-node/index.js",
+      "default": "./dist/runtime-node/index.js"
+    },
+    "./runtime-node/register": {
+      "types": "./dist/runtime-node/register.d.ts",
+      "import": "./dist/runtime-node/register.js",
+      "default": "./dist/runtime-node/register.js"
     },
     "./vite-plugin": {
-      "types": "./dist/vite-plugin.d.ts",
-      "import": "./dist/vite-plugin.js"
+      "types": "./dist/vite-plugin/index.d.ts",
+      "import": "./dist/vite-plugin/index.js",
+      "default": "./dist/vite-plugin/index.js"
     },
     "./nextjs-plugin": {
-      "types": "./dist/nextjs-plugin.d.ts",
-      "import": "./dist/nextjs-plugin.js"
+      "types": "./dist/nextjs-plugin/index.d.ts",
+      "import": "./dist/nextjs-plugin/index.js",
+      "default": "./dist/nextjs-plugin/index.js"
+    },
+    "./nextjs-plugin/register-client": {
+      "types": "./dist/nextjs-plugin/register-client.d.ts",
+      "import": "./dist/nextjs-plugin/register-client.js",
+      "default": "./dist/nextjs-plugin/register-client.js"
+    },
+    "./nextjs-plugin/register-server": {
+      "types": "./dist/nextjs-plugin/register-server.d.ts",
+      "import": "./dist/nextjs-plugin/register-server.js",
+      "default": "./dist/nextjs-plugin/register-server.js"
     },
     "./wrangler-plugin": {
-      "types": "./dist/wrangler-plugin.d.ts",
-      "import": "./dist/wrangler-plugin.js"
+      "types": "./dist/wrangler-plugin/index.d.ts",
+      "import": "./dist/wrangler-plugin/index.js",
+      "default": "./dist/wrangler-plugin/index.js"
+    },
+    "./wrangler-plugin/instrument": {
+      "types": "./dist/wrangler-plugin/instrument.d.ts",
+      "import": "./dist/wrangler-plugin/instrument.js",
+      "default": "./dist/wrangler-plugin/instrument.js"
+    },
+    "./wrangler-plugin/with-kilog": {
+      "types": "./dist/wrangler-plugin/with-kilog.d.ts",
+      "import": "./dist/wrangler-plugin/with-kilog.js",
+      "default": "./dist/wrangler-plugin/with-kilog.js"
     },
     "./web-ui": {
-      "types": "./dist/web-ui.d.ts",
-      "import": "./dist/web-ui.js"
+      "types": "./dist/web-ui/index.d.ts",
+      "import": "./dist/web-ui/index.js",
+      "default": "./dist/web-ui/index.js"
     }
   },
   "publishConfig": {
@@ -65,28 +116,39 @@
     "provenance": true
   },
   "scripts": {
-    "build": "tsc",
-    "prepack": "node -e \"require('node:fs').copyFileSync('../../README.md','README.md')\""
+    "build": "vp build && tsc",
+    "build:client": "vp build",
+    "build:server": "tsc",
+    "dev:client": "vp dev",
+    "test": "vp test run"
   },
   "dependencies": {
-    "@kilog/cli": "workspace:*",
-    "@kilog/core": "workspace:*",
-    "@kilog/nextjs-plugin": "workspace:*",
-    "@kilog/register": "workspace:*",
-    "@kilog/runtime-node": "workspace:*",
-    "@kilog/vite-plugin": "workspace:*",
-    "@kilog/web-ui": "workspace:*",
-    "@kilog/wrangler-plugin": "workspace:*"
+    "@duckdb/node-api": "1.5.2-r.1",
+    "@hono/node-server": "^2.0.0",
+    "@hono/standard-validator": "^0.2.2",
+    "@scalar/hono-api-reference": "^0.10.9",
+    "cac": "^7.0.0",
+    "hono": "^4.12.14",
+    "hono-openapi": "^1.3.0"
+  },
+  "devDependencies": {
+    "@duckdb/duckdb-wasm": "1.33.1-dev45.0",
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
   },
   "peerDependencies": {
     "next": ">=15.3.0",
-    "vite": "^8.0.10"
+    "vite": "^8.0.10",
+    "wrangler": ">=3"
   },
   "peerDependenciesMeta": {
     "next": {
       "optional": true
     },
     "vite": {
+      "optional": true
+    },
+    "wrangler": {
       "optional": true
     }
   }

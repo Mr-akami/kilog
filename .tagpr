@@ -1,0 +1,8 @@
+[tagpr]
+	releaseBranch = main
+	versionFile = packages/kilog/package.json
+	vPrefix = true
+	changelog = true
+	calendarVersioning = true
+	release = true
+	commitPrefix = "chore:"

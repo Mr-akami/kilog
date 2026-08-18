@@ -1,5 +1,5 @@
 {
-  "name": "@kilog/example-hono-vite",
+  "name": "kilog-example-hono-vite",
   "version": "0.0.7",
   "private": true,
   "type": "module",
@@ -9,11 +9,10 @@
   },
   "dependencies": {
     "@hono/vite-dev-server": "latest",
-    "@kilog/vite-plugin": "workspace:*",
+    "@mr-akami/kilog": "workspace:*",
     "hono": "*"
   },
   "devDependencies": {
-    "@kilog/cli": "workspace:*",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   }

@@ -1,5 +1,5 @@
 {
-  "name": "@kilog/example-wrangler-vite",
+  "name": "kilog-example-wrangler-vite",
   "version": "0.0.3",
   "private": true,
   "type": "module",
@@ -9,11 +9,10 @@
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "latest",
-    "@kilog/wrangler-plugin": "workspace:*",
+    "@mr-akami/kilog": "workspace:*",
     "hono": "*"
   },
   "devDependencies": {
-    "@kilog/cli": "workspace:*",
     "vite": "catalog:",
     "vite-plus": "catalog:",
     "wrangler": "latest"

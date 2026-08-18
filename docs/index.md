@@ -12,6 +12,19 @@
 - [Docs Policy](docs-policy.md)
 - [Skills Policy](skills-policy.md)
 
+## Modules
+
+Reference for each subpath export of the single `kilog` package.
+
+- [CLI](cli.md)
+- [core](core.md)
+- [register](register.md)
+- [runtime-node](runtime-node.md)
+- [vite-plugin](vite-plugin.md)
+- [nextjs-plugin](nextjs-plugin.md)
+- [wrangler-plugin](wrangler-plugin.md)
+- [web-ui](web-ui.md)
+
 ## Contributor
 
 - [Development](development.md)
