@@ -1,6 +1,6 @@
 {
   "name": "@mr-akami/kilog",
-  "version": "0.0.0",
+  "version": "2026.818.0",
   "description": "kilog — dev-time structured logging toolkit (CLI, web UI, runtime + framework integrations)",
   "keywords": [
     "cli",
@@ -112,16 +112,14 @@
     }
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "scripts": {
     "build": "vp build && tsc",
     "build:client": "vp build",
     "build:server": "tsc",
     "dev:client": "vp dev",
-    "test": "vp test run",
-    "prepack": "node -e \"require('node:fs').copyFileSync('../../README.md','README.md')\""
+    "test": "vp test run"
   },
   "dependencies": {
     "@duckdb/node-api": "1.5.2-r.1",
