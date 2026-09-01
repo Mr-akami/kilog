@@ -1,6 +1,6 @@
 {
   "name": "@mr-akami/kilog",
-  "version": "2026.818.1",
+  "version": "2026.901.0",
   "description": "kilog — dev-time structured logging toolkit (CLI, web UI, runtime + framework integrations)",
   "keywords": [
     "cli",
