@@ -139,7 +139,7 @@
   "peerDependencies": {
     "next": ">=15.3.0",
     "vite": "^8.2.0",
-    "wrangler": ">=3"
+    "wrangler": ">=3.114.17"
   },
   "peerDependenciesMeta": {
     "next": {
