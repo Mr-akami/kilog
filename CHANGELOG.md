@@ -1,5 +1,17 @@
 # @kilog/kilog
 
+## [v2026.908.0](https://github.com/Mr-akami/kilog/compare/v2026.818.1...v2026.908.0) - 2026-09-08
+
+- chore(deps): update node.js by @renovate[bot] in https://github.com/Mr-akami/kilog/pull/82
+- chore(deps): update dependency vite to ^8.1.5 by @renovate[bot] in https://github.com/Mr-akami/kilog/pull/78
+- chore(deps): update actions/checkout action to v7 by @renovate[bot] in https://github.com/Mr-akami/kilog/pull/84
+- chore(deps): update pnpm to v10.34.5 by @renovate[bot] in https://github.com/Mr-akami/kilog/pull/79
+- chore(deps): update actions/setup-node action to v7 by @renovate[bot] in https://github.com/Mr-akami/kilog/pull/88
+- chore(deps): update node.js by @renovate[bot] in https://github.com/Mr-akami/kilog/pull/95
+- chore(deps): update dependency vite to ^8.2.0 by @renovate[bot] in https://github.com/Mr-akami/kilog/pull/96
+- chore(deps): update dependency vite to ^8.2.1 by @renovate[bot] in https://github.com/Mr-akami/kilog/pull/97
+- chore(deps): update node.js by @renovate[bot] in https://github.com/Mr-akami/kilog/pull/98
+
 ## [v2026.818.1](https://github.com/Mr-akami/kilog/compare/v2026.818.0...v2026.818.1) - 2026-08-18
 
 - feat!: consolidate into a single @mr-akami/kilog package by @Mr-akami in https://github.com/Mr-akami/kilog/pull/89
