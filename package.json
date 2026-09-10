@@ -12,7 +12,7 @@
     "check": "vp check"
   },
   "dependencies": {
-    "@hono/node-server": "^2",
+    "@hono/node-server": "^2.1.0",
     "hono": "^4.12.14"
   },
   "devDependencies": {
