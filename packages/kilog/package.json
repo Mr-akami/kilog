@@ -123,7 +123,7 @@
     "test": "vp test run"
   },
   "dependencies": {
-    "@duckdb/node-api": "1.5.2-r.1",
+    "@duckdb/node-api": "1.5.2-r.2",
     "@hono/node-server": "^2.0.0",
     "@hono/standard-validator": "^0.2.2",
     "@scalar/hono-api-reference": "^0.10.9",
